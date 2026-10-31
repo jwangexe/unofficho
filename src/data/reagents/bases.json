@@ -1,0 +1,25 @@
+[
+  {
+    "id": "lda",
+    "name": "Lithium diisopropylamide",
+    "aliases": ["LDA"],
+    "formula": "LiN(i-Pr)₂",
+    "smiles": "[Li+].CC(C)[N-]C(C)C",
+    "roles": ["bronsted-base"],
+    "primaryRole": "bronsted-base",
+    "strength": { "pKaH": 36, "note": "pKa of diisopropylamine" },
+    "typicalUses": [
+      "Quantitative, irreversible formation of kinetic enolates at −78 °C in THF"
+    ],
+    "chemoselectivity": [
+      "Deprotonates α-C–H of ketones, esters and nitriles",
+      "Bulky and poorly nucleophilic, so it rarely adds to C=O"
+    ],
+    "pitfalls": [
+      "With an unsymmetrical ketone it gives the less substituted (kinetic) enolate, not the thermodynamic one"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false,
+    "todoVerify": ["pKaH value: ~36 is the commonly quoted figure; solvent-dependent"]
+  }
+]

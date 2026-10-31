@@ -1,0 +1,346 @@
+import { D } from '../dims';
+import { defineFormula } from '../formula';
+import { R } from '../constants';
+import { deltaT, dimensionless, molarEnergy, T1, T2, temp } from './vars';
+
+const ln = Math.log;
+
+export const thermo = [
+  defineFormula({
+    id: 'gibbs',
+    name: 'Gibbs energy from ΔH and ΔS',
+    topic: 'thermo',
+    latex: '\\Delta G = \\Delta H - T\\Delta S',
+    vars: [
+      molarEnergy('dG', 'ΔG', '\\Delta G', 'Gibbs energy change', { flexUnit: 'kJ' }),
+      molarEnergy('dH', 'ΔH', '\\Delta H', 'Enthalpy change', { flexUnit: 'kJ' }),
+      temp(),
+      { sym: 'dS', label: 'ΔS', latex: '\\Delta S', name: 'Entropy change', dim: D.molarEntropy, unit: 'J/(K mol)', sign: 'signed', flexUnit: 'J/K' },
+    ],
+    relation: (v) => [v.dG!, v.dH! - v.T! * v.dS!],
+    rearranged: {
+      dG: '\\Delta G = \\Delta H - T\\Delta S',
+      dH: '\\Delta H = \\Delta G + T\\Delta S',
+      T: 'T = \\dfrac{\\Delta H - \\Delta G}{\\Delta S}',
+      dS: '\\Delta S = \\dfrac{\\Delta H - \\Delta G}{T}',
+    },
+    examples: [{ dH: -92.4, T: 298, dS: -198.3 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'gibbs-k',
+    name: 'Standard Gibbs energy and K',
+    topic: 'thermo',
+    latex: '\\Delta G^\\circ = -RT\\ln K',
+    vars: [
+      molarEnergy('dG0', 'ΔG°', '\\Delta G^\\circ', 'Standard Gibbs energy change'),
+      temp(),
+      dimensionless('K', 'K', 'K', 'Equilibrium constant'),
+    ],
+    relation: (v) => [v.dG0!, -R * v.T! * ln(v.K!)],
+    rearranged: {
+      dG0: '\\Delta G^\\circ = -RT\\ln K',
+      T: 'T = -\\dfrac{\\Delta G^\\circ}{R\\ln K}',
+      K: 'K = \\exp\\!\\left(-\\dfrac{\\Delta G^\\circ}{RT}\\right)',
+    },
+    examples: [{ dG0: -33.3, T: 298 }, { T: 298, K: 1.5e-5 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'gibbs-q',
+    name: 'Gibbs energy away from equilibrium',
+    topic: 'thermo',
+    latex: '\\Delta G = \\Delta G^\\circ + RT\\ln Q',
+    vars: [
+      molarEnergy('dG', 'ΔG', '\\Delta G', 'Gibbs energy change'),
+      molarEnergy('dG0', 'ΔG°', '\\Delta G^\\circ', 'Standard Gibbs energy change'),
+      temp(),
+      dimensionless('Q', 'Q', 'Q', 'Reaction quotient'),
+    ],
+    relation: (v) => [v.dG!, v.dG0! + R * v.T! * ln(v.Q!)],
+    rearranged: {
+      dG: '\\Delta G = \\Delta G^\\circ + RT\\ln Q',
+      dG0: '\\Delta G^\\circ = \\Delta G - RT\\ln Q',
+      T: 'T = \\dfrac{\\Delta G - \\Delta G^\\circ}{R\\ln Q}',
+      Q: 'Q = \\exp\\!\\left(\\dfrac{\\Delta G - \\Delta G^\\circ}{RT}\\right)',
+    },
+    examples: [{ dG0: -33.3, T: 298, Q: 0.01 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'vant-hoff',
+    name: "van 't Hoff equation (two-point)",
+    topic: 'thermo',
+    latex: '\\ln\\dfrac{K_2}{K_1} = -\\dfrac{\\Delta H^\\circ}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)',
+    vars: [
+      dimensionless('K1', 'K₁', 'K_1', 'Equilibrium constant at T₁'),
+      dimensionless('K2', 'K₂', 'K_2', 'Equilibrium constant at T₂'),
+      T1,
+      T2,
+      molarEnergy('dH0', 'ΔH°', '\\Delta H^\\circ', 'Standard enthalpy change'),
+    ],
+    relation: (v) => [ln(v.K2! / v.K1!), (-v.dH0! / R) * (1 / v.T2! - 1 / v.T1!)],
+    rearranged: {
+      K2: 'K_2 = K_1\\exp\\!\\left[-\\dfrac{\\Delta H^\\circ}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)\\right]',
+      K1: 'K_1 = K_2\\exp\\!\\left[\\dfrac{\\Delta H^\\circ}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)\\right]',
+      T2: '\\dfrac{1}{T_2} = \\dfrac{1}{T_1} - \\dfrac{R\\ln(K_2/K_1)}{\\Delta H^\\circ}',
+      T1: '\\dfrac{1}{T_1} = \\dfrac{1}{T_2} + \\dfrac{R\\ln(K_2/K_1)}{\\Delta H^\\circ}',
+      dH0: '\\Delta H^\\circ = -\\dfrac{R\\ln(K_2/K_1)}{1/T_2 - 1/T_1}',
+    },
+    notes: 'Assumes ΔH° is independent of temperature over the range.',
+    examples: [{ K1: 1.0e-3, T1: 298, T2: 350, dH0: 50 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'kirchhoff',
+    name: "Kirchhoff's law",
+    topic: 'thermo',
+    latex: '\\Delta H(T_2) = \\Delta H(T_1) + \\Delta C_p\\,(T_2 - T_1)',
+    vars: [
+      molarEnergy('dH2', 'ΔH(T₂)', '\\Delta H(T_2)', 'Enthalpy change at T₂', { flexUnit: 'kJ' }),
+      molarEnergy('dH1', 'ΔH(T₁)', '\\Delta H(T_1)', 'Enthalpy change at T₁', { flexUnit: 'kJ' }),
+      { sym: 'dCp', label: 'ΔCₚ', latex: '\\Delta C_p', name: 'Heat capacity change', dim: D.molarEntropy, unit: 'J/(K mol)', sign: 'signed', flexUnit: 'J/K' },
+      T1,
+      T2,
+    ],
+    relation: (v) => [v.dH2!, v.dH1! + v.dCp! * (v.T2! - v.T1!)],
+    rearranged: {
+      dH2: '\\Delta H(T_2) = \\Delta H(T_1) + \\Delta C_p\\,(T_2 - T_1)',
+      dH1: '\\Delta H(T_1) = \\Delta H(T_2) - \\Delta C_p\\,(T_2 - T_1)',
+      dCp: '\\Delta C_p = \\dfrac{\\Delta H(T_2) - \\Delta H(T_1)}{T_2 - T_1}',
+      T1: 'T_1 = T_2 - \\dfrac{\\Delta H(T_2) - \\Delta H(T_1)}{\\Delta C_p}',
+      T2: 'T_2 = T_1 + \\dfrac{\\Delta H(T_2) - \\Delta H(T_1)}{\\Delta C_p}',
+    },
+    notes: 'Assumes ΔCp is constant over the temperature range.',
+    examples: [{ dH1: -92.2, dCp: -45.0, T1: 298, T2: 500 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'clausius-clapeyron',
+    name: 'Clausius–Clapeyron equation',
+    topic: 'thermo',
+    latex: '\\ln\\dfrac{p_2}{p_1} = -\\dfrac{\\Delta_\\mathrm{vap}H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)',
+    vars: [
+      { sym: 'p1', label: 'p₁', latex: 'p_1', name: 'Vapour pressure at T₁', dim: D.pressure, unit: 'kPa' },
+      { sym: 'p2', label: 'p₂', latex: 'p_2', name: 'Vapour pressure at T₂', dim: D.pressure, unit: 'kPa' },
+      T1,
+      T2,
+      molarEnergy('dvapH', 'ΔvapH', '\\Delta_\\mathrm{vap}H', 'Enthalpy of vaporisation', { sign: 'positive' }),
+    ],
+    relation: (v) => [ln(v.p2! / v.p1!), (-v.dvapH! / R) * (1 / v.T2! - 1 / v.T1!)],
+    rearranged: {
+      p2: 'p_2 = p_1\\exp\\!\\left[-\\dfrac{\\Delta_\\mathrm{vap}H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)\\right]',
+      p1: 'p_1 = p_2\\exp\\!\\left[\\dfrac{\\Delta_\\mathrm{vap}H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right)\\right]',
+      T2: '\\dfrac{1}{T_2} = \\dfrac{1}{T_1} - \\dfrac{R\\ln(p_2/p_1)}{\\Delta_\\mathrm{vap}H}',
+      T1: '\\dfrac{1}{T_1} = \\dfrac{1}{T_2} + \\dfrac{R\\ln(p_2/p_1)}{\\Delta_\\mathrm{vap}H}',
+      dvapH: '\\Delta_\\mathrm{vap}H = -\\dfrac{R\\ln(p_2/p_1)}{1/T_2 - 1/T_1}',
+    },
+    notes: 'Assumes an ideal vapour, negligible liquid volume and constant ΔvapH.',
+    examples: [{ p1: 101.325, T1: 373.15, T2: 363.15, dvapH: 40.7 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'heat-mass',
+    name: 'Heat from specific heat capacity',
+    topic: 'thermo',
+    latex: 'q = mc\\Delta T',
+    vars: [
+      { sym: 'q', label: 'q', latex: 'q', name: 'Heat', dim: D.energy, unit: 'J', sign: 'signed' },
+      { sym: 'm', label: 'm', latex: 'm', name: 'Mass', dim: D.mass, unit: 'g' },
+      { sym: 'c', label: 'c', latex: 'c', name: 'Specific heat capacity', dim: D.specificHeat, unit: 'J/(g K)' },
+      deltaT(),
+    ],
+    relation: (v) => [v.q!, v.m! * v.c! * v.dT!],
+    rearranged: {
+      q: 'q = mc\\Delta T',
+      m: 'm = \\dfrac{q}{c\\Delta T}',
+      c: 'c = \\dfrac{q}{m\\Delta T}',
+      dT: '\\Delta T = \\dfrac{q}{mc}',
+    },
+    examples: [{ m: 100, c: 4.18, dT: 5.2 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'heat-molar',
+    name: 'Heat from molar heat capacity',
+    topic: 'thermo',
+    latex: 'q = nC\\Delta T',
+    vars: [
+      { sym: 'q', label: 'q', latex: 'q', name: 'Heat', dim: D.energy, unit: 'J', sign: 'signed' },
+      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
+      { sym: 'C', label: 'C', latex: 'C', name: 'Molar heat capacity', dim: D.molarEntropy, unit: 'J/(K mol)' },
+      deltaT(),
+    ],
+    relation: (v) => [v.q!, v.n! * v.C! * v.dT!],
+    rearranged: {
+      q: 'q = nC\\Delta T',
+      n: 'n = \\dfrac{q}{C\\Delta T}',
+      C: 'C = \\dfrac{q}{n\\Delta T}',
+      dT: '\\Delta T = \\dfrac{q}{nC}',
+    },
+    examples: [{ n: 2.0, C: 75.3, dT: 10 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'entropy-qrev',
+    name: 'Entropy change from reversible heat',
+    topic: 'thermo',
+    latex: '\\Delta S = \\dfrac{q_\\mathrm{rev}}{T}',
+    vars: [
+      { sym: 'dS', label: 'ΔS', latex: '\\Delta S', name: 'Entropy change', dim: D.entropy, unit: 'J/K', sign: 'signed', flexUnit: 'J/(K mol)' },
+      { sym: 'q', label: 'q_rev', latex: 'q_\\mathrm{rev}', name: 'Reversible heat', dim: D.energy, unit: 'J', sign: 'signed', flexUnit: 'kJ/mol' },
+      temp(),
+    ],
+    relation: (v) => [v.dS!, v.q! / v.T!],
+    rearranged: {
+      dS: '\\Delta S = \\dfrac{q_\\mathrm{rev}}{T}',
+      q: 'q_\\mathrm{rev} = T\\Delta S',
+      T: 'T = \\dfrac{q_\\mathrm{rev}}{\\Delta S}',
+    },
+    notes: 'Use molar quantities for a phase transition: ΔtrsS = ΔtrsH / Ttrs.',
+    examples: [{ q: 4000, T: 300 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'entropy-heating',
+    name: 'Entropy change on heating',
+    topic: 'thermo',
+    latex: '\\Delta S = nC_p\\ln\\dfrac{T_2}{T_1}',
+    vars: [
+      { sym: 'dS', label: 'ΔS', latex: '\\Delta S', name: 'Entropy change', dim: D.entropy, unit: 'J/K', sign: 'signed' },
+      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
+      { sym: 'Cp', label: 'Cₚ', latex: 'C_p', name: 'Molar heat capacity (constant p)', dim: D.molarEntropy, unit: 'J/(K mol)' },
+      T1,
+      T2,
+    ],
+    relation: (v) => [v.dS!, v.n! * v.Cp! * ln(v.T2! / v.T1!)],
+    rearranged: {
+      dS: '\\Delta S = nC_p\\ln\\dfrac{T_2}{T_1}',
+      n: 'n = \\dfrac{\\Delta S}{C_p\\ln(T_2/T_1)}',
+      Cp: 'C_p = \\dfrac{\\Delta S}{n\\ln(T_2/T_1)}',
+      T1: 'T_1 = T_2\\,e^{-\\Delta S/nC_p}',
+      T2: 'T_2 = T_1\\,e^{\\Delta S/nC_p}',
+    },
+    notes: 'Constant pressure, constant Cp, no phase change.',
+    examples: [{ n: 1, Cp: 75.3, T1: 298, T2: 348 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'entropy-isothermal',
+    name: 'Entropy change on isothermal expansion',
+    topic: 'thermo',
+    latex: '\\Delta S = nR\\ln\\dfrac{V_2}{V_1}',
+    vars: [
+      { sym: 'dS', label: 'ΔS', latex: '\\Delta S', name: 'Entropy change', dim: D.entropy, unit: 'J/K', sign: 'signed' },
+      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
+      { sym: 'V1', label: 'V₁', latex: 'V_1', name: 'Initial volume', dim: D.volume, unit: 'dm3' },
+      { sym: 'V2', label: 'V₂', latex: 'V_2', name: 'Final volume', dim: D.volume, unit: 'dm3' },
+    ],
+    relation: (v) => [v.dS!, v.n! * R * ln(v.V2! / v.V1!)],
+    rearranged: {
+      dS: '\\Delta S = nR\\ln\\dfrac{V_2}{V_1}',
+      n: 'n = \\dfrac{\\Delta S}{R\\ln(V_2/V_1)}',
+      V1: 'V_1 = V_2\\,e^{-\\Delta S/nR}',
+      V2: 'V_2 = V_1\\,e^{\\Delta S/nR}',
+    },
+    notes: 'Ideal gas.',
+    examples: [{ n: 2, V1: 10, V2: 25 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'ideal-gas',
+    name: 'Ideal gas equation',
+    topic: 'thermo',
+    latex: 'pV = nRT',
+    vars: [
+      { sym: 'p', label: 'p', latex: 'p', name: 'Pressure', dim: D.pressure, unit: 'kPa' },
+      { sym: 'V', label: 'V', latex: 'V', name: 'Volume', dim: D.volume, unit: 'dm3' },
+      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
+      temp(),
+    ],
+    relation: (v) => [v.p! * v.V!, v.n! * R * v.T!],
+    rearranged: {
+      p: 'p = \\dfrac{nRT}{V}',
+      V: 'V = \\dfrac{nRT}{p}',
+      n: 'n = \\dfrac{pV}{RT}',
+      T: 'T = \\dfrac{pV}{nR}',
+    },
+    examples: [{ V: 24.79, n: 1, T: 298.15 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'work-pv',
+    name: 'Expansion work against constant pressure',
+    topic: 'thermo',
+    latex: 'w = -p_\\mathrm{ext}\\Delta V',
+    vars: [
+      { sym: 'w', label: 'w', latex: 'w', name: 'Work done on the system', dim: D.energy, unit: 'J', sign: 'signed' },
+      { sym: 'p', label: 'p_ext', latex: 'p_\\mathrm{ext}', name: 'External pressure', dim: D.pressure, unit: 'kPa' },
+      { sym: 'dV', label: 'ΔV', latex: '\\Delta V', name: 'Volume change', dim: D.volume, unit: 'dm3', sign: 'signed' },
+    ],
+    relation: (v) => [v.w!, -v.p! * v.dV!],
+    rearranged: {
+      w: 'w = -p_\\mathrm{ext}\\Delta V',
+      p: 'p_\\mathrm{ext} = -\\dfrac{w}{\\Delta V}',
+      dV: '\\Delta V = -\\dfrac{w}{p_\\mathrm{ext}}',
+    },
+    notes: 'Sign convention: w is work done ON the system (IUPAC).',
+    examples: [{ p: 100, dV: 2.5 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'first-law',
+    name: 'First law of thermodynamics',
+    topic: 'thermo',
+    latex: '\\Delta U = q + w',
+    vars: [
+      { sym: 'dU', label: 'ΔU', latex: '\\Delta U', name: 'Internal energy change', dim: D.energy, unit: 'J', sign: 'signed', flexUnit: 'kJ/mol' },
+      { sym: 'q', label: 'q', latex: 'q', name: 'Heat supplied to the system', dim: D.energy, unit: 'J', sign: 'signed', flexUnit: 'kJ/mol' },
+      { sym: 'w', label: 'w', latex: 'w', name: 'Work done on the system', dim: D.energy, unit: 'J', sign: 'signed', flexUnit: 'kJ/mol' },
+    ],
+    relation: (v) => [v.dU!, v.q! + v.w!],
+    rearranged: {
+      dU: '\\Delta U = q + w',
+      q: 'q = \\Delta U - w',
+      w: 'w = \\Delta U - q',
+    },
+    examples: [{ q: 500, w: -200 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'dh-du',
+    name: 'ΔH from ΔU (gas-phase moles)',
+    topic: 'thermo',
+    latex: '\\Delta H = \\Delta U + \\Delta n_\\mathrm{gas}RT',
+    vars: [
+      molarEnergy('dH', 'ΔH', '\\Delta H', 'Enthalpy change'),
+      molarEnergy('dU', 'ΔU', '\\Delta U', 'Internal energy change'),
+      dimensionless('dn', 'Δn_gas', '\\Delta n_\\mathrm{gas}', 'Change in moles of gas per mole of reaction', { sign: 'signed' }),
+      temp(),
+    ],
+    relation: (v) => [v.dH!, v.dU! + v.dn! * R * v.T!],
+    rearranged: {
+      dH: '\\Delta H = \\Delta U + \\Delta n_\\mathrm{gas}RT',
+      dU: '\\Delta U = \\Delta H - \\Delta n_\\mathrm{gas}RT',
+      dn: '\\Delta n_\\mathrm{gas} = \\dfrac{\\Delta H - \\Delta U}{RT}',
+      T: 'T = \\dfrac{\\Delta H - \\Delta U}{\\Delta n_\\mathrm{gas}R}',
+    },
+    notes: 'Ideal-gas behaviour; condensed-phase volume changes neglected.',
+    examples: [{ dU: -280.0, dn: -1.5, T: 298 }],
+    reviewed: false,
+  }),
+];
