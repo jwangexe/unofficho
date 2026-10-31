@@ -1,0 +1,11 @@
+// Cloudflare Workers (static assets) deployment: see DEPLOY.md.
+{
+  "name": "unofficho",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Serve index.html for app routes such as /book/diels-alder (replaces a _redirects rule,
+    // which Workers rejects as a loop).
+    "not_found_handling": "single-page-application"
+  }
+}

@@ -1,6 +1,6 @@
 # Deploying UnoffIChO
 
-UnoffIChO is a static site. There is no backend, database or API key. `npm run build` writes everything to `dist/`, and any static host can serve it. This guide uses **Cloudflare Pages**, with the custom domain **unofficho.org**.
+UnoffIChO is a static site. There is no backend, database or API key. `npm run build` writes everything to `dist/`, and any static host can serve it. This guide uses **Cloudflare** (a Worker serving static files, which is what the dashboard's *Create* button sets up), with the custom domain **unofficho.org**.
 
 ## 1. Check the build locally
 
@@ -26,54 +26,53 @@ Open the URL `vite preview` prints. This is the production build, including the 
 npm run e2e
 ```
 
-## 2. Create the Pages project
+## 2. Create the Cloudflare project
 
-1. Sign in to the [Cloudflare dashboard](https://dash.cloudflare.com) and open **Workers & Pages → Create → Pages → Connect to Git**.
+1. Sign in to the [Cloudflare dashboard](https://dash.cloudflare.com) and open **Workers & Pages → Create → Import a repository** (Connect to Git).
 2. Authorise GitHub and pick the **jwangexe/unofficho** repository (it can stay private).
 3. Set up the build:
 
    | Setting | Value |
    | --- | --- |
+   | Project name | `unofficho` (must match `name` in `wrangler.jsonc`) |
    | Production branch | `main` |
-   | Framework preset | None (or Vite) |
    | Build command | `npm run build` |
-   | Build output directory | `dist` |
+   | Deploy command | `npx wrangler deploy` |
    | Environment variable | `NODE_VERSION` = `24` |
 
-4. **Save and Deploy.** The first build gives you a `https://<project>.pages.dev` address. Check that it works before adding the domain.
+4. **Save and Deploy.** The first build gives you a `https://unofficho.<your-subdomain>.workers.dev` address. Check that it works before adding the domain.
 
-From then on:
+From then on, every push to `main` deploys to production.
 
-- every push to `main` deploys to production
-- every other branch or pull request gets its own preview URL
+How the files are served:
 
-Two files in `public/` are copied into `dist/` and read by Pages:
+- **`wrangler.jsonc`** tells Cloudflare to serve `dist/`. Its `"not_found_handling": "single-page-application"` returns `index.html` for app routes, so links such as `/book/diels-alder` work when opened directly. Do **not** add a `_redirects` file with `/* /index.html 200`: Workers rejects it as an infinite loop.
+- **`public/_headers`** (copied into `dist/`) caches the hashed files in `/assets/` for a year. It always revalidates `index.html`, `sw.js`, `registerSW.js` and the manifest, so users never get stuck on an old version. It also adds a few standard security headers.
 
-- **`_redirects`** sends every path to `index.html`, so links such as `/book/diels-alder` work when opened directly.
-- **`_headers`** caches the hashed files in `/assets/` for a year. It always revalidates `index.html`, `sw.js`, `registerSW.js` and the manifest, so users never get stuck on an old version. It also adds a few standard security headers.
+### Alternative: deploy from your machine
 
-### Alternative: upload from your machine
-
-No Git connection needed:
+No Git connection needed. Log in once with `npx wrangler login`, then:
 
 ```bash
 npm run build
 ```
 
 ```bash
-npx wrangler pages deploy dist --project-name unofficho
+npx wrangler deploy
 ```
+
+To check the configuration without uploading anything, use `npx wrangler deploy --dry-run`.
 
 ## 3. Connect unofficho.org
 
-A bare domain (`unofficho.org` with no `www.`) can only point to Pages if **Cloudflare runs the domain's DNS**. That is the simplest set-up.
+A bare domain (`unofficho.org` with no `www.`) can only point to your Cloudflare project if **Cloudflare runs the domain's DNS**. That is the simplest set-up.
 
 1. **Register the domain.** Buy it through Cloudflare Registrar (dashboard → *Domain Registration*), or at any registrar.
 2. **Hand DNS to Cloudflare** (skip this if you bought it from Cloudflare):
    - dashboard → *Add a site* → enter `unofficho.org` → Free plan
    - Cloudflare shows two nameservers; at your registrar, replace the existing nameservers with those two
    - wait until Cloudflare marks the site **Active** (minutes to a day)
-3. **Attach the domain to the project:** Pages project → **Custom domains → Set up a custom domain** → `unofficho.org`. Cloudflare adds the DNS record and issues the HTTPS certificate itself.
+3. **Attach the domain to the project:** your project → **Settings → Domains & Routes → Add → Custom domain** → `unofficho.org`. Cloudflare adds the DNS record and issues the HTTPS certificate itself.
 4. **Add `www` as well:** repeat step 3 for `www.unofficho.org`.
 5. **Redirect `www` to the bare domain**, so there is one canonical address:
    - zone `unofficho.org` → **Rules → Redirect Rules → Create rule**
@@ -83,7 +82,7 @@ A bare domain (`unofficho.org` with no `www.`) can only point to Pages if **Clou
 
 DNS and the certificate usually take a few minutes; allow up to 24 hours.
 
-If you keep DNS with another provider, Pages only works for subdomains. Add a `CNAME` from, say, `app.unofficho.org` to `<project>.pages.dev`, then add that name under **Custom domains**.
+Custom domains on Cloudflare need the domain's DNS to be on Cloudflare (step 2). If you keep DNS elsewhere, use the `workers.dev` address, or move the DNS.
 
 ## 4. Check the live site
 
@@ -96,17 +95,17 @@ If you keep DNS with another provider, Pages only works for subdomains. Add a `C
 
 ## 5. Updating
 
-Push to `main`. Pages rebuilds and deploys in a minute or two. Users get the update in two steps:
+Push to `main`. Cloudflare rebuilds and deploys in a minute or two. Users get the update in two steps:
 
 1. While the app is open online, its service worker downloads the new version in the background.
 2. The new version shows the next time they open or reload the app.
 
 No action is needed from them.
 
-To roll back, open the project's **Deployments** list and choose **Rollback** on an earlier build.
+To roll back, open the project's **Deployments** list and roll back to an earlier version.
 
 ## Notes
 
 - **Privacy.** The site has no analytics, cookies or server-side storage. Progress lives in each user's browser (IndexedDB) and leaves the device only through the user's own export.
 - **Branding.** UnoffIChO is unofficial. Keep the disclaimer in the footer and on the About screen, and don't use olympiad logos in the icon or the store listing.
-- **Other hosts.** Netlify understands the same `_redirects` and `_headers` files. On Vercel or GitHub Pages, configure an SPA fallback to `index.html` and the same caching rules instead.
+- **Other hosts.** On Netlify or classic Cloudflare Pages, add `public/_redirects` containing `/* /index.html 200` for the SPA fallback (`_headers` works as is). On Vercel or GitHub Pages, configure an SPA fallback to `index.html` and the same caching rules instead.
