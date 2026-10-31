@@ -127,18 +127,13 @@ describe('textbook values', () => {
     expect(val('gibbs-emf', 'n', { dG0: qty(-212.27, 'kJ/mol'), E0: qty(1.1, 'V') })).toBe(2);
   });
 
-  it('Lindemann limits: high [M] → k₁k₂/k₋₁, low [M] → k₁[M]', () => {
-    const base = { k1: qty(2e6, 'dm3/(mol s)'), km1: qty(1e9, 'dm3/(mol s)'), k2: qty(5e6, '1/s') };
-    expect(val('lindemann', 'kuni', { ...base, M: qty(1e3, 'mol/dm3') })).toBeCloseTo((2e6 * 5e6) / 1e9, -1);
-    expect(val('lindemann', 'kuni', { ...base, M: qty(1e-9, 'mol/dm3') })).toBeCloseTo(2e6 * 1e-9, 6);
-  });
 });
 
 describe('solver failures are reported clearly', () => {
   it('no real solution', () => {
-    // [S] from Michaelis–Menten needs v < Vmax.
-    const res = solveFormula(formulaById.get('michaelis-menten')!, 'S', {
-      v: qty(2e-4, 'mol/(dm3 s)'), Vmax: qty(1e-4, 'mol/(dm3 s)'), Km: qty(5e-3, 'mol/dm3'),
+    // First-order decay cannot make [A] grow: no positive k.
+    const res = solveFormula(formulaById.get('first-order')!, 'k', {
+      A: qty(0.2, 'mol/dm3'), A0: qty(0.1, 'mol/dm3'), t: qty(10, 's'),
     });
     expect(res.ok).toBe(false);
     if (!res.ok) expect(res.error.code).toBe('no-solution');

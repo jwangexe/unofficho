@@ -1,0 +1,115 @@
+---
+id: deriving-rate-laws
+chapter: physical
+section: kinetics
+order: 4
+title: "Deriving rate laws: Lindemann and Michaelis–Menten"
+minutes: 4
+quickChecks:
+  - id: lindemann-low-pressure
+    type: mcq
+    prompt: "In the Lindemann mechanism at very low pressure, what is the overall order of reaction?"
+    options:
+      - "First order: rate = $k_1k_2[\\mathrm{A}]/k_{-1}$"
+      - "Second order: first in A and first in M"
+      - "Zero order in A"
+      - "Third order"
+    answer: 1
+    explanation: "When $k_{-1}[\\mathrm{M}] \\ll k_2$, every energised A* reacts before it can be deactivated, so rate = $k_1[\\mathrm{A}][\\mathrm{M}]$: the energising collision is rate-limiting."
+  - id: half-vmax
+    type: mcq
+    prompt: "For Michaelis–Menten kinetics, what is the rate when $[\\mathrm{S}] = K_\\mathrm{M}$?"
+    options: ["$V_\\mathrm{max}$", "$V_\\mathrm{max}/2$", "$V_\\mathrm{max}/4$", "$2V_\\mathrm{max}$"]
+    answer: 1
+    explanation: "$v = V_\\mathrm{max}[\\mathrm{S}]/(K_\\mathrm{M} + [\\mathrm{S}]) = V_\\mathrm{max}K_\\mathrm{M}/(2K_\\mathrm{M}) = V_\\mathrm{max}/2$. This is a quick way to read $K_\\mathrm{M}$ off a plot."
+  - id: mass-balance
+    type: reveal
+    prompt: "Why does the Michaelis–Menten derivation need $[\\mathrm{E}] = [\\mathrm{E}]_0 - [\\mathrm{ES}]$, when Lindemann needs no such step?"
+    answer: "The steady-state equation gives [ES] in terms of free [E], which you cannot measure: the enzyme is mostly tied up as ES at high [S]. Only the total [E]₀ is known, so you eliminate [E] with the mass balance. In Lindemann, [A] and [M] are both present in large, known amounts."
+reviewed: false
+---
+
+You do not need to memorise these rate laws. Both come from the same short recipe, and in an exam it is faster and safer to derive them than to recall them.
+
+## The recipe
+
+1. Write the rate you are asked for using the elementary steps (mass action).
+2. List the intermediates: species made and used up within the mechanism.
+3. For each one, either set $\mathrm{d}[\mathrm{X}]/\mathrm{d}t = 0$ (**steady state**) or set the forward and backward rates of a fast reversible step equal (**pre-equilibrium**).
+4. If a catalyst is involved, add its **mass balance**.
+5. Solve for the intermediates, substitute, and simplify.
+6. Check the **limits**: let each term of the denominator dominate in turn.
+
+## Lindemann–Hinshelwood
+
+A gas molecule A only reacts once a collision with any molecule M has given it enough energy (A*):
+
+$$
+\mathrm{A} + \mathrm{M} \xrightleftharpoons[\;k_{-1}\;]{\;k_1\;} \mathrm{A^*} + \mathrm{M}
+\qquad
+\mathrm{A^*} \xrightarrow{\;k_2\;} \mathrm{P}
+$$
+
+A* is the intermediate, so put it in steady state:
+
+$$
+\frac{\mathrm{d}[\mathrm{A^*}]}{\mathrm{d}t} = k_1[\mathrm{A}][\mathrm{M}] - k_{-1}[\mathrm{A^*}][\mathrm{M}] - k_2[\mathrm{A^*}] = 0
+$$
+
+$$
+[\mathrm{A^*}] = \frac{k_1[\mathrm{A}][\mathrm{M}]}{k_2 + k_{-1}[\mathrm{M}]}
+$$
+
+$$
+\frac{\mathrm{d}[\mathrm{P}]}{\mathrm{d}t} = k_2[\mathrm{A^*}] = \frac{k_1k_2[\mathrm{M}]}{k_2 + k_{-1}[\mathrm{M}]}\,[\mathrm{A}]
+$$
+
+The reaction is first order in A, with an effective constant that depends on pressure. When $k_{-1}[\mathrm{M}] \gg k_2$ (high pressure), it levels off at $k_1k_2/k_{-1}$. When $k_{-1}[\mathrm{M}] \ll k_2$ (low pressure), it falls to $k_1[\mathrm{M}]$ and the reaction becomes second order overall.
+
+<Mechanism id="mech-lindemann" />
+
+## Michaelis–Menten
+
+An enzyme E binds its substrate S, and the complex ES gives the product:
+
+$$
+\mathrm{E} + \mathrm{S} \xrightleftharpoons[\;k_{-1}\;]{\;k_1\;} \mathrm{ES}
+\qquad
+\mathrm{ES} \xrightarrow{\;k_2\;} \mathrm{E} + \mathrm{P}
+$$
+
+Steady state on ES:
+
+$$
+k_1[\mathrm{E}][\mathrm{S}] = (k_{-1} + k_2)[\mathrm{ES}]
+$$
+
+Free [E] is unknown, but the total is fixed: $[\mathrm{E}] = [\mathrm{E}]_0 - [\mathrm{ES}]$. Substituting and collecting [ES]:
+
+$$
+[\mathrm{ES}] = \frac{k_1[\mathrm{E}]_0[\mathrm{S}]}{k_{-1} + k_2 + k_1[\mathrm{S}]}
+$$
+
+Divide the top and bottom by $k_1$ and multiply by $k_2$:
+
+$$
+v = k_2[\mathrm{ES}] = \frac{V_\mathrm{max}[\mathrm{S}]}{K_\mathrm{M} + [\mathrm{S}]},
+\qquad
+V_\mathrm{max} = k_2[\mathrm{E}]_0,
+\quad
+K_\mathrm{M} = \frac{k_{-1} + k_2}{k_1}
+$$
+
+Here [S] means the substrate concentration, taken as its initial value, since $[\mathrm{S}]_0 \gg [\mathrm{E}]_0$.
+
+<Callout type="trap">
+Without the mass balance you get $v = k_1k_2[\mathrm{E}][\mathrm{S}]/(k_{-1} + k_2)$, which looks first order in S forever. It contains free [E], which is not known, and it misses saturation completely.
+</Callout>
+
+<Mechanism id="mech-michaelis-menten" />
+
+<Callout type="tip">
+If the binding step is a fast pre-equilibrium instead ($k_{-1} \gg k_2$), you get the same form with $K_\mathrm{S} = k_{-1}/k_1$ in place of $K_\mathrm{M}$. Switch the tool above to "Pre-equilibrium: Step 1" to see it.
+</Callout>
+
+More mechanisms to derive, including ozone, the S<sub>N</sub>1 common-ion effect and radical chains, are in **Calculations → Mechanisms**.

@@ -18,11 +18,19 @@ export const kineticsTemplates2: CalcTemplate[] = [
       { key: 'km1', label: 'k₋₁', from: 'p.km1' },
       { key: 'k2', label: 'k₂', from: 'n.k2', sig: 2 },
     ],
-    reference: [{ id: 'keff', formula: 'ssa-consecutive', solveFor: 'keff', inputs: { k1: 'g.k1', km1: 'g.km1', k2: 'g.k2' } }],
+    // Derived, not looked up: steady state on I gives k_eff = k₁k₂/(k₋₁ + k₂).
+    reference: [
+      { id: 'k12', label: 'k₁k₂', op: 'mul', inputs: ['g.k1', 'g.k2'] },
+      { id: 'den', label: 'k₋₁ + k₂', op: 'add', inputs: ['g.km1', 'g.k2'] },
+      { id: 'keff', label: 'k_eff', op: 'div', inputs: ['n.k12', 'n.den'] },
+    ],
     answer: { node: 'keff', label: 'k_eff', unit: '1/s' },
     misconceptions: [
       {
-        reference: [{ id: 'kobs', formula: 'pre-equilibrium', solveFor: 'kobs', inputs: { k1: 'g.k1', km1: 'g.km1', k2: 'g.k2' } }],
+        reference: [
+          { id: 'k12', op: 'mul', inputs: ['g.k1', 'g.k2'] },
+          { id: 'kobs', op: 'div', inputs: ['n.k12', 'g.km1'] },
+        ],
         answer: 'kobs',
         message: 'That is the pre-equilibrium result k₁k₂/k₋₁, which needs k₋₁ ≫ k₂. Here they are comparable: use the steady-state expression.',
       },
@@ -37,7 +45,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'A reacts through an intermediate: A ⇌ I (k₁ = {k1}, k₋₁ = {km1}), then I → P (k₂ = {k2}). Apply the steady-state approximation to I and find k_eff.',
     ],
     approachText: 'A ⇌ I → P with all three rate constants known; steady state on I.',
-    explanation: 'Steady state on I: k₁[A] = (k₋₁ + k₂)[I], so rate = k₂[I] = k₁k₂[A]/(k₋₁ + k₂).',
+    explanation: 'd[I]/dt = k₁[A] − k₋₁[I] − k₂[I] = 0 gives [I] = k₁[A]/(k₋₁ + k₂), so rate = k₂[I] = k₁k₂[A]/(k₋₁ + k₂): k_eff = k₁k₂/(k₋₁ + k₂).',
     reviewed: false,
   },
   {
@@ -57,7 +65,8 @@ export const kineticsTemplates2: CalcTemplate[] = [
       { key: 'k2', label: 'k₂', from: 'n.k2', sig: 2 },
     ],
     reference: [
-      { id: 'kobs', formula: 'pre-equilibrium', solveFor: 'kobs', inputs: { k1: 'g.k1', km1: 'g.km1', k2: 'g.k2' } },
+      { id: 'K1', label: 'K₁ = k₁/k₋₁', op: 'div', inputs: ['g.k1', 'g.km1'] },
+      { id: 'kobs', label: 'k_obs', op: 'mul', inputs: ['n.K1', 'g.k2'] },
       { id: 'thalf', formula: 'half-life-first', solveFor: 'thalf', inputs: { k: 'n.kobs' } },
     ],
     answer: { node: 'thalf', label: 't½', unit: 's' },
@@ -73,7 +82,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'A rapidly equilibrates with I (k₁ = {k1}, k₋₁ = {km1}); I slowly gives P with k₂ = {k2}. What is the half-life of A?',
     ],
     approachText: 'A ⇌ I fast pre-equilibrium, then slow I → P; all rate constants known. Find the half-life of A.',
-    explanation: 'Pre-equilibrium: [I] = K₁[A] with K₁ = k₁/k₋₁, so rate = k₂K₁[A] is first order with k_obs = k₁k₂/k₋₁; then t½ = ln 2/k_obs.',
+    explanation: 'Pre-equilibrium: k₁[A] = k₋₁[I], so [I] = K₁[A] with K₁ = k₁/k₋₁. Then rate = k₂[I] = K₁k₂[A], first order with k_obs = k₁k₂/k₋₁, and t½ = ln 2/k_obs.',
     reviewed: false,
   },
   {
@@ -95,8 +104,13 @@ export const kineticsTemplates2: CalcTemplate[] = [
     ],
     // Keep to the fall-off region, where neither limit applies.
     constraint: (v) => (v.km1! * v.M!) / v.k2! > 0.1 && (v.km1! * v.M!) / v.k2! < 10,
+    // Steady state on A*: k_uni = k₁k₂[M]/(k₋₁[M] + k₂).
     reference: [
-      { id: 'kuni', formula: 'lindemann', solveFor: 'kuni', inputs: { k1: 'g.k1', km1: 'g.km1', k2: 'g.k2', M: 'g.M' } },
+      { id: 'kM', label: 'k₋₁[M]', op: 'mul', inputs: ['g.km1', 'g.M'] },
+      { id: 'den', label: 'k₋₁[M] + k₂', op: 'add', inputs: ['n.kM', 'g.k2'] },
+      { id: 'k1M', label: 'k₁[M]', op: 'mul', inputs: ['g.k1', 'g.M'] },
+      { id: 'num', label: 'k₁k₂[M]', op: 'mul', inputs: ['n.k1M', 'g.k2'] },
+      { id: 'kuni', label: 'k_uni', op: 'div', inputs: ['n.num', 'n.den'] },
     ],
     answer: { node: 'kuni', label: 'k_uni', unit: '1/s' },
     misconceptions: [
@@ -119,7 +133,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'For A + M ⇌ A* + M (k₁ = {k1}, k₋₁ = {km1}), A* → P (k₂ = {k2}), calculate the effective first-order rate constant at [M] = {M}.',
     ],
     approachText: 'Lindemann mechanism with k₁, k₋₁, k₂ and [M] known; find the effective unimolecular rate constant.',
-    explanation: 'Steady state on A*: k_uni = k₁k₂[M]/(k₋₁[M] + k₂). It tends to k₁k₂/k₋₁ at high [M] and k₁[M] at low [M].',
+    explanation: 'd[A*]/dt = k₁[A][M] − k₋₁[A*][M] − k₂[A*] = 0, so [A*] = k₁[A][M]/(k₋₁[M] + k₂) and rate = k₂[A*]: k_uni = k₁k₂[M]/(k₋₁[M] + k₂). It tends to k₁k₂/k₋₁ at high [M] and k₁[M] at low [M].',
     reviewed: false,
   },
   {
@@ -138,7 +152,12 @@ export const kineticsTemplates2: CalcTemplate[] = [
       { key: 'Km', label: 'K_M', from: 'p.Km' },
       { key: 'S', label: '[S]', from: 'n.S', sig: 2 },
     ],
-    reference: [{ id: 'v', formula: 'michaelis-menten', solveFor: 'v', inputs: { Vmax: 'g.Vmax', Km: 'g.Km', S: 'g.S' } }],
+    // v = V_max[S]/(K_M + [S]), from steady state on ES (see Mechanisms).
+    reference: [
+      { id: 'VS', label: 'V_max[S]', op: 'mul', inputs: ['g.Vmax', 'g.S'] },
+      { id: 'den', label: 'K_M + [S]', op: 'add', inputs: ['g.Km', 'g.S'] },
+      { id: 'v', label: 'v', op: 'div', inputs: ['n.VS', 'n.den'] },
+    ],
     answer: { node: 'v', label: 'v', unit: 'mol/(dm3 s)' },
     misconceptions: [
       {
@@ -154,7 +173,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'An enzyme has V_max = {Vmax} and K_M = {Km}. What is the initial rate at [S] = {S}?',
       'Find the initial rate of an enzyme-catalysed reaction at [S] = {S}, given K_M = {Km} and V_max = {Vmax}.',
     ],
-    explanation: 'v = V_max[S]/(K_M + [S]). At [S] = K_M the rate is exactly half of V_max.',
+    explanation: 'Steady state on ES, with [E] = [E]₀ − [ES], gives v = k₂[E]₀[S]/(K_M + [S]) = V_max[S]/(K_M + [S]). At [S] = K_M the rate is exactly half of V_max.',
     reviewed: false,
   },
   {

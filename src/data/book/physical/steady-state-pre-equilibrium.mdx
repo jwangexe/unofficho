@@ -5,8 +5,6 @@ section: kinetics
 order: 3
 title: Steady state vs pre-equilibrium
 minutes: 3
-related:
-  formulas: [ssa-consecutive, pre-equilibrium, lindemann]
 quickChecks:
   - id: fast-second-step
     type: mcq
@@ -63,7 +61,7 @@ $$
 \text{rate} = k_2[\mathrm{I}] = \frac{k_1k_2}{k_{-1}+k_2}\,[\mathrm{A}]
 $$
 
-This is the <F id="ssa-consecutive">steady-state result</F>. Notice what it does **not** assume: nothing about which step is faster.
+This is the steady-state result. Notice what it does **not** assume: nothing about which step is faster.
 
 ## The pre-equilibrium approximation
 
@@ -73,7 +71,7 @@ $$
 \text{rate} = k_2K_1[\mathrm{A}] = \frac{k_1k_2}{k_{-1}}[\mathrm{A}]
 $$
 
-This is exactly the steady-state result with $k_2$ dropped from the denominator. The <F id="pre-equilibrium">pre-equilibrium form</F> is a limit, not a rival theory.
+This is exactly the steady-state result with $k_2$ dropped from the denominator. The pre-equilibrium form is a limit, not a rival theory.
 
 The opposite limit, $k_2 \gg k_{-1}$, gives rate $= k_1[\mathrm{A}]$. Almost every I that forms goes on to P, so the first step controls the rate.
 
@@ -87,7 +85,13 @@ Pre-equilibrium needs $k_{-1} \gg k_2$. It does **not** need $k_1 \gg k_2$. A sl
 - With two intermediates, write one steady-state equation for each and solve them together.
 - Check the answer against the limits. Does it collapse to something sensible when one rate constant dominates?
 
-The <F id="lindemann">Lindemann mechanism</F> for unimolecular gas reactions is the same algebra with a collision partner M. That is why its order shifts from first to second as pressure falls.
+The Lindemann mechanism for unimolecular gas reactions is the same algebra with a collision partner M; the next page derives it, and Michaelis–Menten, step by step.
+
+## Try it
+
+Switch the approximations below and watch the derivation and the limiting cases change.
+
+<Mechanism id="mech-consecutive" />
 
 <Callout type="tip">
 Activation energies follow the algebra. If $k_\mathrm{obs} = k_1k_2/k_{-1}$, then $E_{a,\text{obs}} = E_{a,1} + E_{a,2} - E_{a,-1} = \Delta H^\circ_1 + E_{a,2}$. If step 1 is exothermic enough, this can be negative: the reaction slows as it warms.

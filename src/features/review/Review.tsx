@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { reactItems, reagents } from '@/data';
 import { bookPages } from '@/data/book';
+import { MECHANISMS } from '@/data/mechanisms';
 import { ALL_TEMPLATES } from '@/data/templates';
 import { FORMULAS } from '@/engine/formulas';
 import { F, R } from '@/features/book/mdx';
@@ -34,6 +35,7 @@ const KIND_LABEL: Record<ReviewKind, string> = {
   react: 'Will it react?',
   formula: 'Formulas',
   template: 'Questions',
+  mechanism: 'Mechanisms',
 };
 
 const linkCls = 'text-accent underline underline-offset-4';
@@ -53,6 +55,10 @@ function unreviewed(): Row[] {
         view: <Link className={linkCls} to={`/reagents${focusQuery({ ids: [itemId.react(x.id)] })}`}>Try it</Link>,
       })),
     ...FORMULAS.filter((f) => !f.reviewed).map((f) => ({ kind: 'formula' as const, id: f.id, title: f.name, flagId: f.id, todo: f.todoVerify ?? [], view: <F id={f.id}>Open formula</F> })),
+    ...MECHANISMS.filter((m) => !m.reviewed).map((m) => ({
+      kind: 'mechanism' as const, id: m.id, title: m.title, flagId: itemId.mech(m.id), todo: m.todoVerify ?? [],
+      view: <Link className={linkCls} to={`/calc${focusQuery({ ids: [itemId.mech(m.id)] })}`}>Try it</Link>,
+    })),
     ...ALL_TEMPLATES.filter((t) => !t.reviewed).map((t) => ({
       kind: 'template' as const, id: t.id, title: t.title, flagId: itemId.calc(t.id), todo: t.todoVerify ?? [],
       view: <Link className={linkCls} to={`/calc${focusQuery({ ids: [itemId.calc(t.id)] })}`}>Try it</Link>,

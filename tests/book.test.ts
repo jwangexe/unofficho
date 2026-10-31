@@ -5,6 +5,7 @@ import SmilesDrawer from 'smiles-drawer';
 import { describe, expect, it } from 'vitest';
 import { reagentById } from '@/data';
 import { BOOK_OUTLINE, bookPages } from '@/data/book';
+import { mechanismById } from '@/data/mechanisms';
 import { CHAPTERS } from '@/data/schemas';
 import { formulaById } from '@/engine/formulas';
 import { mdxComponents } from '@/features/book/mdx';
@@ -41,6 +42,7 @@ describe('book pages', () => {
       const text = body(p.path);
       for (const id of [...attrs(text, 'R', 'id'), ...attrs(text, 'Scheme', 'reagent')]) expect(reagentById.has(id), `${p.id}: ${id}`).toBe(true);
       for (const id of attrs(text, 'F', 'id')) expect(formulaById.has(id), `${p.id}: ${id}`).toBe(true);
+      for (const id of attrs(text, 'Mechanism', 'id')) expect(mechanismById.has(id), `${p.id}: ${id}`).toBe(true);
     }
   });
 

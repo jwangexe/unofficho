@@ -9,7 +9,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-export const REVIEW_KINDS = ['book', 'reagent', 'react', 'formula', 'template'] as const;
+export const REVIEW_KINDS = ['book', 'reagent', 'react', 'formula', 'template', 'mechanism'] as const;
 export type ReviewKind = (typeof REVIEW_KINDS)[number];
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -40,6 +40,7 @@ const SPECS: Record<ReviewKind, KindSpec> = {
   react: { files: [{ dir: 'src/data', match: /^react-items\.json$/ }], ...json },
   formula: { files: [{ dir: 'src/engine/formulas', match: /\.ts$/ }], ...ts },
   template: { files: [{ dir: 'src/data/templates', match: /\.ts$/ }], ...ts },
+  mechanism: { files: [{ dir: 'src/data', match: /^mechanisms\.ts$/ }], ...ts },
 };
 
 function listFiles(root: string, spec: KindSpec): string[] {

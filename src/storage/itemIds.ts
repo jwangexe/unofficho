@@ -5,6 +5,7 @@ export const itemId = {
   reagent: (id: string) => `reagent:${id}`,
   react: (id: string) => `react:${id}`,
   calc: (templateId: string) => `calc:${templateId}`,
+  mech: (mechanismId: string) => `mech:${mechanismId}`,
   book: (pageId: string, checkId: string) => `book:${pageId}:${checkId}`,
 };
 

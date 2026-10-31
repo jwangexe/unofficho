@@ -2,6 +2,7 @@
 import { reactItems, reagentById } from '@/data';
 import { BOOK_OUTLINE, bookPageById, bookPages } from '@/data/book';
 import { CHAPTERS, type Chapter } from '@/data/schemas';
+import { mechanismById } from '@/data/mechanisms';
 import { calcTemplateById } from '@/data/templates';
 import { formulaById } from '@/engine/formulas';
 import { TOPIC_TAG } from '@/features/calc/topics';
@@ -37,6 +38,8 @@ export function itemName(id: string): string {
     }
     case 'calc':
       return calcTemplateById.get(p.id)?.title ?? p.id;
+    case 'mech':
+      return mechanismById.get(p.id)?.title ?? p.id;
     case 'book': {
       const page = bookPageById.get(p.id);
       const n = page ? page.quickChecks.findIndex((q) => q.id === p.sub) + 1 : 0;
@@ -60,7 +63,7 @@ export function itemHref(id: string): string {
   const p = parseItemId(id);
   if (!p) return '/';
   if (p.kind === 'book') return `/book/${p.id}`;
-  const path = p.kind === 'calc' ? '/calc' : '/reagents';
+  const path = p.kind === 'calc' || p.kind === 'mech' ? '/calc' : '/reagents';
   return `${path}${focusQuery({ ids: [id], label: itemName(id) })}`;
 }
 

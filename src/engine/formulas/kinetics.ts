@@ -231,28 +231,6 @@ export const kinetics = [
   }),
 
   defineFormula({
-    id: 'michaelis-menten',
-    name: 'Michaelis–Menten equation',
-    topic: 'kinetics',
-    latex: 'v = \\dfrac{V_\\mathrm{max}[\\mathrm{S}]}{K_\\mathrm{M} + [\\mathrm{S}]}',
-    vars: [
-      { sym: 'v', label: 'v', latex: 'v', name: 'Initial rate', dim: D.rate, unit: 'mol/(dm3 s)' },
-      { sym: 'Vmax', label: 'V_max', latex: 'V_\\mathrm{max}', name: 'Maximum rate', dim: D.rate, unit: 'mol/(dm3 s)' },
-      conc('S', '[S]', '[\\mathrm{S}]', 'Substrate concentration'),
-      conc('Km', 'K_M', 'K_\\mathrm{M}', 'Michaelis constant'),
-    ],
-    relation: (v) => [v.v!, (v.Vmax! * v.S!) / (v.Km! + v.S!)],
-    rearranged: {
-      v: 'v = \\dfrac{V_\\mathrm{max}[\\mathrm{S}]}{K_\\mathrm{M} + [\\mathrm{S}]}',
-      Vmax: 'V_\\mathrm{max} = v\\,\\dfrac{K_\\mathrm{M} + [\\mathrm{S}]}{[\\mathrm{S}]}',
-      S: '[\\mathrm{S}] = \\dfrac{vK_\\mathrm{M}}{V_\\mathrm{max} - v}',
-      Km: 'K_\\mathrm{M} = [\\mathrm{S}]\\left(\\dfrac{V_\\mathrm{max}}{v} - 1\\right)',
-    },
-    examples: [{ Vmax: 1.0e-4, S: 2.0e-3, Km: 5.0e-3 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
     id: 'radioactive-decay',
     name: 'Radioactive decay',
     topic: 'kinetics',
@@ -272,81 +250,6 @@ export const kinetics = [
     },
     notes: 'N can be number of nuclei, mass or activity, as long as N and N₀ match.',
     examples: [{ N0: 10.0, t: 11460, thalf: 5730 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
-    id: 'ssa-consecutive',
-    name: 'Steady state: A ⇌ I → P',
-    topic: 'kinetics',
-    latex: 'k_\\mathrm{eff} = \\dfrac{k_1k_2}{k_{-1} + k_2}',
-    vars: [
-      firstOrderK('keff', 'k_eff', 'k_\\mathrm{eff}', { name: 'Effective first-order rate constant' }),
-      firstOrderK('k1', 'k₁', 'k_1', { name: 'A → I' }),
-      firstOrderK('km1', 'k₋₁', 'k_{-1}', { name: 'I → A' }),
-      firstOrderK('k2', 'k₂', 'k_2', { name: 'I → P' }),
-    ],
-    relation: (v) => [v.keff!, (v.k1! * v.k2!) / (v.km1! + v.k2!)],
-    rearranged: {
-      keff: 'k_\\mathrm{eff} = \\dfrac{k_1k_2}{k_{-1} + k_2}',
-      k1: 'k_1 = \\dfrac{k_\\mathrm{eff}(k_{-1} + k_2)}{k_2}',
-      km1: 'k_{-1} = \\dfrac{k_1k_2}{k_\\mathrm{eff}} - k_2',
-      k2: 'k_2 = \\dfrac{k_\\mathrm{eff}k_{-1}}{k_1 - k_\\mathrm{eff}}',
-    },
-    notes: 'Steady-state approximation on I (all steps first order). For bimolecular steps, build the expression from multiply/divide operations.',
-    examples: [{ k1: 1.0e-2, km1: 5.0e2, k2: 1.0e2 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
-    id: 'pre-equilibrium',
-    name: 'Pre-equilibrium: A ⇌ I → P',
-    topic: 'kinetics',
-    latex: 'k_\\mathrm{obs} = \\dfrac{k_1}{k_{-1}}\\,k_2 = K_1k_2',
-    vars: [
-      firstOrderK('kobs', 'k_obs', 'k_\\mathrm{obs}', { name: 'Observed rate constant' }),
-      firstOrderK('k1', 'k₁', 'k_1', { name: 'A → I' }),
-      firstOrderK('km1', 'k₋₁', 'k_{-1}', { name: 'I → A' }),
-      firstOrderK('k2', 'k₂', 'k_2', { name: 'I → P' }),
-    ],
-    relation: (v) => [v.kobs!, (v.k1! * v.k2!) / v.km1!],
-    rearranged: {
-      kobs: 'k_\\mathrm{obs} = \\dfrac{k_1k_2}{k_{-1}}',
-      k1: 'k_1 = \\dfrac{k_\\mathrm{obs}k_{-1}}{k_2}',
-      km1: 'k_{-1} = \\dfrac{k_1k_2}{k_\\mathrm{obs}}',
-      k2: 'k_2 = \\dfrac{k_\\mathrm{obs}k_{-1}}{k_1}',
-    },
-    notes: 'Valid when k₋₁ ≫ k₂, so A and I stay at equilibrium. It is the k₋₁ ≫ k₂ limit of the steady-state result.',
-    warnings: (v) =>
-      v.k2! > 0.1 * v.km1!
-        ? ['k₂ is not much smaller than k₋₁: the pre-equilibrium approximation is doubtful here; use the steady-state result']
-        : [],
-    examples: [{ k1: 1.0e3, km1: 1.0e5, k2: 50 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
-    id: 'lindemann',
-    name: 'Lindemann–Hinshelwood mechanism',
-    topic: 'kinetics',
-    latex: 'k_\\mathrm{uni} = \\dfrac{k_1k_2[\\mathrm{M}]}{k_{-1}[\\mathrm{M}] + k_2}',
-    vars: [
-      firstOrderK('kuni', 'k_uni', 'k_\\mathrm{uni}', { name: 'Effective unimolecular rate constant' }),
-      { ...k2, sym: 'k1', label: 'k₁', latex: 'k_1', name: 'Activation by collision' },
-      { ...k2, sym: 'km1', label: 'k₋₁', latex: 'k_{-1}', name: 'Deactivation by collision' },
-      firstOrderK('k2', 'k₂', 'k_2', { name: 'Reaction of A*' }),
-      conc('M', '[M]', '[\\mathrm{M}]', 'Collision partner concentration'),
-    ],
-    relation: (v) => [v.kuni!, (v.k1! * v.k2! * v.M!) / (v.km1! * v.M! + v.k2!)],
-    rearranged: {
-      kuni: 'k_\\mathrm{uni} = \\dfrac{k_1k_2[\\mathrm{M}]}{k_{-1}[\\mathrm{M}] + k_2}',
-      k1: 'k_1 = \\dfrac{k_\\mathrm{uni}(k_{-1}[\\mathrm{M}] + k_2)}{k_2[\\mathrm{M}]}',
-      km1: 'k_{-1} = \\dfrac{k_1k_2}{k_\\mathrm{uni}} - \\dfrac{k_2}{[\\mathrm{M}]}',
-      k2: 'k_2 = \\dfrac{k_\\mathrm{uni}k_{-1}[\\mathrm{M}]}{k_1[\\mathrm{M}] - k_\\mathrm{uni}}',
-      M: '[\\mathrm{M}] = \\dfrac{k_\\mathrm{uni}k_2}{k_1k_2 - k_\\mathrm{uni}k_{-1}}',
-    },
-    notes: 'Steady state on the energised molecule A*. High-pressure limit: k₁k₂/k₋₁; low-pressure limit: k₁[M].',
-    examples: [{ k1: 2.0e6, km1: 1.0e9, k2: 5.0e6, M: 1.0e-3 }],
     reviewed: false,
   }),
 ];

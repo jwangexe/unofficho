@@ -6,13 +6,17 @@
  *   <Callout type="trap">…</Callout>        type: trap | tip | note
  *   <R id="dibal-h" />  or  <R id="dibal-h">DIBAL</R>   (opens the reagent card)
  *   <F id="nernst" />                                    (opens the formula)
+ *   <Mechanism id="mech-lindemann" />                    (interactive steady-state derivation)
  *
  * Maths is ordinary Markdown: $…$ inline, $$…$$ on its own lines (KaTeX at build time).
  */
 import type { MDXComponents } from 'mdx/types';
 import { useState, type ReactNode } from 'react';
 import { reagentById } from '@/data';
+import { mechanismById } from '@/data/mechanisms';
 import { formulaById } from '@/engine/formulas';
+import { MechanismExplorer } from '@/features/mechanisms/MechanismExplorer';
+import { MechanismScheme } from '@/features/mechanisms/MechanismScheme';
 import { ReagentExplanation } from '@/features/reagents/Explanation';
 import { ReagentIdentity } from '@/features/reagents/ReagentHeader';
 import { Sheet } from '@/ui/Sheet';
@@ -152,6 +156,19 @@ export function FormulaCard({ id }: { id: string }) {
   );
 }
 
+/** A mechanism with the steady-state / pre-equilibrium derivation tool under it. */
+export function Mechanism({ id }: { id: string }) {
+  const mech = mechanismById.get(id);
+  if (!mech) return <span className="text-bad">[unknown mechanism {id}]</span>;
+  return (
+    <figure className="my-4 space-y-3 rounded-xl bg-surface p-3" aria-label={`Derivation tool: ${mech.title}`}>
+      <figcaption className="text-sm font-semibold">{mech.title}</figcaption>
+      <MechanismScheme mech={mech} />
+      <MechanismExplorer mech={mech} />
+    </figure>
+  );
+}
+
 /** Plain Markdown elements, styled for a phone-width reading column. */
 export const mdxComponents: MDXComponents = {
   h2: (p) => <h2 className="mt-6 mb-2 text-lg font-semibold" {...p} />,
@@ -173,4 +190,5 @@ export const mdxComponents: MDXComponents = {
   Scheme,
   R,
   F,
+  Mechanism,
 };

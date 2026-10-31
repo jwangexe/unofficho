@@ -11,6 +11,7 @@ All content is data, kept apart from the UI. You can add a page, reagent, formul
 | Formulas | `src/engine/formulas/*.ts` | TS | add to a topic file's array; a new file must also be listed in `formulas/index.ts` |
 | Questions (feed) | `src/data/templates/*.ts` | TS | add to a topic file's array; a new file must also be spread into `CALC_TEMPLATES` in `templates/index.ts` |
 | Multi-step problems | `src/data/templates/problems.ts` | TS | automatically (exported list) |
+| Mechanisms (steady-state derivations) | `src/data/mechanisms.ts` | TS | automatically (exported list) |
 
 Formulas and questions are TypeScript because they contain functions (residuals, constraints). Everything else is plain data.
 
@@ -303,11 +304,51 @@ A multi-step problem is the same type, a question template, written by hand at o
 },
 ```
 
+## Mechanism
+
+A mechanism is a list of elementary steps. The app derives its rate law itself for any choice of approximations: which intermediates are in steady state, and which reversible steps are fast pre-equilibria. Mechanisms appear in **Calculations → Mechanisms** and wherever a Book page includes `<Mechanism id="…" />`. Steady-state results are deliberately **not** stored as formulas: students derive them.
+
+| Field | Notes |
+| --- | --- |
+| `species` | species name → TeX body, in display order (`'A*': 'A^*'`, `'R': 'R^\\bullet'`) |
+| `steps` | `{ eq, k, back? }`: `eq` is `"A + M -> A* + M"`; write a coefficient with a space, as in `"2 NO -> N2O2"`. `k` and `back` are rate-constant symbols: `k1` shows as $k_1$, `km1` as $k_{-1}$, `kd` as $k_\mathrm{d}$ |
+| `intermediates` | species that may be put in steady state |
+| `rate` | the rate asked for: `{ species }` gives d[X]/dt; add `sign: -1` for a reactant (−d[X]/dt) |
+| `conserve` | a mass balance for a catalyst: `{ total: 'E0', tex: '[\\mathrm{E}]_0', free: 'E', species: ['E', 'ES'] }` |
+| `challenges` | the approximations practice cards ask about: `{ ss: ['ES'], pe: [] }` or `{ ss: [], pe: [0] }` (step indices) |
+| `blurb`, `explanation` | text; `explanation` may use inline `$…$` |
+
+Rates follow mass action, so every step must be elementary. The solver handles:
+
+- intermediates whose steady-state equations are linear in them, solved together by Cramer's rule
+- a single intermediate with a power, such as $[\mathrm{R^\bullet}]^2$ in termination or $[\mathrm{I}]^2$ in H₂ + I₂
+
+Choices it cannot solve in closed form say so instead of giving a wrong answer. The tests check each mechanism against its textbook rate law and integrate one numerically.
+
+```ts
+{
+  id: 'mech-lindemann',
+  title: 'Lindemann–Hinshelwood (unimolecular gas reaction)',
+  topic: 'kinetics',
+  blurb: 'Collisions with any gas molecule M energise A to A*, which either reacts or is deactivated.',
+  species: { A: 'A', M: 'M', 'A*': 'A^*', P: 'P' },
+  steps: [
+    { eq: 'A + M -> A* + M', k: 'k1', back: 'km1' },
+    { eq: 'A* -> P', k: 'k2' },
+  ],
+  intermediates: ['A*'],
+  rate: { species: 'P' },
+  challenges: [{ ss: ['A*'], pe: [] }, { ss: [], pe: [0] }],
+  explanation: 'Steady state on A* gives …',
+  reviewed: false,
+},
+```
+
 ---
 
 ## Progress data
 
-Progress lives only on the device, in IndexedDB, and can be exported and imported as JSON from the Progress screen. Every answer is stored against a namespaced item id: `calc:<template>`, `reagent:<id>`, `react:<id>` or `book:<page>:<check>`. Each answer also updates that item's SM-2 review schedule:
+Progress lives only on the device, in IndexedDB, and can be exported and imported as JSON from the Progress screen. Every answer is stored against a namespaced item id: `calc:<template>`, `mech:<mechanism>`, `reagent:<id>`, `react:<id>` or `book:<page>:<check>`. Each answer also updates that item's SM-2 review schedule:
 
 - intervals of 1 day, then 6 days, then interval × ease
 - a score below 50% resets the item and brings it back 10 minutes later

@@ -1,4 +1,5 @@
 import type { Reagent } from '@/data/schemas';
+import type { Section } from '@/storage/db';
 import { FlagButton } from '@/ui/FlagButton';
 import { Structure } from '@/ui/Structure';
 
@@ -9,7 +10,19 @@ export const topicLabel = (t: string) =>
     .map((x, i) => (i === 0 ? x[0]!.toUpperCase() + x.slice(1) : x))
     .join(' · ');
 
-export function CardTop({ topic, reviewed, itemId, context }: { topic: string; reviewed: boolean; itemId: string; context?: string }) {
+export function CardTop({
+  topic,
+  reviewed,
+  itemId,
+  context,
+  section = 'reagents',
+}: {
+  topic: string;
+  reviewed: boolean;
+  itemId: string;
+  context?: string;
+  section?: Section;
+}) {
   return (
     <header className="flex items-center gap-2 px-4 pt-2">
       <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-muted">{topicLabel(topic)}</span>
@@ -19,7 +32,7 @@ export function CardTop({ topic, reviewed, itemId, context }: { topic: string; r
         </span>
       )}
       <span className="flex-1" />
-      <FlagButton itemId={itemId} section="reagents" context={context} />
+      <FlagButton itemId={itemId} section={section} context={context} />
     </header>
   );
 }

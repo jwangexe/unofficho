@@ -52,6 +52,23 @@ test('a book page renders maths and structures, and its quick check responds', a
   await expect(page.locator('article .katex-display').first()).toBeVisible();
 });
 
+test('Mechanisms mode: pick a rate law, then switch approximations in the derivation', async ({ page }) => {
+  await page.goto('/calc?ids=mech%3Amech-lindemann');
+  const card = page.getByRole('region', { name: 'Mechanism 1' });
+  await expect(card.getByRole('heading', { name: /Lindemann/ })).toBeVisible();
+  await card.getByRole('group', { name: 'Rate laws' }).getByRole('button').first().click();
+  await expect(card.getByRole('status')).toContainText(/Correct|Not quite/);
+  await expect(card.getByRole('region', { name: 'Derivation' }).getByText('Rate law', { exact: true })).toBeVisible();
+
+  // The Book's tool starts from steady state on A*; switching to a pre-equilibrium takes A* over.
+  await page.goto('/book/deriving-rate-laws');
+  const tool = page.getByRole('figure', { name: /Lindemann/ });
+  await expect(tool.getByText('Steady state on')).toBeVisible();
+  await tool.getByRole('button', { name: 'Step 1', exact: true }).click();
+  await expect(tool.getByText('Fast pre-equilibrium in step 1')).toBeVisible();
+  await expect(tool.getByRole('button', { name: '[A*]' })).toBeDisabled();
+});
+
 test('installable PWA that works offline after the first visit', async ({ page, context }) => {
   await page.goto('/');
   const manifest = await page.evaluate(async () => {
