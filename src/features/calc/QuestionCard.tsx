@@ -124,6 +124,7 @@ export function QuestionCard({
             type="button"
             onClick={() => reveal(inst.key)}
             disabled={card.revealed}
+            data-tour="explain"
             className="min-h-11 px-2 text-sm text-muted disabled:opacity-50"
           >
             Explain
@@ -133,14 +134,16 @@ export function QuestionCard({
       </header>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
-        <p className="text-[17px] leading-relaxed">{inst.text}</p>
+        <p className="text-[17px] leading-relaxed" data-tour="question">
+          {inst.text}
+        </p>
         <p className="text-sm text-muted">
           Find <span className="font-semibold text-text">{t.answer.label}</span>
           {getUnit(t.answer.unit).symbol && <> ({getUnit(t.answer.unit).symbol})</>}.{' '}
           {exam ? 'Exam mode: units are not converted for you.' : 'Tap a chip to select it, or start an operation.'}
         </p>
 
-        <div className="flex flex-wrap gap-2" aria-label="Given quantities">
+        <div className="flex flex-wrap gap-2" aria-label="Given quantities" data-tour="givens">
           {card.chips
             .filter((c) => c.source === 'given')
             .map((c) => (
@@ -184,7 +187,7 @@ export function QuestionCard({
         <p className="pt-4 text-center text-xs leading-snug text-muted">{DISCLAIMER}</p>
       </div>
 
-      <div className="flex gap-2 border-t border-border bg-bg px-4 py-2">
+      <div className="flex gap-2 border-t border-border bg-bg px-4 py-2" data-tour="actions">
         {card.result ? (
           <>
             {!card.result.correct && (

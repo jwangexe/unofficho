@@ -173,12 +173,13 @@ export function MechanismDerive({
   return (
     <div className="space-y-4">
       {/* 1. Equations */}
-      <section aria-label="Write the equations" className="space-y-3">
+      <section aria-label="Write the equations" className="space-y-3" data-tour="equations">
         <h3 className="font-semibold">1. Write the equations</h3>
         {targets.map((t) => {
           const coeffs = st.coeffs[t.species]!;
           const issues = st.issues[t.species] ?? [];
-          const built = signed(coeffs.map((c, i) => ({ c, tex: terms[i]!.tex })));
+          // An empty equation shows a box, not "0 = 0".
+          const built = coeffs.some((c) => c !== 0) ? signed(coeffs.map((c, i) => ({ c, tex: terms[i]!.tex }))) : '\\square';
           return (
             <div key={t.species} className="rounded-xl bg-surface-2 p-3">
               <p className="text-sm">

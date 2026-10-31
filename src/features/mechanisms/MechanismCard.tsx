@@ -94,10 +94,10 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
           <h2 className="text-lg leading-snug font-semibold">{mech.title}</h2>
           <p className="text-sm text-muted">{mech.blurb}</p>
         </div>
-        <div className="rounded-2xl bg-surface p-3">
+        <div className="rounded-2xl bg-surface p-3" data-tour="scheme">
           <MechanismScheme mech={mech} />
         </div>
-        <div className="grid grid-cols-2 gap-1 rounded-xl bg-surface-2 p-1" role="group" aria-label="How to answer">
+        <div className="grid grid-cols-2 gap-1 rounded-xl bg-surface-2 p-1" role="group" aria-label="How to answer" data-tour="style">
           {(['derive', 'pick'] as const).map((s) => (
             <button
               key={s}

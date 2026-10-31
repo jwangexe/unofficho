@@ -12,6 +12,8 @@ import { QuestionCard } from './QuestionCard';
 import { useCalcStore } from './store';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
 import { useSavedMode } from '../useSavedMode';
+import { markTutorialSeen, Tutorial, tutorialSeen } from '@/ui/Tutorial';
+import { CALC_TOUR, MECHANISMS_TOUR } from './tours';
 
 type Mode = 'feed' | 'approach' | 'multi' | 'exam' | 'mechanisms';
 
@@ -155,6 +157,16 @@ export default function CalcHome() {
   );
   const count = mode === 'mechanisms' ? mechPool.length : (pool?.length ?? 0);
 
+  // First visit: Rad's tour of Calculations, and separately of Mechanisms. "?" replays it.
+  const tourId = mode === 'mechanisms' ? 'mechanisms' : 'calc';
+  const [tour, setTour] = useState<'calc' | 'mechanisms' | null>(null);
+  useEffect(() => {
+    if (tutorialSeen(tourId)) return;
+    // Let the first card render, so the tour can point at it.
+    const t = setTimeout(() => setTour(tourId), 450);
+    return () => clearTimeout(t);
+  }, [tourId]);
+
   // Five modes overflow a phone's width: keep the active one in view.
   const nav = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -164,7 +176,8 @@ export default function CalcHome() {
 
   return (
     <div className="flex h-full flex-col">
-      <nav ref={nav} aria-label="Calculation modes" className="mx-auto flex w-full max-w-xl gap-1 overflow-x-auto px-4 pt-2">
+      <div className="mx-auto flex w-full max-w-xl items-center gap-1 px-4 pt-2" data-tour="modes">
+      <nav ref={nav} aria-label="Calculation modes" className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
         {MODES.map((m) => (
           <button
             key={m.id}
@@ -177,6 +190,25 @@ export default function CalcHome() {
           </button>
         ))}
       </nav>
+        <button
+          type="button"
+          onClick={() => setTour(tourId)}
+          aria-label={mode === 'mechanisms' ? 'How Mechanisms works' : 'How Calculations works'}
+          className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-sm font-semibold text-muted"
+        >
+          ?
+        </button>
+      </div>
+      {tour && (
+        <Tutorial
+          steps={tour === 'mechanisms' ? MECHANISMS_TOUR : CALC_TOUR}
+          label={tour === 'mechanisms' ? 'Mechanisms tutorial' : 'Calculations tutorial'}
+          onClose={() => {
+            markTutorialSeen(tour);
+            setTour(null);
+          }}
+        />
+      )}
       {focus && ready && <FocusBanner focus={focus} count={count} onClear={clearFocus} />}
       <div className="min-h-0 flex-1">
         {!ready ? null : count === 0 ? (

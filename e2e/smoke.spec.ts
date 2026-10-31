@@ -4,6 +4,14 @@ import { expect, test, type Page } from '@playwright/test';
 const DISCLAIMER =
   'An unofficial, independent study resource. Not affiliated with or endorsed by the International Chemistry Olympiad or its organisers.';
 
+// Rad's first-visit tours would cover the screen; tests that want them clear these flags.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('unofficho.tutorial.calc', '1');
+    localStorage.setItem('unofficho.tutorial.mechanisms', '1');
+  });
+});
+
 const tab = (page: Page, name: string) => page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name });
 
 test('tab bar reaches every section, and About shows the disclaimer', async ({ page }) => {
@@ -29,6 +37,30 @@ test('homepage buttons open the right feature and mode', async ({ page }) => {
   await page.getByRole('link', { name: 'UnoffIChO' }).click();
   await page.getByRole('link', { name: 'Will it react?' }).click();
   await expect(page.getByRole('navigation', { name: 'Reagent modes' }).getByRole('button', { name: 'Will it react?' })).toHaveAttribute('aria-current', 'page');
+});
+
+test('Rad’s Calculations tour shows once, spotlights the card, and can be replayed', async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('tour-test')) {
+      sessionStorage.setItem('tour-test', '1');
+      localStorage.removeItem('unofficho.tutorial.calc');
+    }
+  });
+  await page.goto('/calc');
+  const tour = page.getByRole('dialog', { name: 'Calculations tutorial' });
+  await expect(tour).toBeVisible();
+  await expect(tour.getByRole('img', { name: /Rad/ })).toBeVisible();
+  await expect(tour.getByRole('heading', { name: 'Hi, I’m Rad' })).toBeVisible();
+  await tour.getByRole('button', { name: 'Next' }).click();
+  await expect(tour.getByRole('heading', { name: 'Read the question' })).toBeVisible();
+  await tour.getByRole('button', { name: 'Skip' }).click();
+  await expect(tour).toBeHidden();
+
+  await page.reload();
+  await expect(page.getByRole('region', { name: 'Question 1' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByRole('button', { name: 'How Calculations works' }).click();
+  await expect(page.getByRole('dialog', { name: 'Calculations tutorial' })).toBeVisible();
 });
 
 test('a calculation card shows labelled chips and the keyboard moves the feed', async ({ page }) => {
