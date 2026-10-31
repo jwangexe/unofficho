@@ -1,6 +1,8 @@
-import { useCallback, useRef, useState } from 'react';
-import { ALL_TEMPLATES, CALC_TEMPLATES, calcTemplateById, PROBLEMS } from '@/data/templates';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { ALL_TEMPLATES, CALC_TEMPLATES, calcTemplateById, PROBLEMS, templateFormulas } from '@/data/templates';
 import { instantiate, type CalcInstance, type CalcTemplate } from '@/engine/template';
+import { itemId } from '@/storage/progress';
+import { EmptyFocus, FocusBanner, useDueIds, useFocus, type Focus } from '../focus';
 import { Feed, type FeedHandle } from '@/ui/Feed';
 import { ApproachCard } from './ApproachCard';
 import { QuestionCard } from './QuestionCard';
@@ -17,6 +19,21 @@ const MODES: { id: Mode; label: string; pool: readonly CalcTemplate[] }[] = [
 ];
 
 const MODE_KEY = 'unofficho.calcMode';
+
+/**
+ * Templates matching a focus within a mode. A focused feed draws from every template,
+ * multi-step problems included, since a weak spot may be one.
+ */
+function focusPool(mode: Mode, focus: Focus, due: Set<string> | null): CalcTemplate[] {
+  const base = mode === 'feed' ? ALL_TEMPLATES : MODES.find((m) => m.id === mode)!.pool;
+  return base.filter(
+    (t) =>
+      (!focus.topic || t.topic === focus.topic) &&
+      (!focus.formula || templateFormulas(t).includes(focus.formula)) &&
+      (!focus.ids || focus.ids.includes(itemId.calc(t.id))) &&
+      (!focus.due || !!due?.has(itemId.calc(t.id))),
+  );
+}
 
 const randomSeed = () => {
   try {
@@ -42,8 +59,7 @@ function generate(pool: readonly CalcTemplate[], n: number, lastTemplate?: strin
   return out;
 }
 
-function ModeFeed({ mode }: { mode: Mode }) {
-  const pool = MODES.find((m) => m.id === mode)!.pool;
+function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] }) {
   const [items, setItems] = useState<CalcInstance[]>(() => generate(pool, 5));
   const [locked, setLocked] = useState(false);
   const [index, setIndex] = useState(0);
@@ -102,6 +118,13 @@ export default function CalcHome() {
     }
   };
 
+  const [focus, clearFocus] = useFocus();
+  const due = useDueIds('calc', !!focus?.due);
+  const pool = useMemo(
+    () => (focus ? (focus.due && !due ? null : focusPool(mode, focus, due)) : MODES.find((m) => m.id === mode)!.pool),
+    [focus, due, mode],
+  );
+
   return (
     <div className="flex h-full flex-col">
       <nav aria-label="Calculation modes" className="mx-auto flex w-full max-w-xl gap-1 overflow-x-auto px-4 pt-2">
@@ -117,8 +140,16 @@ export default function CalcHome() {
           </button>
         ))}
       </nav>
+      {focus && pool && <FocusBanner focus={focus} count={pool.length} onClear={clearFocus} />}
       <div className="min-h-0 flex-1">
-        <ModeFeed key={mode} mode={mode} />
+        {!pool ? null : pool.length === 0 ? (
+          <EmptyFocus
+            message={focus?.due ? 'Nothing is due for review in Calculations today.' : 'No questions in this mode match the focus. Try another mode.'}
+            onClear={clearFocus}
+          />
+        ) : (
+          <ModeFeed key={`${mode}|${pool.map((t) => t.id).join(',')}`} mode={mode} pool={pool} />
+        )}
       </div>
     </div>
   );

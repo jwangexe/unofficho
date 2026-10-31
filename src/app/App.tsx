@@ -7,8 +7,9 @@ const ReagentsHome = lazy(() => import('@/features/reagents/ReagentsHome'));
 const CalcHome = lazy(() => import('@/features/calc/CalcHome'));
 const ProgressHome = lazy(() => import('@/features/progress/ProgressHome'));
 const About = lazy(() => import('@/features/about/About'));
-// Dev-only route; the ternary lets the production build drop the chunk entirely.
+// Dev-only routes; the ternary lets the production build drop the chunk entirely.
 const Debug = import.meta.env.DEV ? lazy(() => import('@/features/debug/Debug')) : null;
+const Review = import.meta.env.DEV ? lazy(() => import('@/features/review/Review')) : null;
 
 export function App() {
   return (
@@ -22,6 +23,7 @@ export function App() {
           <Route path="progress" element={<ProgressHome />} />
           <Route path="about" element={<About />} />
           {Debug && <Route path="debug" element={<Debug />} />}
+          {Review && <Route path="review" element={<Review />} />}
           <Route path="*" element={<Navigate to="/calc" replace />} />
         </Route>
       </Routes>

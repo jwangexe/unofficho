@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie';
+import { normaliseAttemptId } from './itemIds';
 
 export type Section = 'book' | 'reagents' | 'calc';
 
@@ -56,6 +57,17 @@ export class UnoffIChODB extends Dexie {
       flags: '++id, itemId, createdAt',
       settings: 'key',
     });
+    // v2: namespaced item ids ("calc:…", "reagent:…") so attempts and SRS state line up.
+    this.version(2)
+      .stores({})
+      .upgrade((tx) =>
+        tx
+          .table<Attempt, number>('attempts')
+          .toCollection()
+          .modify((a) => {
+            a.itemId = normaliseAttemptId(a).itemId;
+          }),
+      );
   }
 }
 

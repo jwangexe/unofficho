@@ -1,3 +1,4 @@
+import { isFormulaNode } from '@/engine/graph';
 import type { CalcTemplate } from '@/engine/template';
 import { electroTemplates } from './electro';
 import { equilibriumTemplates } from './equilibrium';
@@ -22,3 +23,6 @@ export const PROBLEMS: readonly CalcTemplate[] = problems;
 
 export const ALL_TEMPLATES: readonly CalcTemplate[] = [...CALC_TEMPLATES, ...PROBLEMS];
 export const calcTemplateById = new Map(ALL_TEMPLATES.map((t) => [t.id, t]));
+
+/** Formula ids used by a template's reference solution. */
+export const templateFormulas = (t: CalcTemplate) => [...new Set(t.reference.filter(isFormulaNode).map((n) => n.formula))];

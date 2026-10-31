@@ -10,6 +10,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeKatex from 'rehype-katex';
+import { reviewPlugin } from './scripts/review.ts';
 
 export default defineConfig({
   resolve: {
@@ -25,6 +26,8 @@ export default defineConfig({
       }),
     },
     react({ include: /\.(mdx|[jt]sx?)$/ }),
+    // Dev only: lets the /review page mark content reviewed in its source file.
+    reviewPlugin(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',

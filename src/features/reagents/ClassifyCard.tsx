@@ -1,5 +1,5 @@
 import { ROLE_LABELS, ROLES, type Reagent, type Role } from '@/data/schemas';
-import { db } from '@/storage/db';
+import { itemId, recordAttempt as record } from '@/storage/progress';
 import { CardDisclaimer } from '@/ui/Footer';
 import { ReagentExplanation } from './Explanation';
 import { CardTop, ReagentIdentity } from './ReagentHeader';
@@ -7,7 +7,7 @@ import { scoreClassification, scoreFast } from './scoring';
 import { emptyCard, useReagentStore } from './store';
 
 const recordAttempt = (r: Reagent, score: number, mode: string, meta: Record<string, unknown>) =>
-  void db.attempts.add({ itemId: r.id, section: 'reagents', topic: r.topic, ts: Date.now(), score, mode, meta });
+  void record({ itemId: itemId.reagent(r.id), section: 'reagents', topic: r.topic, score, mode, meta });
 
 /** Multi-select classification: tap categories, then Check. */
 export function ClassifyCard({ cardKey, r, onNext }: { cardKey: string; r: Reagent; onNext: () => void }) {
@@ -67,7 +67,7 @@ export function ClassifyCard({ cardKey, r, onNext }: { cardKey: string; r: Reage
 
   return (
     <article className="mx-auto flex h-full max-w-xl flex-col" aria-label={`Classify ${r.name}`}>
-      <CardTop topic={r.topic} reviewed={r.reviewed} itemId={r.id} context="classify" />
+      <CardTop topic={r.topic} reviewed={r.reviewed} itemId={itemId.reagent(r.id)} context="classify" />
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
         <ReagentIdentity r={r} />
         {result && (
@@ -115,7 +115,7 @@ export function FastCard({ cardKey, r, onNext }: { cardKey: string; r: Reagent; 
 
   return (
     <article className="mx-auto flex h-full max-w-xl flex-col" aria-label={`Main role of ${r.name}`}>
-      <CardTop topic={r.topic} reviewed={r.reviewed} itemId={r.id} context="fast" />
+      <CardTop topic={r.topic} reviewed={r.reviewed} itemId={itemId.reagent(r.id)} context="fast" />
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
         <ReagentIdentity r={r} compact />
         {verdict && (

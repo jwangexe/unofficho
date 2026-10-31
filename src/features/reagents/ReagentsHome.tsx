@@ -1,7 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { reactItems, reagents } from '@/data';
 import type { ReactItem, Reagent } from '@/data/schemas';
+import { itemId } from '@/storage/progress';
 import { Feed, type FeedHandle } from '@/ui/Feed';
+import { EmptyFocus, FocusBanner, useDueIds, useFocus, type Focus } from '../focus';
 import { ClassifyCard, FastCard } from './ClassifyCard';
 import { ReactCard } from './ReactCard';
 
@@ -24,20 +26,39 @@ function shuffle<T>(xs: readonly T[]): T[] {
   return a;
 }
 
-let counter = 0;
-/** One shuffled pass through the deck; the feed appends another pass when it runs low. */
-function deal(mode: Mode): Item[] {
-  return mode === 'react'
-    ? shuffle(reactItems).map((react) => ({ key: `${react.id}#${counter++}`, react }))
-    : shuffle(reagents).map((reagent) => ({ key: `${reagent.id}#${counter++}`, reagent }));
+interface Deck {
+  reagents: readonly Reagent[];
+  reactItems: readonly ReactItem[];
 }
 
-function ModeFeed({ mode }: { mode: Mode }) {
-  const [items, setItems] = useState<Item[]>(() => deal(mode));
+const FULL_DECK: Deck = { reagents, reactItems };
+
+/** The part of the deck a focus selects; due ids come from the SRS store. */
+function focusDeck(focus: Focus, due: Set<string> | null): Deck {
+  const keep = (id: string, topic: string) =>
+    (!focus.topic || topic === focus.topic) && (!focus.ids || focus.ids.includes(id)) && (!focus.due || !!due?.has(id));
+  return {
+    reagents: reagents.filter((r) => keep(itemId.reagent(r.id), r.topic)),
+    reactItems: reactItems.filter((x) => keep(itemId.react(x.id), x.topic)),
+  };
+}
+
+const deckSize = (deck: Deck, mode: Mode) => (mode === 'react' ? deck.reactItems.length : deck.reagents.length);
+
+let counter = 0;
+/** One shuffled pass through the deck; the feed appends another pass when it runs low. */
+function deal(mode: Mode, deck: Deck): Item[] {
+  return mode === 'react'
+    ? shuffle(deck.reactItems).map((react) => ({ key: `${react.id}#${counter++}`, react }))
+    : shuffle(deck.reagents).map((reagent) => ({ key: `${reagent.id}#${counter++}`, reagent }));
+}
+
+function ModeFeed({ mode, deck }: { mode: Mode; deck: Deck }) {
+  const [items, setItems] = useState<Item[]>(() => deal(mode, deck));
   const feed = useRef<FeedHandle>(null);
   const onIndexChange = useCallback(
-    (i: number) => setItems((cur) => (i >= cur.length - 3 ? [...cur, ...deal(mode)] : cur)),
-    [mode],
+    (i: number) => setItems((cur) => (i >= cur.length - 3 ? [...cur, ...deal(mode, deck)] : cur)),
+    [mode, deck],
   );
   return (
     <Feed
@@ -68,7 +89,19 @@ function readMode(): Mode {
 }
 
 export default function ReagentsHome() {
-  const [mode, setMode] = useState<Mode>(readMode);
+  const [chosen, setMode] = useState<Mode>(readMode);
+  const [focus, clearFocus] = useFocus();
+  const due = useDueIds('reagents', !!focus?.due);
+  const deck = useMemo(() => (focus ? (focus.due && !due ? null : focusDeck(focus, due)) : FULL_DECK), [focus, due]);
+  // A focus on "Will it react?" items alone opens that mode (and vice versa) without changing the saved choice.
+  const mode: Mode =
+    deck && deckSize(deck, chosen) === 0 && focus
+      ? chosen === 'react'
+        ? 'classify'
+        : deck.reactItems.length
+          ? 'react'
+          : chosen
+      : chosen;
   const pick = (m: Mode) => {
     setMode(m);
     try {
@@ -92,8 +125,16 @@ export default function ReagentsHome() {
           </button>
         ))}
       </nav>
+      {focus && deck && <FocusBanner focus={focus} count={deck.reagents.length + deck.reactItems.length} onClear={clearFocus} />}
       <div className="min-h-0 flex-1">
-        <ModeFeed key={mode} mode={mode} />
+        {!deck ? null : deckSize(deck, mode) === 0 ? (
+          <EmptyFocus
+            message={focus?.due ? 'Nothing is due for review in Reagents today.' : 'Nothing in this mode matches the focus.'}
+            onClear={clearFocus}
+          />
+        ) : (
+          <ModeFeed key={`${mode}|${focus ? JSON.stringify(focus) : ''}|${due?.size ?? ''}`} mode={mode} deck={deck} />
+        )}
       </div>
     </div>
   );

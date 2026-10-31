@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { create } from 'zustand';
 import { buildOptions, describeNode, judgeChoice, resolveChoice, type ApproachOption, type ChoiceVerdict } from '@/engine/approach';
 import { rng, type CalcInstance, type CalcTemplate } from '@/engine/template';
-import { db } from '@/storage/db';
+import { itemId, recordAttempt } from '@/storage/progress';
 import { FlagButton } from '@/ui/FlagButton';
 import { Tex } from '@/ui/Tex';
 import { TOPIC_TAG } from './topics';
@@ -59,11 +59,10 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
     };
     if (next.done.length === total && !state.recorded) {
       next.recorded = true;
-      void db.attempts.add({
-        itemId: t.id,
+      void recordAttempt({
+        itemId: itemId.calc(t.id),
         section: 'calc',
         topic: t.topic,
-        ts: Date.now(),
         score: next.firstTry / total,
         mode: 'approach',
         meta: { seed: inst.seed, steps: total, firstTry: next.firstTry },
@@ -82,7 +81,7 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
           Step {Math.min(state.done.length + 1, total)} of {total}
         </span>
         <span className="flex-1" />
-        <FlagButton itemId={t.id} section="calc" context="approach mode" />
+        <FlagButton itemId={itemId.calc(t.id)} section="calc" context="approach mode" />
       </header>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">

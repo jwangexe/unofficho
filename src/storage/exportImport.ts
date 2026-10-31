@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { db as defaultDb, type UnoffIChODB } from './db';
+import { normaliseAttemptId } from './itemIds';
 
 export const EXPORT_FORMAT = 'unofficho-progress';
 export const EXPORT_VERSION = 1;
@@ -85,7 +86,7 @@ export async function importAll(
   if (!parsed.success) {
     throw new Error(`Not a valid UnoffIChO progress file:\n${z.prettifyError(parsed.error)}`);
   }
-  const { data } = parsed.data;
+  const data = { ...parsed.data.data, attempts: parsed.data.data.attempts.map(normaliseAttemptId) };
 
   return db.transaction('rw', [db.srs, db.attempts, db.flags, db.settings], async () => {
     if (mode === 'replace') {

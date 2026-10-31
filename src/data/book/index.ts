@@ -6,6 +6,7 @@
 import type { MDXContent } from 'mdx/types';
 import { z } from 'zod';
 import { formulaById } from '@/engine/formulas';
+import { itemId } from '@/storage/itemIds';
 import { reagentById } from '../index';
 import { BookPageMeta, CHAPTERS, type Chapter } from '../schemas';
 import { BOOK_OUTLINE } from './outline';
@@ -62,7 +63,7 @@ export const bookPages: readonly BookPage[] = loadPages();
 export const bookPageById = new Map(bookPages.map((p) => [p.id, p]));
 
 /** Item id used for attempts, flags and spaced repetition. */
-export const quickCheckItemId = (pageId: string, checkId: string) => `book:${pageId}:${checkId}`;
+export const quickCheckItemId = itemId.book;
 
 export const sectionTitle = (p: BookPageMeta) =>
   BOOK_OUTLINE[p.chapter].sections.find((s) => s.id === p.section)?.title ?? p.section;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { quickCheckItemId, type BookPage } from '@/data/book';
 import type { QuickCheck } from '@/data/schemas';
-import { db } from '@/storage/db';
+import { recordAttempt } from '@/storage/progress';
 import { Tex } from '@/ui/Tex';
 
 /** Text from YAML with optional inline $…$ maths. */
@@ -15,11 +15,10 @@ export function RichText({ children }: { children: string }) {
 }
 
 function record(page: BookPage, q: QuickCheck, score: number) {
-  void db.attempts.add({
+  void recordAttempt({
     itemId: quickCheckItemId(page.id, q.id),
     section: 'book',
     topic: `${page.chapter}/${page.section}`,
-    ts: Date.now(),
     score,
     mode: 'quick-check',
   });

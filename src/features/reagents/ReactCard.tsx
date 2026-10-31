@@ -1,6 +1,6 @@
 import { reagentById } from '@/data';
 import type { ReactItem } from '@/data/schemas';
-import { db } from '@/storage/db';
+import { itemId, recordAttempt } from '@/storage/progress';
 import { CardDisclaimer } from '@/ui/Footer';
 import { Structure } from '@/ui/Structure';
 import { CardTop } from './ReagentHeader';
@@ -28,11 +28,10 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
     if (done) return;
     update(cardKey, { product: i });
     const score = (groupsRight ? 0.5 : 0) + (item.products[i]!.correct ? 0.5 : 0);
-    void db.attempts.add({
-      itemId: item.id,
+    void recordAttempt({
+      itemId: itemId.react(item.id),
       section: 'reagents',
       topic: item.topic,
-      ts: Date.now(),
       score,
       mode: 'react',
       meta: { groups: [...picked], product: i },
@@ -41,7 +40,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
 
   return (
     <article className="mx-auto flex h-full max-w-xl flex-col" aria-label={`Will it react: ${item.substrate.name} with ${reagent.name}`}>
-      <CardTop topic={item.topic} reviewed={item.reviewed} itemId={item.id} context="will it react" />
+      <CardTop topic={item.topic} reviewed={item.reviewed} itemId={itemId.react(item.id)} context="will it react" />
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
         <div className="rounded-2xl bg-surface p-3 text-center">
           <Structure smiles={item.substrate.smiles} label={`Structure of ${item.substrate.name}`} width={260} height={130} />

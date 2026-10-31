@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { checkAnswer } from '@/engine/check';
 import { getUnit } from '@/engine/units';
 import type { CalcInstance, CalcTemplate } from '@/engine/template';
-import { db } from '@/storage/db';
+import { itemId, recordAttempt } from '@/storage/progress';
 import { DISCLAIMER } from '@/app/brand';
 import { FlagButton } from '@/ui/FlagButton';
 import { Tex } from '@/ui/Tex';
@@ -85,11 +85,10 @@ export function QuestionCard({
     elapsedAtSubmit.current ??= elapsed;
     if (!card.recorded) {
       markRecorded(inst.key);
-      void db.attempts.add({
-        itemId: t.id,
+      void recordAttempt({
+        itemId: itemId.calc(t.id),
         section: 'calc',
         topic: t.topic,
-        ts: Date.now(),
         score: result.correct ? 1 : 0,
         mode,
         meta: {
@@ -129,7 +128,7 @@ export function QuestionCard({
             Explain
           </button>
         )}
-        <FlagButton itemId={t.id} section="calc" context={`seed ${inst.seed}: ${inst.text}`} />
+        <FlagButton itemId={itemId.calc(t.id)} section="calc" context={`seed ${inst.seed}: ${inst.text}`} />
       </header>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
