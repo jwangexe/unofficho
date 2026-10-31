@@ -4,13 +4,27 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import mdx from '@mdx-js/rollup';
+import remarkFrontmatter from 'remark-frontmatter';
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
+import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
+import rehypeKatex from 'rehype-katex';
 
 export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   plugins: [
-    react(),
+    // Book pages: YAML frontmatter is exported as `frontmatter`; tables via GFM; $…$ and $$…$$ become KaTeX at build time.
+    {
+      enforce: 'pre',
+      ...mdx({
+        remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'frontmatter' }], remarkGfm, remarkMath],
+        rehypePlugins: [[rehypeKatex, { throwOnError: false, output: 'html' }]],
+      }),
+    },
+    react({ include: /\.(mdx|[jt]sx?)$/ }),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -42,5 +56,8 @@ export default defineConfig({
     environment: 'node',
     include: ['tests/**/*.test.ts'],
     setupFiles: ['fake-indexeddb/auto'],
+    // The cache keys on a file's own source, so an import.meta.glob would not see newly
+    // added content files (book pages, reagent JSON) until the cache was cleared.
+    fsModuleCache: false,
   },
 });

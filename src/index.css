@@ -94,3 +94,14 @@ body {
     animation: none;
   }
 }
+
+/* Book pages: wide display maths scrolls sideways instead of overflowing the phone. */
+.book-prose .katex-display {
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+.book-prose .katex {
+  font-size: 1.05em;
+}

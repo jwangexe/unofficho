@@ -1,0 +1,84 @@
+---
+id: choosing-a-hydride
+chapter: organic
+section: oxidation-reduction
+order: 1
+title: Choosing a hydride reducing agent
+minutes: 3
+related:
+  reagents: [nabh4, lialh4, dibal-h, bh3-thf, nabh3cn, l-selectride]
+quickChecks:
+  - id: ketone-over-ester
+    type: mcq
+    prompt: "Which reagent reduces the ketone in methyl 4-acetylbenzoate but leaves the ester intact?"
+    options: ["LiAlH₄ in THF", "NaBH₄ in MeOH", "H₂, Lindlar catalyst", "DIBAL-H (3 equiv.), then H₂O"]
+    answer: 1
+    explanation: "NaBH₄ reduces aldehydes and ketones quickly at 0 °C, but esters only very slowly. LiAlH₄ and excess DIBAL-H would reduce the ester too. A Lindlar catalyst is poisoned so that it only reduces alkynes, and it leaves the ketone alone."
+  - id: acid-over-ester
+    type: mcq
+    prompt: "You need to reduce a carboxylic acid to a primary alcohol without touching an ester elsewhere in the molecule. Which reagent do you choose?"
+    options: ["NaBH₄", "LiAlH₄", "BH₃·THF", "NaBH₃CN"]
+    answer: 2
+    explanation: "Borane is an electrophilic reductant. It first reacts with the acidic O–H to give an acyloxyborane, which is then reduced quickly. Esters are much less Lewis-basic towards boron and react far more slowly."
+  - id: dibal-stops
+    type: reveal
+    prompt: "Why does DIBAL-H at −78 °C turn an ester into an aldehyde instead of a primary alcohol?"
+    answer: "After one hydride adds, the tetrahedral intermediate is an aluminium hemiacetal. At −78 °C it is stable and does not expel the alkoxide. The aldehyde only forms on aqueous work-up, by which time no hydride is left to reduce it further."
+reviewed: false
+---
+
+Hydride reagents are not interchangeable. Their selectivity follows from two things: how **nucleophilic** the hydride is, and whether the reagent is **Lewis acidic** enough to activate the carbonyl itself.
+
+## The nucleophilic hydrides
+
+<R id="lialh4" /> is reactive because Al–H is weaker and more polarised than B–H, and Li⁺ coordinates the carbonyl oxygen. It reduces nearly every carbonyl: aldehydes, ketones, esters, acids (after deprotonation), amides (to amines) and nitriles (to amines).
+
+<R id="nabh4" /> is milder and works in alcohols or water. It reduces aldehydes and ketones but leaves esters, acids and amides essentially alone:
+
+<Scheme
+  from="COC(=O)c1ccc(cc1)C(C)=O"
+  to="COC(=O)c1ccc(cc1)C(C)O"
+  reagent="nabh4"
+  under="MeOH, 0 °C"
+  fromLabel="Keto-ester"
+  toLabel="Ester survives"
+/>
+
+## Stopping at the aldehyde
+
+<R id="dibal-h">DIBAL-H</R> is a neutral, Lewis-acidic aluminium hydride. At −78 °C it adds once to an ester. The resulting aluminium hemiacetal survives until work-up, which releases the aldehyde:
+
+<Scheme
+  from="CCCCC(=O)OC"
+  to="CCCCC=O"
+  reagent="dibal-h"
+  under="−78 °C; then H₂O"
+  fromLabel="Methyl pentanoate"
+  toLabel="Pentanal"
+/>
+
+Use one equivalent and keep the reaction cold. Warmer conditions or excess reagent go on to the alcohol.
+
+## Electrophilic borane
+
+<R id="bh3-thf">Borane</R> works the other way round. It is electron-poor, so it seeks electron-rich carbonyl oxygens. Carboxylic acids react fastest, via an acyloxyborane, and amides are reduced to amines. Esters are slow. This makes BH₃ the reagent for reducing an acid next to an ester, the reverse of what NaBH₄ would do.
+
+| Reagent | Aldehyde / ketone | Ester | Acid | Amide |
+| --- | --- | --- | --- | --- |
+| NaBH₄ | alcohol | slow / none | none | none |
+| LiAlH₄ | alcohol | 1° alcohol | 1° alcohol | amine |
+| DIBAL-H, −78 °C | alcohol | aldehyde | — | — |
+| BH₃·THF | alcohol | slow | 1° alcohol | amine |
+
+<Callout type="trap">
+"LiAlH₄ reduces amides" means the C=O becomes CH₂, giving an **amine**, not an alcohol. It is a common slip to draw the amino alcohol or the alcohol instead.
+</Callout>
+
+## Tuned reagents
+
+- <R id="nabh3cn" /> is stable at pH 6–7. At that pH it reduces protonated iminium ions much faster than ketones, which is why it is used for reductive amination.
+- <R id="l-selectride" /> is very bulky. On substituted cyclohexanones it attacks from the less hindered equatorial direction, giving the **axial** alcohol.
+
+<Callout type="tip">
+To choose a reagent in a synthesis question, list every reducible group in the molecule first. Then pick the mildest reagent that reduces the one you want, rather than the strongest one that will.
+</Callout>

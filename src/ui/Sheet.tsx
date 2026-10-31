@@ -1,6 +1,10 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
-/** Bottom sheet: thumb-reachable panel over the current screen. */
+/**
+ * Bottom sheet: thumb-reachable panel over the current screen. Portalled to <body> so it can
+ * be opened from inline content (e.g. a link inside a paragraph) without invalid nesting.
+ */
 export function Sheet({
   open,
   onClose,
@@ -24,7 +28,7 @@ export function Sheet({
   }, [open, onClose]);
 
   if (!open) return null;
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-40 flex flex-col justify-end" role="dialog" aria-modal="true">
       <button type="button" aria-label="Close" tabIndex={-1} className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="animate-sheet-up relative mx-auto flex max-h-[88dvh] w-full max-w-xl flex-col rounded-t-2xl bg-surface shadow-2xl">
@@ -37,6 +41,7 @@ export function Sheet({
         <div className="min-h-0 flex-auto overflow-y-auto overscroll-contain px-4 py-3">{children}</div>
         {footer && <div className="border-t border-border px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -1,0 +1,84 @@
+---
+id: combining-potentials
+chapter: physical
+section: electrochemistry
+order: 2
+title: Combining electrode potentials
+minutes: 3
+related:
+  formulas: [gibbs-emf, ecell, nernst]
+quickChecks:
+  - id: permanganate
+    type: mcq
+    prompt: "Given $E^\\circ(\\mathrm{MnO_4^-/MnO_2}) = +1.70$ V (3e⁻) and $E^\\circ(\\mathrm{MnO_2/Mn^{2+}}) = +1.23$ V (2e⁻), what is $E^\\circ(\\mathrm{MnO_4^-/Mn^{2+}})$?"
+    options:
+      - "+2.93 V"
+      - "+1.47 V"
+      - "+1.51 V"
+      - "+0.47 V"
+    answer: 2
+    explanation: "Weight each potential by its electrons: $(3 \\times 1.70 + 2 \\times 1.23)/5 = +1.51$ V. The plain average, +1.47 V, ignores the different electron counts."
+  - id: latimer-hypothetical
+    type: mcq
+    prompt: "A Latimer diagram reads X²⁺ —(+0.20 V)→ X⁺ —(+0.55 V)→ X. What happens to X⁺ in water under standard conditions?"
+    options:
+      - "It is stable"
+      - "It disproportionates into X²⁺ and X"
+      - "It is oxidised by water"
+      - "There is not enough information to say"
+    answer: 1
+    explanation: "The potential to the right of X⁺ (+0.55 V) is higher than the one to its left (+0.20 V). X⁺ is a better oxidant than X²⁺, so 2X⁺ → X²⁺ + X has $E^\\circ = 0.55 - 0.20 = +0.35$ V, which is positive."
+  - id: why-cell-works
+    type: reveal
+    prompt: "Why can you subtract potentials directly for a full cell, $E^\\circ_\\text{cell} = E^\\circ_\\text{cathode} - E^\\circ_\\text{anode}$, when you cannot add them for a new half-reaction?"
+    answer: "In a balanced cell reaction both half-reactions transfer the same number of electrons, n. So $\\Delta G^\\circ_\\text{cell} = -nF(E^\\circ_\\text{c} - E^\\circ_\\text{a})$, and n cancels when you convert back to a potential. Combining two half-reactions into a third leaves electrons uncancelled, so the n values differ and do not cancel."
+reviewed: false
+---
+
+Standard electrode potentials look like they should add up like enthalpies, but they don't. A potential is an energy **per electron**, which makes it intensive. Gibbs energies are extensive, and they are the quantities that add.
+
+## The rule
+
+For each half-reaction, convert to Gibbs energy with <F id="gibbs-emf" />:
+
+$$
+\Delta G^\circ = -nFE^\circ
+$$
+
+Add the $\Delta G^\circ$ values along any path, then convert back using the electron count of the overall half-reaction:
+
+$$
+E^\circ_\text{overall} = \frac{\sum_i n_iE^\circ_i}{\sum_i n_i}
+$$
+
+## Worked example: iron
+
+Find $E^\circ(\mathrm{Fe^{3+}/Fe})$ from the two tabulated couples:
+
+| Couple | $n$ | $E^\circ$ / V | $nE^\circ$ / V |
+| --- | --- | --- | --- |
+| $\mathrm{Fe^{3+} + e^- \to Fe^{2+}}$ | 1 | +0.77 | +0.77 |
+| $\mathrm{Fe^{2+} + 2e^- \to Fe}$ | 2 | −0.44 | −0.88 |
+| $\mathrm{Fe^{3+} + 3e^- \to Fe}$ | 3 | ? | −0.11 |
+
+So $E^\circ = -0.11/3 \approx -0.04$ V. That is nowhere near the plain sum (+0.33 V) or the average (+0.17 V).
+
+<Callout type="trap">
+Multiplying a half-equation by 2 doubles $\Delta G^\circ$ but leaves $E^\circ$ unchanged. If you double a potential to balance a cell, you have mixed up the two quantities.
+</Callout>
+
+## Full cells are the exception
+
+When two half-reactions make a balanced cell, the electrons cancel and both halves carry the same $n$. That $n$ divides out, which is why <F id="ecell">$E^\circ_\text{cell} = E^\circ_\text{cathode} - E^\circ_\text{anode}$</F> works with raw potentials.
+
+## Latimer diagrams and disproportionation
+
+A Latimer diagram lists one element's oxidation states left to right, from most to least oxidised, with $E^\circ$ for each step. A species in the middle **disproportionates** if the potential on its right is higher than the one on its left. That means it is a better oxidant than its higher oxidation state is.
+
+Copper is the classic case. Cu²⁺ —(+0.15 V)→ Cu⁺ —(+0.52 V)→ Cu, so aqueous Cu⁺ falls apart into Cu²⁺ and copper metal.
+
+<Callout type="tip">
+To skip a state in a Latimer diagram, use the weighted average above. Comproportionation is the reverse test. If the potential to the right of a middle species is **lower** than the one to its left, the two outer species react to give it.
+</Callout>
+
+These are standard potentials. For real concentrations, correct each couple with the <F id="nernst">Nernst equation</F> before comparing.

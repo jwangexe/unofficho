@@ -124,21 +124,35 @@ export const QuickCheck = z.discriminatedUnion('type', [
 ]);
 export type QuickCheck = z.infer<typeof QuickCheck>;
 
-export const BookPageMeta = z.object({
-  id,
-  chapter: Chapter,
-  section: z.string(),
-  order: z.number(),
-  title: z.string(),
-  topic: z.string(),
-  related: z.object({
-    reagents: z.array(id).default([]),
-    formulas: z.array(id).default([]),
-  }),
-  quickChecks: z.array(QuickCheck).max(3),
-  /** Stub pages have a title and outline only. */
-  stub: z.boolean().default(false),
-  reviewed: z.boolean(),
-  todoVerify,
-});
+export const BookPageMeta = z
+  .object({
+    id,
+    chapter: Chapter,
+    /** Section id within the chapter (see data/book/outline.ts). */
+    section: id,
+    order: z.number(),
+    title: z.string(),
+    /** Estimated reading time on a phone. */
+    minutes: z.number().positive().default(2),
+    related: z
+      .object({
+        reagents: z.array(id).default([]),
+        formulas: z.array(id).default([]),
+      })
+      .default({ reagents: [], formulas: [] }),
+    quickChecks: z.array(QuickCheck).max(3).default([]),
+    /** Stub pages have a title and outline only. */
+    stub: z.boolean().default(false),
+    outline: z.array(z.string()).default([]),
+    reviewed: z.boolean(),
+    todoVerify,
+  })
+  .refine((p) => p.stub || p.quickChecks.length >= 2, { message: 'complete pages need 2–3 quick checks' })
+  .refine((p) => !p.stub || p.outline.length > 0, { message: 'stub pages need an outline' })
+  .refine((p) => new Set(p.quickChecks.map((q) => q.id)).size === p.quickChecks.length, {
+    message: 'quick-check ids must be unique within a page',
+  })
+  .refine((p) => p.quickChecks.every((q) => q.type !== 'mcq' || q.answer < q.options.length), {
+    message: 'mcq answer index out of range',
+  });
 export type BookPageMeta = z.infer<typeof BookPageMeta>;

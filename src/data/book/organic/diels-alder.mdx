@@ -1,0 +1,67 @@
+---
+id: diels-alder
+chapter: organic
+section: pericyclic
+order: 1
+title: The Diels–Alder reaction
+minutes: 3
+quickChecks:
+  - id: not-a-diene
+    type: mcq
+    prompt: "Which of these cannot act as the diene in a Diels–Alder reaction?"
+    options: ["Cyclopenta-1,3-diene", "2-Methylbuta-1,3-diene", "Penta-1,4-diene", "(E)-Penta-1,3-diene"]
+    answer: 2
+    explanation: "The two C=C bonds in penta-1,4-diene are separated by a CH₂, so they are not conjugated. The diene must be a conjugated 1,3-diene able to adopt the s-cis conformation."
+  - id: maleate
+    type: mcq
+    prompt: "Dimethyl maleate (the cis diester) reacts with buta-1,3-diene. How are the two ester groups arranged in the cyclohexene product?"
+    options: ["cis to each other", "trans to each other", "a 1:1 mixture of cis and trans", "No reaction: maleate is too hindered"]
+    answer: 0
+    explanation: "Both new σ-bonds form on the same face of the dienophile in one concerted step, so substituents that are cis on the alkene stay cis in the ring."
+  - id: cyclopentadiene
+    type: reveal
+    prompt: "Cyclopentadiene is one of the most reactive dienes, and it even dimerises on standing at room temperature. Why?"
+    answer: "The ring locks it in the s-cis conformation that the reaction needs, so no energy is spent rotating out of the preferred s-trans form, and its termini are held close together. It is electron-rich enough to act as its own dienophile, which is why it dimerises."
+reviewed: false
+---
+
+The Diels–Alder reaction joins a **diene** (four π-electrons) and a **dienophile** (two π-electrons) to form a cyclohexene. It makes two C–C σ-bonds and up to four stereocentres in one step, with no intermediate.
+
+<Scheme
+  from="C=CC=C"
+  to="COC(=O)C1CCC=CC1"
+  over="CH₂=CHCO₂Me"
+  under="heat"
+  fromLabel="Butadiene (reacts s-cis)"
+  toLabel="Cyclohexene ester"
+/>
+
+## What the partners need
+
+- **The diene must be conjugated and able to reach the s-cis conformation.** Only then are its two ends close enough to bond to the dienophile at the same time. Dienes locked s-trans do not react. Dienes locked s-cis, such as cyclopentadiene, are especially fast.
+- **Electronics.** The usual pairing is an electron-rich diene with an electron-poor dienophile, one bearing C=O, CN or NO₂. In orbital terms, the diene HOMO overlaps with the dienophile LUMO, and a smaller energy gap gives a faster reaction.
+
+## Stereochemistry is conserved
+
+The reaction is concerted and **suprafacial** on both partners, so geometry carries straight through into the product:
+
+- substituents that are cis on the dienophile end up cis on the ring
+- substituents that are trans stay trans
+- the "outside" groups of an (E,E)-diene end up cis to each other
+
+<Callout type="tip">
+For a cyclic diene, the **endo** product is usually the kinetic product. The dienophile's carbonyl tucks under the diene, where secondary orbital overlap stabilises the transition state, even though the exo product is often more stable. Heating long enough can let the reaction reverse and drift towards exo.
+</Callout>
+
+## Regiochemistry: the "ortho/para" rule
+
+With unsymmetrical partners, two orientations are possible. As a rule of thumb, the products that form are the ones that put substituents in "ortho" or "para" positions:
+
+- a **1-substituted** diene gives mainly the 1,2 ("ortho") product
+- a **2-substituted** diene gives mainly the 1,4 ("para") product
+
+To justify this, put a partial negative charge on the diene terminus that the donor makes most nucleophilic. Then join it to the dienophile carbon β to the withdrawing group.
+
+<Callout type="trap">
+Count the atoms in the product. Four carbons from the diene and two from the dienophile make a **six-membered** ring, and the new C=C sits between the old C2 and C3 of the diene, not where either original double bond was.
+</Callout>

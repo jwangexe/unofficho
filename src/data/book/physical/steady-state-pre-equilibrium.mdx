@@ -1,0 +1,94 @@
+---
+id: steady-state-pre-equilibrium
+chapter: physical
+section: kinetics
+order: 3
+title: Steady state vs pre-equilibrium
+minutes: 3
+related:
+  formulas: [ssa-consecutive, pre-equilibrium, lindemann]
+quickChecks:
+  - id: fast-second-step
+    type: mcq
+    prompt: "For A ⇌ I → P, suppose $k_2 \\gg k_{-1}$. Which rate law does the steady-state result reduce to?"
+    options:
+      - "$\\text{rate} = k_1[\\mathrm{A}]$"
+      - "$\\text{rate} = \\dfrac{k_1k_2}{k_{-1}}[\\mathrm{A}]$"
+      - "$\\text{rate} = k_2[\\mathrm{A}]$"
+      - "$\\text{rate} = k_1k_2[\\mathrm{A}]$"
+    answer: 0
+    explanation: "When $k_2 \\gg k_{-1}$, the denominator $k_{-1} + k_2$ is just $k_2$, which cancels. Almost every I goes on to P, so the first step is rate-determining."
+  - id: apparent-ea
+    type: mcq
+    prompt: "In the pre-equilibrium limit, $k_\\mathrm{obs} = k_1k_2/k_{-1}$. What is the apparent activation energy?"
+    options:
+      - "$E_{a,1} + E_{a,2}$"
+      - "$E_{a,1} + E_{a,2} - E_{a,-1}$"
+      - "$E_{a,2}$ only"
+      - "$E_{a,1} - E_{a,-1}$"
+    answer: 1
+    explanation: "Take logs and differentiate with respect to $1/T$. Products of rate constants add their activation energies, and a constant in the denominator subtracts its own."
+  - id: negative-ea
+    type: reveal
+    prompt: "The rate of 2NO + O₂ → 2NO₂ falls as temperature rises. How can a mechanism explain a negative apparent activation energy?"
+    answer: "A fast pre-equilibrium 2NO ⇌ N₂O₂ is exothermic, so its K falls with temperature. The slow step N₂O₂ + O₂ → 2NO₂ has a small barrier. Since $E_{a,\\text{app}} = \\Delta H^\\circ_1 + E_{a,2}$, the sum is negative when $|\\Delta H^\\circ_1| > E_{a,2}$."
+reviewed: false
+---
+
+Many mechanisms pass through a reactive intermediate that never builds up. Take the simplest case:
+
+$$
+\mathrm{A} \xrightleftharpoons[\;k_{-1}\;]{\;k_1\;} \mathrm{I} \xrightarrow{\;k_2\;} \mathrm{P}
+$$
+
+The exact rate equations are coupled, so we approximate. There are two standard approximations. The pre-equilibrium approximation is a special case of the steady-state one, so knowing which you are using, and why, is most of the work.
+
+## The steady-state approximation
+
+If I is consumed about as fast as it is made, its concentration stays small and nearly constant after a short induction period. Set its net rate of change to zero:
+
+$$
+\frac{\mathrm{d}[\mathrm{I}]}{\mathrm{d}t} = k_1[\mathrm{A}] - k_{-1}[\mathrm{I}] - k_2[\mathrm{I}] \approx 0
+$$
+
+so
+
+$$
+[\mathrm{I}] = \frac{k_1[\mathrm{A}]}{k_{-1} + k_2}
+$$
+
+The rate of forming P is then
+
+$$
+\text{rate} = k_2[\mathrm{I}] = \frac{k_1k_2}{k_{-1}+k_2}\,[\mathrm{A}]
+$$
+
+This is the <F id="ssa-consecutive">steady-state result</F>. Notice what it does **not** assume: nothing about which step is faster.
+
+## The pre-equilibrium approximation
+
+Now suppose I falls back to A much faster than it goes on to P, so $k_{-1} \gg k_2$. Then A and I stay close to equilibrium, with $[\mathrm{I}] = K_1[\mathrm{A}]$ where $K_1 = k_1/k_{-1}$, and
+
+$$
+\text{rate} = k_2K_1[\mathrm{A}] = \frac{k_1k_2}{k_{-1}}[\mathrm{A}]
+$$
+
+This is exactly the steady-state result with $k_2$ dropped from the denominator. The <F id="pre-equilibrium">pre-equilibrium form</F> is a limit, not a rival theory.
+
+The opposite limit, $k_2 \gg k_{-1}$, gives rate $= k_1[\mathrm{A}]$. Almost every I that forms goes on to P, so the first step controls the rate.
+
+<Callout type="trap">
+Pre-equilibrium needs $k_{-1} \gg k_2$. It does **not** need $k_1 \gg k_2$. A slow forward step and a fast back step can still be in equilibrium. Look at what competes for I: the back reaction against the forward one.
+</Callout>
+
+## Using the approximation in exam problems
+
+- Apply the steady-state condition to **intermediates only**, never to reactants or products.
+- With two intermediates, write one steady-state equation for each and solve them together.
+- Check the answer against the limits. Does it collapse to something sensible when one rate constant dominates?
+
+The <F id="lindemann">Lindemann mechanism</F> for unimolecular gas reactions is the same algebra with a collision partner M. That is why its order shifts from first to second as pressure falls.
+
+<Callout type="tip">
+Activation energies follow the algebra. If $k_\mathrm{obs} = k_1k_2/k_{-1}$, then $E_{a,\text{obs}} = E_{a,1} + E_{a,2} - E_{a,-1} = \Delta H^\circ_1 + E_{a,2}$. If step 1 is exothermic enough, this can be negative: the reaction slows as it warms.
+</Callout>

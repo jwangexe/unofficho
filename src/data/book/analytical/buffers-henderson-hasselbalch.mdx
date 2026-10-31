@@ -1,0 +1,69 @@
+---
+id: buffers-henderson-hasselbalch
+chapter: analytical
+section: buffers
+order: 1
+title: Buffers and the Henderson–Hasselbalch equation
+minutes: 3
+related:
+  formulas: [henderson-hasselbalch, ph, ka-kb]
+quickChecks:
+  - id: ammonia-buffer
+    type: mcq
+    prompt: "A solution contains 0.20 mol NH₄Cl and 0.10 mol NH₃. Given $\\mathrm{p}K_\\mathrm{a}(\\mathrm{NH_4^+}) = 9.25$, what is its pH?"
+    options: ["8.95", "9.25", "9.55", "4.75"]
+    answer: 0
+    explanation: "$\\mathrm{pH} = 9.25 + \\log_{10}(0.10/0.20) = 9.25 - 0.30 = 8.95$. Base over acid, and the acid here is NH₄⁺. Since both are in the same volume, the ratio of amounts is fine."
+  - id: add-hcl
+    type: mcq
+    prompt: "1.00 L of buffer contains 0.100 mol HA and 0.100 mol A⁻ ($\\mathrm{p}K_\\mathrm{a} = 4.76$). You add 0.010 mol HCl. What is the new pH?"
+    options: ["4.76", "4.67", "4.85", "2.00"]
+    answer: 1
+    explanation: "Do the stoichiometry first. H⁺ converts A⁻ to HA, giving 0.090 mol A⁻ and 0.110 mol HA. Then $\\mathrm{pH} = 4.76 + \\log_{10}(0.090/0.110) = 4.67$."
+  - id: half-eq-strong
+    type: reveal
+    prompt: "For a fairly strong weak acid ($\\mathrm{p}K_\\mathrm{a} \\approx 2$) at about 0.05 mol L⁻¹, is the pH at half-equivalence above, below or equal to the pKₐ? Why?"
+    answer: "Above. Stoichiometry makes [HA] = [A⁻] = c, but the acid dissociates appreciably. The real values are [A⁻] ≈ c + [H⁺] and [HA] ≈ c − [H⁺]. When [H⁺] is comparable to c, the ratio [A⁻]/[HA] exceeds 1, so pH > pKₐ."
+reviewed: false
+---
+
+A buffer holds the pH roughly steady when small amounts of acid or base are added. It does this with a weak acid HA and its conjugate base A⁻, both present in comparable amounts: A⁻ mops up added H⁺, and HA mops up added OH⁻.
+
+## Where the equation comes from
+
+Start from the acid dissociation constant and take $-\log_{10}$ of both sides:
+
+$$
+K_\mathrm{a} = \frac{[\mathrm{H^+}][\mathrm{A^-}]}{[\mathrm{HA}]}
+\quad\Rightarrow\quad
+\mathrm{pH} = \mathrm{p}K_\mathrm{a} + \log_{10}\frac{[\mathrm{A^-}]}{[\mathrm{HA}]}
+$$
+
+This is the <F id="henderson-hasselbalch" />. So far it is exact. The approximation comes when you substitute the amounts you **added** for the equilibrium concentrations. That only works when HA and A⁻ are both much more concentrated than H⁺ and OH⁻.
+
+Because HA and A⁻ share the same volume, you can use **moles** in the ratio, and dilution does not change the pH.
+
+## Worked example: a titration
+
+25.0 mL of 0.100 mol L⁻¹ ethanoic acid ($\mathrm{p}K_\mathrm{a} = 4.76$) is titrated with 0.100 mol L⁻¹ NaOH.
+
+- At **12.50 mL**, half the acid has been neutralised, so $n(\mathrm{HA}) = n(\mathrm{A^-})$ and $\mathrm{pH} = \mathrm{p}K_\mathrm{a} = 4.76$. This is the half-equivalence point.
+- At **20.00 mL**, there is 2.00 mmol of A⁻ and 0.50 mmol of HA left, so $\mathrm{pH} = 4.76 + \log_{10} 4 = 5.36$.
+
+<Callout type="trap">
+When strong acid or base is added to a buffer, do the **stoichiometry first**, as a complete reaction with A⁻ or HA. Only then put the new amounts into Henderson–Hasselbalch. Putting the added H⁺ straight into the log term is the most common error.
+</Callout>
+
+## How good is the buffer?
+
+Buffer capacity $\beta$ is the amount of strong base needed per litre to raise the pH by one unit. Ignoring water's own contribution, for total concentration $C = [\mathrm{HA}] + [\mathrm{A^-}]$ and fraction deprotonated $\alpha$:
+
+$$
+\beta = \ln 10 \cdot C\,\alpha(1-\alpha)
+$$
+
+This is largest when $\alpha = \tfrac12$, that is when pH = pKₐ. It falls to about a third of that maximum at pKₐ ± 1. That is where the rule "choose an acid with pKₐ within one unit of the target pH" comes from.
+
+<Callout type="tip">
+A higher total concentration gives more capacity at the same pH. A buffer of 0.01 mol L⁻¹ ethanoic acid with 0.01 mol L⁻¹ ethanoate has the same pH as one at 1 mol L⁻¹, but only a hundredth of the resistance.
+</Callout>

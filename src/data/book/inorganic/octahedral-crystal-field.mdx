@@ -1,0 +1,81 @@
+---
+id: octahedral-crystal-field
+chapter: inorganic
+section: coordination
+order: 1
+title: Octahedral crystal field splitting
+minutes: 3
+quickChecks:
+  - id: cobalt-ammine
+    type: mcq
+    prompt: "How many unpaired electrons does [Co(NH₃)₆]³⁺ have? (It is low spin.)"
+    options: ["0", "1", "2", "4"]
+    answer: 0
+    explanation: "Co³⁺ is d⁶. In the low-spin case all six electrons pair up in $t_{2g}$, which leaves none unpaired, so the complex is diamagnetic."
+  - id: d5-high-spin
+    type: mcq
+    prompt: "What is the CFSE of a high-spin d⁵ octahedral ion, ignoring pairing energy?"
+    options: ["$0$", "$-0.4\\,\\Delta_\\mathrm{o}$", "$-1.2\\,\\Delta_\\mathrm{o}$", "$-2.0\\,\\Delta_\\mathrm{o}$"]
+    answer: 0
+    explanation: "Configuration $t_{2g}^3e_g^2$: $3(-0.4) + 2(+0.6) = 0$. Half-filled high-spin d⁵ (e.g. Mn²⁺, Fe³⁺) gains nothing from the field. This helps explain why high-spin d⁵ complexes are so labile."
+  - id: fluoride-vs-ammine
+    type: reveal
+    prompt: "[CoF₆]³⁻ is high spin but [Co(NH₃)₆]³⁺ is low spin. Both contain Co³⁺. Why?"
+    answer: "F⁻ is a weak-field ligand: π-donation from F⁻ raises $t_{2g}$, which narrows the gap, so $\\Delta_\\mathrm{o}$ is smaller than the pairing energy and electrons occupy $e_g$ instead of pairing. NH₃ is a pure σ-donor higher in the spectrochemical series. With NH₃, $\\Delta_\\mathrm{o}$ exceeds the pairing energy, so all six electrons pair in $t_{2g}$."
+reviewed: false
+todoVerify:
+  - "Position of OH⁻ relative to F⁻ in the spectrochemical series varies between sources; the series shown omits OH⁻ deliberately."
+---
+
+In an octahedral complex, six ligands sit along the $\pm x$, $\pm y$ and $\pm z$ axes. The five d orbitals no longer have equal energy. The ligands' electron pairs repel electrons in some orbitals more than in others.
+
+## Two sets of orbitals
+
+- **$e_g$** ($d_{z^2}$, $d_{x^2-y^2}$) point straight at the ligands. They are pushed up.
+- **$t_{2g}$** ($d_{xy}$, $d_{xz}$, $d_{yz}$) point between the ligands. They are pushed down.
+
+The gap is $\Delta_\mathrm{o}$. The splitting keeps the average energy unchanged (the barycentre), so the two sets sit at
+
+$$
+E(t_{2g}) = -0.4\,\Delta_\mathrm{o}, \qquad E(e_g) = +0.6\,\Delta_\mathrm{o}
+$$
+
+The crystal field stabilisation energy for $x$ electrons in $t_{2g}$ and $y$ in $e_g$ is then
+
+$$
+\text{CFSE} = (-0.4x + 0.6y)\,\Delta_\mathrm{o}
+$$
+
+plus a pairing energy $P$ for each extra pair compared with the free ion.
+
+## High spin or low spin?
+
+For d¹–d³ and d⁸–d¹⁰ there is only one way to fill the orbitals. For **d⁴–d⁷** the fourth electron has a choice:
+
+- if $\Delta_\mathrm{o} < P$, it goes up into $e_g$, giving **high spin** with the most unpaired electrons
+- if $\Delta_\mathrm{o} > P$, it pairs in $t_{2g}$, giving **low spin**
+
+For example, Fe²⁺ (d⁶) gives:
+
+| Complex | Field | Configuration | Unpaired | CFSE |
+| --- | --- | --- | --- | --- |
+| [Fe(H₂O)₆]²⁺ | weak | $t_{2g}^4e_g^2$ | 4 | $-0.4\,\Delta_\mathrm{o}$ |
+| [Fe(CN)₆]⁴⁻ | strong | $t_{2g}^6$ | 0 | $-2.4\,\Delta_\mathrm{o} + 2P$ |
+
+The spin-only magnetic moment $\mu = \sqrt{n(n+2)}\,\mu_\mathrm{B}$ separates them: 4.90 $\mu_\mathrm{B}$ against zero.
+
+## What makes $\Delta_\mathrm{o}$ large
+
+1. **The ligand.** The spectrochemical series runs from weak to strong field:
+   I⁻ < Br⁻ < Cl⁻ < F⁻ < H₂O < NH₃ < en < CN⁻ < CO.
+   π-donors sit at the weak end. π-acceptors sit at the strong end.
+2. **Higher oxidation state of the metal.** M³⁺ splits more than M²⁺.
+3. **Going down a group.** 4d and 5d orbitals are larger and overlap better. Their complexes are almost always low spin.
+
+<Callout type="trap">
+Count d electrons **after** removing the 4s electrons. Fe²⁺ is [Ar]3d⁶, not [Ar]3d⁴4s². The transition metal loses its 4s electrons first.
+</Callout>
+
+<Callout type="tip">
+Tetrahedral splitting is smaller, about $\Delta_\mathrm{t} \approx \tfrac{4}{9}\Delta_\mathrm{o}$, and the order is inverted (e below t₂). It is almost never larger than $P$. So tetrahedral first-row complexes are high spin unless a question says otherwise.
+</Callout>
