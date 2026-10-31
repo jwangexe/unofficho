@@ -6,7 +6,7 @@
 import katex from 'katex';
 import { describe, expect, it } from 'vitest';
 import { FORMULAS } from '@/engine/formulas';
-import { solveFormula, type Formula } from '@/engine/formula';
+import { formulaForSymbols, solveFormula, type Formula } from '@/engine/formula';
 import { qty, type Quantity } from '@/engine/quantity';
 import { getUnit } from '@/engine/units';
 import { normalised } from '@/engine/solver';
@@ -48,9 +48,12 @@ describe('formula library integrity', () => {
 });
 
 describe('formula round trips', () => {
-  for (const f of FORMULAS) {
+  for (const base of FORMULAS) {
+    let f = base;
     f.examples.forEach((example, i) => {
       it(`${f.id} example ${i + 1}: solve the missing variable, then recover every other`, () => {
+        // Formulas with a species group are checked with as many species as the example uses.
+        f = formulaForSymbols(base, Object.keys(example));
         const missing = f.vars.filter((v) => v.solvable !== false && !(v.sym in example));
         expect(missing.map((v) => v.sym), 'exactly one solvable variable omitted').toHaveLength(1);
         const target = missing[0]!;

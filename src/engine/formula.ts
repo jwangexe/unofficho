@@ -36,6 +36,21 @@ export interface VarSpec {
   typical?: number;
 }
 
+/**
+ * A repeating group of variables, one set per chemical species, for formulas such as
+ * K = Π([X]₀ + νξ)^ν that take any number of species. Species are numbered from 1.
+ */
+export interface SpeciesGroup {
+  min: number;
+  max: number;
+  /** Variables species i adds, e.g. its coefficient ν_i and initial concentration [X_i]₀. */
+  vars: (i: number) => VarSpec[];
+  /** Symbol of species i's stoichiometric coefficient: chosen with a stepper, never solved for. */
+  coefficient: (i: number) => string;
+  /** The relation written out for particular coefficients (negative = reactant). */
+  latexFor: (coefficients: readonly number[]) => string;
+}
+
 export interface Formula {
   id: string;
   name: string;
@@ -61,9 +76,37 @@ export interface Formula {
   examples: Record<string, number>[];
   reviewed: boolean;
   todoVerify?: string[];
+  /** Per-species variables; `vars` then holds only the shared ones until species are added. */
+  species?: SpeciesGroup;
+  /** Set on a formula built for a particular number of species. */
+  speciesCount?: number;
 }
 
 export const defineFormula = (f: Formula): Formula => f;
+
+const withSpeciesCache = new Map<string, Formula>();
+
+/** The formula with n species' variables added (cached). Formulas without species are returned as is. */
+export function withSpecies(f: Formula, n: number): Formula {
+  if (!f.species) return f;
+  const key = `${f.id}#${n}`;
+  let out = withSpeciesCache.get(key);
+  if (!out) {
+    const extra = Array.from({ length: n }, (_, i) => f.species!.vars(i + 1)).flat();
+    out = { ...f, vars: [...f.vars, ...extra], speciesCount: n };
+    withSpeciesCache.set(key, out);
+  }
+  return out;
+}
+
+/** The concrete formula for a set of variable symbols (counts species by their coefficients). */
+export function formulaForSymbols(f: Formula, syms: Iterable<string>): Formula {
+  if (!f.species) return f;
+  const set = new Set(syms);
+  let n = 0;
+  while (set.has(f.species.coefficient(n + 1))) n++;
+  return withSpecies(f, n);
+}
 
 export const varSpec = (f: Formula, sym: string): VarSpec => {
   const v = f.vars.find((x) => x.sym === sym);

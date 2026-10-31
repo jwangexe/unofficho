@@ -195,6 +195,7 @@ A formula is a relation between variables with dimensions. The engine can solve 
 | `rearranged` | the LaTeX shown when solving for each variable |
 | `bracket`, `constraint`, `warnings` | optional: a search interval, physical validity checks, approximation warnings |
 | `examples` | worked values in display units, each with exactly one solvable variable left out. Tests solve for it, then round-trip every other variable. |
+| `species` | optional: a repeating group for formulas over any number of species, such as the ICE formula $K = \prod_i ([\mathrm{X}_i]_0 + \nu_i\xi)^{\nu_i}$. `vars(i)` gives species *i*'s variables (`nu1`, `X01`, …), `coefficient(i)` names its stoichiometric coefficient (chosen with a stepper in the app, never a chip), and `latexFor(ν)` writes the relation out for given coefficients. In examples and graph nodes, list every species' variables. |
 
 ```ts
 defineFormula({
@@ -232,7 +233,7 @@ A template draws random but realistic parameters and shows them as **givens**, r
 | `difficulty` | 1–3; Exam mode uses 2 and 3 |
 | `explanation` | shown after answering |
 
-Graph steps reference values by prefix: `g.` a given, `p.` a param (setup only), `n.` an earlier node, `c.` a constant (`c.R`, `c.F`, …), `#` a literal number (`'#2'`). A step is either a formula, `{ id, formula, solveFor, inputs: { var: ref } }`, or an operation, `{ id, op, inputs }`. The operations are `add`, `sub`, `mul`, `div`, `ln`, `log10`, `exp`, `pow10`, `pow` (with `exponent`), `scale` (with `coef`), `sum` (with `coefs`) and `convert` (with `unit`). An optional `label` names the step's result in Approach mode.
+Graph steps reference values by prefix: `g.` a given, `p.` a param (setup only), `n.` an earlier node, `c.` a constant (`c.R`, `c.F`, …), `#` a literal number (`'#2'`), optionally with a unit (`'#0@mol/dm3'`, e.g. a product absent at the start). For example, H₂ + I₂ ⇌ 2HI with no HI initially is `{ formula: 'ice', solveFor: 'xi', inputs: { K: 'g.K', nu1: '#-1', X01: 'n.cH2', nu2: '#-1', X02: 'n.cI2', nu3: '#2', X03: '#0@mol/dm3' } }`. A step is either a formula, `{ id, formula, solveFor, inputs: { var: ref } }`, or an operation, `{ id, op, inputs }`. The operations are `add`, `sub`, `mul`, `div`, `ln`, `log10`, `exp`, `pow10`, `pow` (with `exponent`), `scale` (with `coef`), `sum` (with `coefs`) and `convert` (with `unit`). An optional `label` names the step's result in Approach mode.
 
 ```ts
 {

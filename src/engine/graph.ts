@@ -3,11 +3,11 @@
  * and arithmetic operations) whose inputs refer to givens, constants, literals or earlier steps.
  *
  * Refs:  'p.x' template parameter · 'g.x' given chip · 'n.id' an earlier node ·
- *        'c.R' physical constant · '#2' a dimensionless literal.
+ *        'c.R' physical constant · '#2' a dimensionless literal · '#0@mol/dm3' a literal with a unit.
  */
 import { CONSTANTS } from './constants';
 import { formulaById } from './formulas';
-import { solveFormula } from './formula';
+import { formulaForSymbols, solveFormula } from './formula';
 import * as ops from './ops';
 import { qty, type Quantity } from './quantity';
 import { fail, ok, type Result } from './result';
@@ -84,7 +84,11 @@ export function runOp(op: ArithOp, inputs: Quantity[], p: OpParams = {}): Result
 }
 
 function resolve(ref: Ref, env: Record<Ref, Quantity>): Quantity | undefined {
-  if (ref.startsWith('#')) return qty(Number(ref.slice(1)), '1');
+  if (ref.startsWith('#')) {
+    // '#2' is dimensionless; '#0@mol/dm3' carries a unit.
+    const [value, unit = '1'] = ref.slice(1).split('@');
+    return qty(Number(value), unit);
+  }
   if (ref.startsWith('c.')) return constantQuantity(ref.slice(2));
   return env[ref];
 }
@@ -96,8 +100,9 @@ export function evaluateGraph(nodes: readonly GraphNode[], env: Record<Ref, Quan
     const get = (r: Ref) => resolve(r, out);
     let res: Result<Quantity>;
     if (isFormulaNode(node)) {
-      const f = formulaById.get(node.formula);
-      if (!f) return fail('missing', `Unknown formula ${node.formula}`);
+      const base = formulaById.get(node.formula);
+      if (!base) return fail('missing', `Unknown formula ${node.formula}`);
+      const f = formulaForSymbols(base, Object.keys(node.inputs));
       const assigned: Record<string, Quantity> = {};
       for (const [sym, ref] of Object.entries(node.inputs)) {
         const q = get(ref);

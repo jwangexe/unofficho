@@ -5,6 +5,21 @@ import { conc, dimensionless, temp } from './vars';
 const ln = Math.log;
 const log10 = Math.log10;
 
+const SUB = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+
+/** K = Π([X_i]₀ + ν_iξ)^ν_i written out: products over reactants, with the actual coefficients. */
+function iceLatex(nus: readonly number[]): string {
+  const xi = (n: number) => `${n === 1 ? '' : n}\\xi`;
+  const term = (i: number, nu: number) => {
+    const body = `[\\mathrm{X}_{${i + 1}}]_0 ${nu > 0 ? '+' : '-'} ${xi(Math.abs(nu))}`;
+    return Math.abs(nu) === 1 ? `(${body})` : `(${body})^{${Math.abs(nu)}}`;
+  };
+  const top = nus.map((nu, i) => (nu > 0 ? term(i, nu) : '')).join('');
+  const bottom = nus.map((nu, i) => (nu < 0 ? term(i, nu) : '')).join('');
+  if (!bottom) return `K = ${top || '1'}`;
+  return `K = \\dfrac{${top || '1'}}{${bottom}}`;
+}
+
 const pVar = (sym: string, label: string, latex: string, name: string): VarSpec =>
   dimensionless(sym, label, latex, name, { sign: 'signed' });
 
@@ -234,50 +249,75 @@ export const equilibrium = [
 
   defineFormula({
     id: 'ice',
-    name: 'ICE table: aA + bB ⇌ cC + dD',
+    name: 'Equilibrium from initial concentrations (ICE)',
     topic: 'equilibrium',
-    latex: 'K = \\dfrac{([\\mathrm{C}]_0 + c\\xi)^c([\\mathrm{D}]_0 + d\\xi)^d}{([\\mathrm{A}]_0 - a\\xi)^a([\\mathrm{B}]_0 - b\\xi)^b}',
+    latex: 'K = \\prod_i \\left(\\frac{[\\mathrm{X}_i]_0 + \\nu_i\\,\\xi}{c^\\circ}\\right)^{\\nu_i}',
     vars: [
       dimensionless('K', 'K', 'K', 'Equilibrium constant (concentrations relative to c°)'),
       conc('xi', 'ξ', '\\xi', 'Extent of reaction per volume (negative if it runs backwards)', { sign: 'signed', typical: 0 }),
-      dimensionless('a', 'a', 'a', 'Coefficient of A (0 if absent)', { sign: 'nonneg', solvable: false }),
-      dimensionless('b', 'b', 'b', 'Coefficient of B (0 if absent)', { sign: 'nonneg', solvable: false }),
-      dimensionless('c', 'c', 'c', 'Coefficient of C (0 if absent)', { sign: 'nonneg', solvable: false }),
-      dimensionless('d', 'd', 'd', 'Coefficient of D (0 if absent)', { sign: 'nonneg', solvable: false }),
-      conc('A0', '[A]₀', '[\\mathrm{A}]_0', 'Initial [A]', { sign: 'nonneg', solvable: false }),
-      conc('B0', '[B]₀', '[\\mathrm{B}]_0', 'Initial [B]', { sign: 'nonneg', solvable: false }),
-      conc('C0', '[C]₀', '[\\mathrm{C}]_0', 'Initial [C]', { sign: 'nonneg', solvable: false }),
-      conc('D0', '[D]₀', '[\\mathrm{D}]_0', 'Initial [D]', { sign: 'nonneg', solvable: false }),
     ],
+    // Any number of species: ν_i < 0 for reactants, > 0 for products. Leave out solids,
+    // pure liquids and the solvent, which do not appear in K.
+    species: {
+      min: 1,
+      max: 6,
+      vars: (i) => [
+        dimensionless(`nu${i}`, `ν${SUB[i]}`, `\\nu_{${i}}`, `Stoichiometric coefficient of X${SUB[i]} (− reactant, + product)`, {
+          sign: 'signed',
+          solvable: false,
+          integer: true,
+        }),
+        conc(`X0${i}`, `[X${SUB[i]}]₀`, `[\\mathrm{X}_{${i}}]_0`, `Initial concentration of X${SUB[i]}`, { sign: 'nonneg', solvable: false }),
+      ],
+      coefficient: (i) => `nu${i}`,
+      latexFor: iceLatex,
+    },
     relation: (v) => {
-      // Signed coefficient ν (negative for reactants): contributes ν·ln([X]₀ + νξ).
-      const term = (c0: number, nu: number) => {
-        if (nu === 0) return 0;
-        const x = (c0 + nu * v.xi!) / C_STD;
-        return x > 0 ? nu * ln(x) : NaN;
-      };
-      const lnQ = term(v.C0!, v.c!) + term(v.D0!, v.d!) + term(v.A0!, -v.a!) + term(v.B0!, -v.b!);
+      // ln Q = Σ ν_i ln(([X_i]₀ + ν_i ξ)/c°); every species must stay positive.
+      let lnQ = 0;
+      for (let i = 1; `nu${i}` in v; i++) {
+        const nu = v[`nu${i}`]!;
+        if (nu === 0) continue;
+        const x = (v[`X0${i}`]! + nu * v.xi!) / C_STD;
+        if (!(x > 0)) return [ln(v.K!), NaN];
+        lnQ += nu * ln(x);
+      }
       return [ln(v.K!), lnQ];
     },
     bracket: (unknown, v) => {
       if (unknown !== 'xi') return undefined;
-      // Every species present must keep a positive concentration.
+      // Reactants limit how far forward ξ can go, products how far backward.
       let lo = -Infinity;
       let hi = Infinity;
-      if (v.a! > 0) hi = Math.min(hi, v.A0! / v.a!);
-      if (v.b! > 0) hi = Math.min(hi, v.B0! / v.b!);
-      if (v.c! > 0) lo = Math.max(lo, -v.C0! / v.c!);
-      if (v.d! > 0) lo = Math.max(lo, -v.D0! / v.d!);
+      for (let i = 1; `nu${i}` in v; i++) {
+        const nu = v[`nu${i}`]!;
+        const x0 = v[`X0${i}`]!;
+        if (nu < 0) hi = Math.min(hi, x0 / -nu);
+        if (nu > 0) lo = Math.max(lo, -x0 / nu);
+      }
       return Number.isFinite(lo) && Number.isFinite(hi) ? [lo, hi] : undefined;
     },
-    rearranged: {
-      K: 'K = \\dfrac{[\\mathrm{C}]^c[\\mathrm{D}]^d}{[\\mathrm{A}]^a[\\mathrm{B}]^b}\\ \\text{at equilibrium}',
-      xi: '\\text{Solve } K = \\dfrac{([\\mathrm{C}]_0 + c\\xi)^c([\\mathrm{D}]_0 + d\\xi)^d}{([\\mathrm{A}]_0 - a\\xi)^a([\\mathrm{B}]_0 - b\\xi)^b}\\text{ for }\\xi',
+    constraint: (v) => {
+      for (let i = 1; `nu${i}` in v; i++) if (v[`nu${i}`] === 0) return `ν${SUB[i]} is 0: remove that species instead`;
+      return null;
     },
-    notes: 'Solution-phase concentrations relative to c° = 1 mol dm⁻³. The physical root keeps every concentration positive.',
+    rearranged: {
+      K: 'K = \\prod_i \\left(\\frac{[\\mathrm{X}_i]_\\mathrm{eq}}{c^\\circ}\\right)^{\\nu_i},\\quad [\\mathrm{X}_i]_\\mathrm{eq} = [\\mathrm{X}_i]_0 + \\nu_i\\xi',
+      xi: '\\text{Solve } K = \\prod_i \\left(\\frac{[\\mathrm{X}_i]_0 + \\nu_i\\,\\xi}{c^\\circ}\\right)^{\\nu_i} \\text{ for } \\xi',
+    },
+    notes:
+      'ν is negative for reactants and positive for products. Concentrations are relative to c° = 1 mol dm⁻³; leave out solids, pure liquids and the solvent. The physical root keeps every concentration positive.',
     examples: [
-      { K: 50, a: 1, b: 1, c: 2, d: 0, A0: 0.1, B0: 0.1, C0: 0, D0: 0 },
-      { K: 1.8e-5, a: 1, b: 0, c: 1, d: 1, A0: 0.1, B0: 0, C0: 0, D0: 0 },
+      // H₂ + I₂ ⇌ 2HI from 0.10 mol dm⁻³ each.
+      { K: 50, nu1: -1, X01: 0.1, nu2: -1, X02: 0.1, nu3: 2, X03: 0 },
+      // Weak acid HA ⇌ H⁺ + A⁻.
+      { K: 1.8e-5, nu1: -1, X01: 0.1, nu2: 1, X02: 0, nu3: 1, X03: 0 },
+      // N₂ + 3H₂ ⇌ 2NH₃.
+      { K: 0.5, nu1: -1, X01: 1, nu2: -3, X02: 3, nu3: 2, X03: 0 },
+      // AgCl(s) ⇌ Ag⁺ + Cl⁻ into 0.010 mol dm⁻³ Cl⁻ (the solid is left out).
+      { K: 1.8e-10, nu1: 1, X01: 0, nu2: 1, X02: 0.01 },
+      // From ξ to K: N₂O₄ ⇌ 2NO₂.
+      { xi: 0.02, nu1: -1, X01: 0.1, nu2: 2, X02: 0 },
     ],
     reviewed: false,
   }),

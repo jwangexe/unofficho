@@ -1,11 +1,11 @@
 /** Spot checks against independently calculated textbook values. */
 import { describe, expect, it } from 'vitest';
 import { formulaById } from '@/engine/formulas';
-import { solveFormula } from '@/engine/formula';
+import { formulaForSymbols, solveFormula } from '@/engine/formula';
 import { displayValue, qty, type Quantity } from '@/engine/quantity';
 
 function solve(id: string, unknown: string, given: Record<string, Quantity>) {
-  const res = solveFormula(formulaById.get(id)!, unknown, given);
+  const res = solveFormula(formulaForSymbols(formulaById.get(id)!, Object.keys(given)), unknown, given);
   if (!res.ok) throw new Error(res.error.message);
   return res.value;
 }
@@ -68,19 +68,29 @@ describe('textbook values', () => {
 
   it('ICE: H₂ + I₂ ⇌ 2HI with K = 50 from 0.10 mol dm⁻³ each', () => {
     const xi = val('ice', 'xi', {
-      K: qty(50, '1'), a: qty(1, '1'), b: qty(1, '1'), c: qty(2, '1'), d: qty(0, '1'),
-      A0: qty(0.1, 'mol/dm3'), B0: qty(0.1, 'mol/dm3'), C0: qty(0, 'mol/dm3'), D0: qty(0, 'mol/dm3'),
+      K: qty(50, '1'), nu1: qty(-1, '1'), X01: qty(0.1, 'mol/dm3'), nu2: qty(-1, '1'), X02: qty(0.1, 'mol/dm3'), nu3: qty(2, '1'), X03: qty(0, 'mol/dm3'),
     });
     expect(xi).toBeCloseTo((0.1 * Math.sqrt(50)) / (2 + Math.sqrt(50)), 8);
   });
 
   it('ICE runs backwards (negative ξ) when products start in excess', () => {
     const xi = val('ice', 'xi', {
-      K: qty(50, '1'), a: qty(1, '1'), b: qty(1, '1'), c: qty(2, '1'), d: qty(0, '1'),
-      A0: qty(0, 'mol/dm3'), B0: qty(0, 'mol/dm3'), C0: qty(0.2, 'mol/dm3'), D0: qty(0, 'mol/dm3'),
+      K: qty(50, '1'), nu1: qty(-1, '1'), X01: qty(0, 'mol/dm3'), nu2: qty(-1, '1'), X02: qty(0, 'mol/dm3'), nu3: qty(2, '1'), X03: qty(0.2, 'mol/dm3'),
     });
     expect(xi).toBeLessThan(0);
     expect(xi).toBeCloseTo(-(0.2 - (0.2 * Math.sqrt(50)) / (2 + Math.sqrt(50))) / 2, 8);
+  });
+
+  it('ICE with three reactant molecules: N₂ + 3H₂ ⇌ 2NH₃', () => {
+    const xi = val('ice', 'xi', {
+      K: qty(0.5, '1'), nu1: qty(-1, '1'), X01: qty(1, 'mol/dm3'), nu2: qty(-3, '1'), X02: qty(3, 'mol/dm3'), nu3: qty(2, '1'), X03: qty(0, 'mol/dm3'),
+    });
+    expect((2 * xi) ** 2 / ((1 - xi) * (3 - 3 * xi) ** 3)).toBeCloseTo(0.5, 8);
+  });
+
+  it('ICE with a common ion: AgCl solubility in 0.010 mol dm⁻³ Cl⁻ (solid left out)', () => {
+    const xi = val('ice', 'xi', { K: qty(1.8e-10, '1'), nu1: qty(1, '1'), X01: qty(0, 'mol/dm3'), nu2: qty(1, '1'), X02: qty(0.01, 'mol/dm3') });
+    expect(xi * (0.01 + xi)).toBeCloseTo(1.8e-10, 18);
   });
 
   it('a 10 K rise doubling the rate near room temperature means Eₐ ≈ 52.9 kJ mol⁻¹', () => {
