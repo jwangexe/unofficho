@@ -60,7 +60,10 @@ export function texToSpeech(tex: string): string {
     } else if (c === '_' || c === '^') {
       const [a, j] = group(tex, i + 1);
       const spoken = texToSpeech(a);
-      out += c === '_' ? ` ${spoken} ` : spoken === '2' ? ' squared ' : ` to the power ${spoken} `;
+      // Superscripts that are labels, not powers: A*, R⁺, X⁻, R•.
+      const label: Record<string, string> = { '*': 'star', '∗': 'star', plus: 'plus', minus: 'minus', radical: 'radical' };
+      out +=
+        c === '_' ? ` ${spoken} ` : label[spoken] ? ` ${label[spoken]} ` : spoken === '2' ? ' squared ' : ` to the power ${spoken} `;
       i = j;
     } else if (c === '{' || c === '}') i++;
     else {

@@ -9,13 +9,42 @@ import { Tex } from '@/ui/Tex';
 import { texToSpeech } from '@/ui/texSpeech';
 import { answer } from '../answer';
 import { RichText } from '../book/QuickChecks';
+import { MechanismDerive } from './MechanismDerive';
 import { MechanismExplorer } from './MechanismExplorer';
 import { MechanismScheme } from './MechanismScheme';
 
-/** Picks per card, kept outside the cards so they survive scrolling off-screen. */
-const usePicks = create<{ picks: Record<string, number>; pick: (key: string, i: number) => void }>((set) => ({
+type Style = 'pick' | 'derive';
+const STYLE_KEY = 'unofficho.mechStyle';
+const readStyle = (): Style => {
+  try {
+    return localStorage.getItem(STYLE_KEY) === 'pick' ? 'pick' : 'derive';
+  } catch {
+    return 'derive';
+  }
+};
+
+/** Answers per card (kept outside the cards so they survive scrolling off-screen), plus the preferred style. */
+const usePicks = create<{
+  picks: Record<string, number>;
+  derived: Record<string, boolean>;
+  style: Style;
+  pick: (key: string, i: number) => void;
+  finishDerive: (key: string) => void;
+  setStyle: (s: Style) => void;
+}>((set) => ({
   picks: {},
+  derived: {},
+  style: readStyle(),
   pick: (key, i) => set((s) => ({ picks: { ...s.picks, [key]: i } })),
+  finishDerive: (key) => set((s) => ({ derived: { ...s.derived, [key]: true } })),
+  setStyle: (style) => {
+    try {
+      localStorage.setItem(STYLE_KEY, style);
+    } catch {
+      // Not persisted in private mode; fine.
+    }
+    set({ style });
+  },
 }));
 
 export interface MechanismItem {
@@ -31,8 +60,10 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
   const choice = mech.challenges[item.challenge]!;
   const options = useMemo(() => challengeOptions(mech, choice, rng(item.seed)) ?? [], [mech, choice, item.seed]);
   const picked = usePicks((s) => s.picks[key]);
-  const done = picked !== undefined;
-  const right = done && options[picked]!.correct;
+  const derived = usePicks((s) => !!s.derived[key]);
+  const style = usePicks((s) => s.style);
+  const done = picked !== undefined || derived;
+  const right = picked !== undefined && options[picked]!.correct;
   const tex = symbolTex(mech);
   const target = tex(`[${mech.rate.species}]`);
   const lhs = `${mech.rate.sign === -1 ? '-' : ''}\\frac{\\mathrm{d}${target}}{\\mathrm{d}t}`;
@@ -50,6 +81,11 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
     });
   };
 
+  const finishDerive = (score: number, meta: Record<string, unknown>) => {
+    usePicks.getState().finishDerive(key);
+    void answer({ itemId: itemId.mech(mech.id), section: 'calc', topic: mech.topic, score, mode: 'mechanisms-derive', meta: { challenge: item.challenge, ...meta } });
+  };
+
   return (
     <article className="mx-auto flex h-full max-w-xl flex-col" aria-label={`Mechanism: ${mech.title}`}>
       <CardTop topic="kinetics/mechanisms" reviewed={mech.reviewed} itemId={itemId.mech(mech.id)} context={`challenge ${item.challenge}`} section="calc" />
@@ -61,9 +97,34 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
         <div className="rounded-2xl bg-surface p-3">
           <MechanismScheme mech={mech} />
         </div>
+        <div className="grid grid-cols-2 gap-1 rounded-xl bg-surface-2 p-1" role="group" aria-label="How to answer">
+          {(['derive', 'pick'] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={style === s}
+              disabled={picked !== undefined || derived}
+              onClick={() => usePicks.getState().setStyle(s)}
+              className={`min-h-10 rounded-lg text-sm font-medium disabled:opacity-60 ${style === s ? 'bg-accent text-accent-ink' : 'text-muted'}`}
+            >
+              {s === 'derive' ? 'Derive it' : 'Pick the rate law'}
+            </button>
+          ))}
+        </div>
         <p className="leading-relaxed">
-          Take <RichText>{describeChoice(mech, choice)}</RichText>. Which expression is <Tex>{lhs}</Tex>?
+          Take <RichText>{describeChoice(mech, choice)}</RichText>.{' '}
+          {style === 'pick' ? (
+            <>
+              Which expression is <Tex>{lhs}</Tex>?
+            </>
+          ) : (
+            <>
+              Derive <Tex>{lhs}</Tex>.
+            </>
+          )}
         </p>
+        {style === 'derive' && picked === undefined && <MechanismDerive cardKey={key} mech={mech} choice={choice} seed={item.seed} onFinish={finishDerive} />}
+        {style === 'pick' && (
         <div className="grid gap-2" role="group" aria-label="Rate laws">
           {options.map((o, i) => {
             const tone = !done ? 'border-border bg-surface-2' : o.correct ? 'border-good bg-good/10' : picked === i ? 'border-bad bg-bad/10' : 'border-border bg-surface-2 text-muted';
@@ -80,7 +141,8 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
             );
           })}
         </div>
-        {done && (
+        )}
+        {picked !== undefined && (
           <section role="status" className={`animate-pop space-y-2 rounded-2xl border p-4 text-sm leading-relaxed ${right ? 'border-good/50' : 'border-bad/50'}`}>
             <p className={`font-semibold ${right ? 'text-good' : 'text-bad'}`}>{right ? '✓ Correct' : '✗ Not quite'}</p>
             {!right && options[picked]!.why && (
@@ -95,7 +157,7 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
         )}
         {done && (
           <section aria-label="Derivation" className="rounded-2xl bg-surface p-3">
-            <h3 className="mb-2 font-semibold">Derivation</h3>
+            <h3 className="mb-2 font-semibold">{derived ? 'Explore' : 'Derivation'}</h3>
             <p className="mb-3 text-xs text-muted">Change the approximations to see how the rate law changes.</p>
             <MechanismExplorer mech={mech} initial={choice} />
           </section>
@@ -104,7 +166,7 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
       </div>
       <div className="border-t border-border bg-bg px-4 py-2">
         <button type="button" disabled={!done} onClick={onNext} className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-ink disabled:opacity-40">
-          {done ? 'Next ↓' : 'Pick a rate law'}
+          {done ? 'Next ↓' : style === 'derive' ? 'Derive the rate law' : 'Pick a rate law'}
         </button>
       </div>
     </article>

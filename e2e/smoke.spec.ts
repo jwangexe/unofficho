@@ -56,6 +56,7 @@ test('Mechanisms mode: pick a rate law, then switch approximations in the deriva
   await page.goto('/calc?ids=mech%3Amech-lindemann');
   const card = page.getByRole('region', { name: 'Mechanism 1' });
   await expect(card.getByRole('heading', { name: /Lindemann/ })).toBeVisible();
+  await card.getByRole('button', { name: 'Pick the rate law' }).click();
   await card.getByRole('group', { name: 'Rate laws' }).getByRole('button').first().click();
   await expect(card.getByRole('status')).toContainText(/Correct|Not quite/);
   await expect(card.getByRole('region', { name: 'Derivation' }).getByText('Rate law', { exact: true })).toBeVisible();
@@ -67,6 +68,41 @@ test('Mechanisms mode: pick a rate law, then switch approximations in the deriva
   await tool.getByRole('button', { name: 'Step 1', exact: true }).click();
   await expect(tool.getByText('Fast pre-equilibrium in step 1')).toBeVisible();
   await expect(tool.getByRole('button', { name: '[A*]' })).toBeDisabled();
+});
+
+test('derive it yourself: equations, then solving by substitution', async ({ page }) => {
+  // Math.random() = 0 deals the first challenge: steady state on A*.
+  await page.addInitScript(() => {
+    Math.random = () => 0;
+  });
+  await page.goto('/calc?ids=mech%3Amech-lindemann');
+  const card = page.getByRole('region', { name: 'Mechanism 1' });
+  await card.getByRole('button', { name: 'Derive it' }).click();
+
+  const eqs = card.getByRole('region', { name: 'Write the equations' });
+  const coef = (term: string) => eqs.getByRole('group', { name: `Coefficient of ${term}` });
+  await coef('k 1 [A][M]').getByRole('button', { name: '+' }).click();
+  await coef('k minus 1 [M][A star]').getByRole('button', { name: '+' }).click();
+  await eqs.getByRole('button', { name: 'Check equations' }).click();
+  await expect(eqs.getByText(/so its term is negative/)).toBeVisible();
+  await coef('k minus 1 [M][A star]').getByRole('button', { name: '−' }).click();
+  await coef('k 2 [A star]').getByRole('button', { name: '−' }).click();
+  await eqs.getByRole('button', { name: 'Check equations' }).click();
+  await expect(eqs.getByText('✓ Equations right')).toBeVisible();
+
+  const solve = card.getByRole('region', { name: 'Solve by substitution' });
+  await solve.getByRole('button', { name: /Solve for/ }).click();
+  const chip = (term: string) => solve.getByRole('button', { name: new RegExp(`^${term.replace(/[[\]]/g, '\\$&')}:`) });
+  await chip('k 1 [A][M]').click(); // → numerator
+  await chip('k 2').click();
+  await chip('k 2').click(); // → denominator
+  await chip('k minus 1 [M]').click();
+  await chip('k minus 1 [M]').click();
+  await solve.getByRole('button', { name: 'Check', exact: true }).click();
+
+  const rate = card.getByRole('region', { name: 'The rate law' });
+  await rate.getByRole('button', { name: 'd[P] over dt equals k 1 k 2 [A][M] over k 2 plus k minus 1 [M]' }).click();
+  await expect(rate.getByText('✓ Derived')).toBeVisible();
 });
 
 test('installable PWA that works offline after the first visit', async ({ page, context }) => {

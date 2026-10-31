@@ -73,7 +73,7 @@ export interface Choice {
   pe: number[];
 }
 
-interface Elementary {
+export interface Elementary {
   k: string;
   reactants: Record<string, number>;
   products: Record<string, number>;
@@ -148,7 +148,7 @@ export const allSymbols = (mech: Mechanism) => [
   ...Object.keys(mech.species).map(conc),
 ];
 
-const rateOf = (e: Elementary): Poly => mul(sym(e.k), ...Object.entries(e.reactants).map(([sp, n]) => sym(conc(sp), n)));
+export const rateOf = (e: Elementary): Poly => mul(sym(e.k), ...Object.entries(e.reactants).map(([sp, n]) => sym(conc(sp), n)));
 
 /** A mass-action expression written step by step, in mechanism order (not collected). */
 function stepwiseTex(mech: Mechanism, coef: (e: Elementary) => number): string {
@@ -165,7 +165,7 @@ const netRateTex = (mech: Mechanism, sp: string, sign = 1) =>
   stepwiseTex(mech, (e) => sign * ((e.products[sp] ?? 0) - (e.reactants[sp] ?? 0)));
 
 /** d[sp]/dt by mass action. */
-function netRate(mech: Mechanism, sp: string): Poly {
+export function netRate(mech: Mechanism, sp: string): Poly {
   return add(...elementarySteps(mech).map((e) => scale(rateOf(e), (e.products[sp] ?? 0) - (e.reactants[sp] ?? 0))));
 }
 
@@ -180,13 +180,13 @@ export function preEquilibriumSpecies(mech: Mechanism, stepIndex: number, ss: re
 // ---------- Solving ----------
 
 /** A solved unknown: [X]^power = value. */
-interface Solution {
+export interface Solution {
   power: number;
   value: Rational;
 }
 
 /** Replace x^power by `value` throughout p (every power of x must be a multiple, unless the value is a monomial). */
-function substitutePower(p: Poly, x: string, { power, value }: Solution): Rational {
+export function substitutePower(p: Poly, x: string, { power, value }: Solution): Rational {
   if (power === 1) return substitute(p, x, value);
   const scaled = p.map((t) => {
     const e = t.m[x];
