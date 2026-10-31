@@ -22,7 +22,7 @@ export default defineConfig({
       enforce: 'pre',
       ...mdx({
         remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'frontmatter' }], remarkGfm, remarkMath],
-        rehypePlugins: [[rehypeKatex, { throwOnError: false, output: 'html' }]],
+        rehypePlugins: [[rehypeKatex, { throwOnError: false }]],
       }),
     },
     react({ include: /\.(mdx|[jt]sx?)$/ }),

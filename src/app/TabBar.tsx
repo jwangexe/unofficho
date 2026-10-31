@@ -20,7 +20,7 @@ export function TabBar() {
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] ${
+                `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs ${
                   isActive ? 'text-accent' : 'text-muted'
                 }`
               }

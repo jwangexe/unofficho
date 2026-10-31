@@ -6,6 +6,7 @@ import { Feed, type FeedHandle } from '@/ui/Feed';
 import { EmptyFocus, FocusBanner, useDueIds, useFocus, type Focus } from '../focus';
 import { ClassifyCard, FastCard } from './ClassifyCard';
 import { ReactCard } from './ReactCard';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 type Mode = 'classify' | 'fast' | 'react';
 const MODES: { id: Mode; label: string }[] = [
@@ -66,6 +67,7 @@ function ModeFeed({ mode, deck }: { mode: Mode; deck: Deck }) {
       items={items}
       getKey={(x) => x.key}
       onIndexChange={onIndexChange}
+      itemLabel={mode === 'react' ? 'Question' : 'Reagent'}
       render={(x, i) => {
         const next = () => feed.current?.scrollTo(i + 1);
         if (x.react) return <ReactCard cardKey={x.key} item={x.react} onNext={next} />;
@@ -89,6 +91,7 @@ function readMode(): Mode {
 }
 
 export default function ReagentsHome() {
+  useDocumentTitle('Reagents');
   const [chosen, setMode] = useState<Mode>(readMode);
   const [focus, clearFocus] = useFocus();
   const due = useDueIds('reagents', !!focus?.due);

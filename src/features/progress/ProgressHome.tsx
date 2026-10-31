@@ -9,6 +9,7 @@ import { Page } from '@/ui/Page';
 import { focusQuery } from '../focus';
 import { formulaHref, formulaName, itemHref, itemName, SECTION_LABEL, SECTION_PATH, topicHref, topicName } from './labels';
 import { dueToday, recent, RECENT_DAYS, streaks, tallyBy, weakSpots, type Tally } from './stats';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 const SECTIONS: Section[] = ['calc', 'reagents', 'book'];
 const btn = 'min-h-11 rounded-xl bg-surface-2 px-4 text-sm font-medium active:opacity-70';
@@ -82,6 +83,7 @@ function useProgress(version: number) {
 }
 
 export default function ProgressHome() {
+  useDocumentTitle('Progress');
   const [version, setVersion] = useState(0);
   const data = useProgress(version);
   const [msg, setMsg] = useState('');
@@ -144,7 +146,8 @@ export default function ProgressHome() {
   return (
     <Page title="Progress">
       {!stats ? (
-        <p className="text-sm text-muted">Loading…</p>
+        // Hold the space until the stats load, so the cards below do not jump (layout shift).
+        <div className="min-h-[100dvh]" aria-busy="true" />
       ) : (
         <>
           <div className="mb-4 grid grid-cols-3 gap-2">

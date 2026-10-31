@@ -6,7 +6,7 @@ import { RouteList } from './RouteList';
 export function ResultPanel({ result, template, inst }: { result: CheckResult; template: CalcTemplate; inst: CalcInstance }) {
   const { correct } = result;
   return (
-    <div role="status" className={`rounded-2xl border p-4 ${correct ? 'border-good/50' : 'border-bad/50'}`}>
+    <div role="status" className={`animate-pop rounded-2xl border p-4 ${correct ? 'border-good/50' : 'border-bad/50'}`}>
       <p className={`mb-2 text-lg font-semibold ${correct ? 'text-good' : 'text-bad'}`}>{correct ? '✓ Correct' : '✗ Not quite'}</p>
       <dl className="mb-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
         <dt className="text-muted">Expected</dt>

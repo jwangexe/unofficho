@@ -69,7 +69,7 @@ export function Scheme({
         <div className="min-w-0 flex-1">
           <Structure smiles={from} label={fromLabel ?? 'Reactant'} width={150} height={120} />
         </div>
-        <div className="flex w-20 shrink-0 flex-col items-center text-center text-[11px] leading-tight">
+        <div className="flex w-20 shrink-0 flex-col items-center text-center text-xs leading-tight">
           <span className="min-h-4">{reagent ? <R id={reagent}>{overText}</R> : overText}</span>
           <svg width="72" height="12" viewBox="0 0 72 12" aria-hidden className="my-1 text-text">
             <path d="M2 6h64M60 1l7 5-7 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -100,7 +100,7 @@ export function R({ id, children }: { id: string; children?: ReactNode }) {
   if (!r) return <span className="text-bad">[unknown reagent {id}]</span>;
   return (
     <>
-      <button type="button" className={linkCls} onClick={() => setOpen(true)}>
+      <button type="button" className={linkCls} onClick={() => setOpen(true)} aria-label={typeof children === 'string' || !children ? undefined : r.name}>
         {children ?? r.name}
       </button>
       <Sheet open={open} onClose={() => setOpen(false)} title="Reagent">
@@ -120,7 +120,7 @@ export function F({ id, children }: { id: string; children?: ReactNode }) {
   if (!f) return <span className="text-bad">[unknown formula {id}]</span>;
   return (
     <>
-      <button type="button" className={linkCls} onClick={() => setOpen(true)}>
+      <button type="button" className={linkCls} onClick={() => setOpen(true)} aria-label={typeof children === 'string' || !children ? undefined : f.name}>
         {children ?? f.name}
       </button>
       <Sheet open={open} onClose={() => setOpen(false)} title={f.name}>

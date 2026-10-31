@@ -10,5 +10,5 @@ export function Footer() {
 
 /** Compact disclaimer for full-screen feed cards, which have no page footer. */
 export function CardDisclaimer() {
-  return <p className="pt-4 text-center text-[11px] leading-snug text-muted/80">{DISCLAIMER}</p>;
+  return <p className="pt-4 text-center text-xs leading-snug text-muted">{DISCLAIMER}</p>;
 }

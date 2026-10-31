@@ -1,5 +1,6 @@
 import { ROLE_LABELS, ROLES, type Reagent, type Role } from '@/data/schemas';
-import { itemId, recordAttempt as record } from '@/storage/progress';
+import { itemId } from '@/storage/progress';
+import { answer as record } from '../answer';
 import { CardDisclaimer } from '@/ui/Footer';
 import { ReagentExplanation } from './Explanation';
 import { CardTop, ReagentIdentity } from './ReagentHeader';
@@ -41,7 +42,7 @@ export function ClassifyCard({ cardKey, r, onNext }: { cardKey: string; r: Reage
     if (result.missed.includes(role)) return 'border-good border-dashed';
     if (result.wrong.includes(role)) return 'border-bad bg-bad/15';
     if (result.extra.includes(role)) return 'border-border bg-surface-2';
-    return 'border-border opacity-50';
+    return 'border-border text-muted';
   };
   const chipNote = (role: Role) =>
     !result ? '' : result.missed.includes(role) ? ' · missed' : result.wrong.includes(role) ? ' · no' : result.extra.includes(role) ? ' · also OK' : '';
@@ -72,7 +73,7 @@ export function ClassifyCard({ cardKey, r, onNext }: { cardKey: string; r: Reage
         <ReagentIdentity r={r} />
         {result && (
           <>
-            <p role="status" className={`text-center text-lg font-semibold ${result.score === 1 ? 'text-good' : result.score > 0 ? 'text-warn' : 'text-bad'}`}>
+            <p role="status" className={`animate-pop text-center text-lg font-semibold ${result.score === 1 ? 'text-good' : result.score > 0 ? 'text-warn' : 'text-bad'}`}>
               {result.score === 1 ? '✓ All correct' : `${Math.round(result.score * 100)}% — partial credit`}
             </p>
             {grid}
@@ -120,7 +121,7 @@ export function FastCard({ cardKey, r, onNext }: { cardKey: string; r: Reagent; 
         <ReagentIdentity r={r} compact />
         {verdict && (
           <>
-            <p role="status" className={`text-center text-lg font-semibold ${verdict.verdict === 'primary' ? 'text-good' : verdict.verdict === 'secondary' ? 'text-warn' : 'text-bad'}`}>
+            <p role="status" className={`animate-pop text-center text-lg font-semibold ${verdict.verdict === 'primary' ? 'text-good' : verdict.verdict === 'secondary' ? 'text-warn' : 'text-bad'}`}>
               {verdict.verdict === 'primary'
                 ? '✓ Main role'
                 : verdict.verdict === 'secondary'

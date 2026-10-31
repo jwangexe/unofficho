@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { checkAnswer } from '@/engine/check';
 import { getUnit } from '@/engine/units';
 import type { CalcInstance, CalcTemplate } from '@/engine/template';
-import { itemId, recordAttempt } from '@/storage/progress';
+import { itemId } from '@/storage/progress';
+import { answer } from '../answer';
 import { DISCLAIMER } from '@/app/brand';
 import { FlagButton } from '@/ui/FlagButton';
 import { Tex } from '@/ui/Tex';
@@ -85,7 +86,7 @@ export function QuestionCard({
     elapsedAtSubmit.current ??= elapsed;
     if (!card.recorded) {
       markRecorded(inst.key);
-      void recordAttempt({
+      void answer({
         itemId: itemId.calc(t.id),
         section: 'calc',
         topic: t.topic,
@@ -109,7 +110,7 @@ export function QuestionCard({
       <header className="flex items-center gap-2 px-4 pt-2">
         <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-muted">{TOPIC_TAG[t.topic] ?? t.topic}</span>
         {!t.reviewed && (
-          <span className="text-[10px] text-muted/70" title="Not yet checked for accuracy">
+          <span className="text-xs text-muted" title="Not yet checked for accuracy">
             unreviewed
           </span>
         )}
@@ -180,7 +181,7 @@ export function QuestionCard({
           </section>
         )}
 
-        <p className="pt-4 text-center text-[11px] leading-snug text-muted/80">{DISCLAIMER}</p>
+        <p className="pt-4 text-center text-xs leading-snug text-muted">{DISCLAIMER}</p>
       </div>
 
       <div className="flex gap-2 border-t border-border bg-bg px-4 py-2">

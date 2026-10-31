@@ -1,6 +1,7 @@
 import { reagentById } from '@/data';
 import type { ReactItem } from '@/data/schemas';
-import { itemId, recordAttempt } from '@/storage/progress';
+import { itemId } from '@/storage/progress';
+import { answer } from '../answer';
 import { CardDisclaimer } from '@/ui/Footer';
 import { Structure } from '@/ui/Structure';
 import { CardTop } from './ReagentHeader';
@@ -28,7 +29,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
     if (done) return;
     update(cardKey, { product: i });
     const score = (groupsRight ? 0.5 : 0) + (item.products[i]!.correct ? 0.5 : 0);
-    void recordAttempt({
+    void answer({
       itemId: itemId.react(item.id),
       section: 'reagents',
       topic: item.topic,
@@ -66,7 +67,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
                     : 'border-good border-dashed'
                   : on
                     ? 'border-bad bg-bad/15'
-                    : 'border-border opacity-60';
+                    : 'border-border text-muted';
               return (
                 <button key={g.name} type="button" aria-pressed={on} onClick={() => toggleGroup(g.name)} className={`min-h-11 rounded-full border px-3 text-sm ${tone}`}>
                   {g.name}
@@ -76,7 +77,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
             })}
           </div>
           {state.groupsChecked && (
-            <p role="status" className={`mt-2 text-sm ${groupsRight ? 'text-good' : 'text-bad'}`}>
+            <p role="status" className={`animate-pop mt-2 text-sm ${groupsRight ? 'text-good' : 'text-bad'}`}>
               {groupsRight ? '✓ Right groups' : '✗ Not quite: reacting groups are in green'}
             </p>
           )}
@@ -87,7 +88,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
             <p className="mb-2 text-sm font-semibold">2. Which product forms?</p>
             <ul className="grid grid-cols-2 gap-2">
               {item.products.map((p, i) => {
-                const tone = !done ? 'border-border' : p.correct ? 'border-good bg-good/10' : state.product === i ? 'border-bad bg-bad/10' : 'border-border opacity-60';
+                const tone = !done ? 'border-border' : p.correct ? 'border-good bg-good/10' : state.product === i ? 'border-bad bg-bad/10' : 'border-border text-muted';
                 return (
                   <li key={p.smiles}>
                     <button
@@ -107,7 +108,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
         )}
 
         {done && (
-          <section role="status" className={`rounded-2xl border p-4 text-sm leading-relaxed ${productRight ? 'border-good/50' : 'border-bad/50'}`}>
+          <section role="status" className={`animate-pop rounded-2xl border p-4 text-sm leading-relaxed ${productRight ? 'border-good/50' : 'border-bad/50'}`}>
             <p className={`mb-1 font-semibold ${productRight ? 'text-good' : 'text-bad'}`}>{productRight ? '✓ Correct product' : '✗ Not that one'}</p>
             {item.explanation}
           </section>

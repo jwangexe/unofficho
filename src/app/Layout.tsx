@@ -9,6 +9,12 @@ export function Layout() {
   const { theme, toggle } = useTheme();
   return (
     <div className="flex h-dvh flex-col">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-accent-ink"
+      >
+        Skip to content
+      </a>
       <header className="flex items-center justify-between border-b border-border bg-surface px-4 pt-[env(safe-area-inset-top)]">
         <Link to="/" className="py-3 text-lg">
           <Logo />
@@ -27,7 +33,7 @@ export function Layout() {
           </Link>
         </div>
       </header>
-      <main className="min-h-0 flex-1 overflow-y-auto">
+      <main id="main" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto outline-none">
         <Suspense fallback={null}>
           <Outlet />
         </Suspense>

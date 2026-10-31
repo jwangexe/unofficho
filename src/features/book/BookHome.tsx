@@ -4,6 +4,7 @@ import { BOOK_OUTLINE, bookPages } from '@/data/book';
 import { CHAPTERS, type Chapter } from '@/data/schemas';
 import { Page } from '@/ui/Page';
 import { BookPageView } from './BookPageView';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 const CHAPTER_KEY = 'unofficho.bookChapter';
 
@@ -17,6 +18,7 @@ function readChapter(): Chapter {
 }
 
 function Contents() {
+  useDocumentTitle('Book');
   const [chapter, setChapter] = useState<Chapter>(readChapter);
   const pick = (c: Chapter) => {
     setChapter(c);

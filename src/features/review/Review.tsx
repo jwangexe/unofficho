@@ -16,6 +16,7 @@ import { downloadJson } from '@/storage/exportImport';
 import { itemId } from '@/storage/itemIds';
 import { Page } from '@/ui/Page';
 import type { ReviewKind } from '../../../scripts/review';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 interface Row {
   kind: ReviewKind;
@@ -60,6 +61,7 @@ function unreviewed(): Row[] {
 }
 
 export default function Review() {
+  useDocumentTitle('Review content');
   const all = useMemo(unreviewed, []);
   const [kind, setKind] = useState<ReviewKind | 'all'>('all');
   const [onlyTodo, setOnlyTodo] = useState(false);

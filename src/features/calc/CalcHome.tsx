@@ -7,6 +7,7 @@ import { Feed, type FeedHandle } from '@/ui/Feed';
 import { ApproachCard } from './ApproachCard';
 import { QuestionCard } from './QuestionCard';
 import { useCalcStore } from './store';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 type Mode = 'feed' | 'approach' | 'multi' | 'exam';
 
@@ -62,12 +63,10 @@ function generate(pool: readonly CalcTemplate[], n: number, lastTemplate?: strin
 function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] }) {
   const [items, setItems] = useState<CalcInstance[]>(() => generate(pool, 5));
   const [locked, setLocked] = useState(false);
-  const [index, setIndex] = useState(0);
   const feed = useRef<FeedHandle>(null);
 
   const onIndexChange = useCallback(
     (i: number) => {
-      setIndex(i);
       setItems((cur) => (i >= cur.length - 3 ? [...cur, ...generate(pool, 5, cur.at(-1)?.templateId)] : cur));
     },
     [pool],
@@ -80,6 +79,7 @@ function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] })
         items={items}
         getKey={(i) => i.key}
         locked={locked}
+        itemLabel="Question"
         onIndexChange={onIndexChange}
         render={(inst, i, active) => {
           const t = calcTemplateById.get(inst.templateId)!;
@@ -91,9 +91,6 @@ function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] })
           );
         }}
       />
-      <span className="sr-only" aria-live="polite">
-        Question {index + 1}
-      </span>
     </>
   );
 }
@@ -108,6 +105,7 @@ function readMode(): Mode {
 }
 
 export default function CalcHome() {
+  useDocumentTitle('Calculations');
   const [mode, setMode] = useState<Mode>(readMode);
   const pick = (m: Mode) => {
     setMode(m);

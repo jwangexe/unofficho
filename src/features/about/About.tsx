@@ -1,8 +1,10 @@
 import { DISCLAIMER, DOMAIN } from '@/app/brand';
 import { Logo } from '@/ui/Logo';
 import { Page } from '@/ui/Page';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 export default function About() {
+  useDocumentTitle('About');
   return (
     <Page>
       <h1 className="mb-4 text-3xl">

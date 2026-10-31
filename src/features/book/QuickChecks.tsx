@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { quickCheckItemId, type BookPage } from '@/data/book';
 import type { QuickCheck } from '@/data/schemas';
-import { recordAttempt } from '@/storage/progress';
+import { answer } from '../answer';
 import { Tex } from '@/ui/Tex';
+import { richTextSpeech } from '@/ui/texSpeech';
 
 /** Text from YAML with optional inline $…$ maths. */
 export function RichText({ children }: { children: string }) {
@@ -15,7 +16,7 @@ export function RichText({ children }: { children: string }) {
 }
 
 function record(page: BookPage, q: QuickCheck, score: number) {
-  void recordAttempt({
+  void answer({
     itemId: quickCheckItemId(page.id, q.id),
     section: 'book',
     topic: `${page.chapter}/${page.section}`,
@@ -41,7 +42,7 @@ function Mcq({ page, q }: { page: BookPage; q: Extract<QuickCheck, { type: 'mcq'
             idle: 'border-border bg-surface-2',
             right: 'border-good bg-good/10',
             wrong: 'border-bad bg-bad/10',
-            other: 'border-border bg-surface-2 opacity-60',
+            other: 'border-border bg-surface-2 text-muted',
           }[state];
           return (
             <button
@@ -49,6 +50,7 @@ function Mcq({ page, q }: { page: BookPage; q: Extract<QuickCheck, { type: 'mcq'
               type="button"
               onClick={() => pick(i)}
               aria-disabled={done}
+              aria-label={o.includes('$') ? richTextSpeech(o) + (state === 'right' ? ' (correct answer)' : state === 'wrong' ? ' (your answer, incorrect)' : '') : undefined}
               className={`min-h-12 rounded-xl border px-3 py-2 text-left text-[0.95rem] ${cls}`}
             >
               <RichText>{o}</RichText>
@@ -59,7 +61,7 @@ function Mcq({ page, q }: { page: BookPage; q: Extract<QuickCheck, { type: 'mcq'
         })}
       </div>
       {done && (
-        <p className="mt-3 text-sm leading-relaxed" aria-live="polite">
+        <p className="animate-pop mt-3 text-sm leading-relaxed" aria-live="polite">
           <span className={`font-semibold ${picked === q.answer ? 'text-good' : 'text-bad'}`}>
             {picked === q.answer ? 'Correct. ' : 'Not quite. '}
           </span>

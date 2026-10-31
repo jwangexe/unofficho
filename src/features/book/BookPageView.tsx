@@ -1,23 +1,33 @@
-import { useEffect } from 'react';
-import { Link, Navigate, useParams } from 'react-router';
+import { useEffect, useRef } from 'react';
+import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import { BOOK_OUTLINE, bookPageById, bookPages, sectionTitle } from '@/data/book';
 import { FlagButton } from '@/ui/FlagButton';
 import { Page } from '@/ui/Page';
+import { useSwipe } from '@/ui/useSwipe';
 import { Callout, F, mdxComponents, R } from './mdx';
 import { QuickChecks } from './QuickChecks';
+import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 export function BookPageView() {
   const { pageId } = useParams();
   const page = pageId ? bookPageById.get(pageId) : undefined;
+  const navigate = useNavigate();
+  useDocumentTitle(page?.title ?? 'Book');
+  const article = useRef<HTMLElement>(null);
+  const i = page ? bookPages.indexOf(page) : -1;
+  const prev = bookPages[i - 1];
+  const next = bookPages[i + 1];
+  // Swipe left for the next page, right for the previous one.
+  useSwipe(article, {
+    onLeft: next ? () => navigate(`/book/${next.id}`) : undefined,
+    onRight: prev ? () => navigate(`/book/${prev.id}`) : undefined,
+  });
 
   useEffect(() => {
     document.querySelector('main')?.scrollTo(0, 0);
   }, [pageId]);
 
   if (!page) return <Navigate to="/book" replace />;
-  const i = bookPages.indexOf(page);
-  const prev = bookPages[i - 1];
-  const next = bookPages[i + 1];
   const { Content } = page;
   const hasRelated = page.related.reagents.length + page.related.formulas.length > 0;
 
@@ -37,13 +47,13 @@ export function BookPageView() {
       <p className="mt-1.5 flex items-center gap-2 text-xs text-muted">
         <span>{page.stub ? 'Outline' : `${page.minutes} min read`}</span>
         {!page.reviewed && (
-          <span className="text-muted/70" title="Not yet checked for accuracy">
+          <span className="text-muted" title="Not yet checked for accuracy">
             · unreviewed
           </span>
         )}
       </p>
 
-      <article className="book-prose mt-2 text-[1.0625rem]">
+      <article ref={article} className="book-prose mt-2 text-[1.0625rem]">
         {page.stub ? (
           <>
             <Callout type="note" title="Not written yet">

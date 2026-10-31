@@ -119,7 +119,7 @@ export function OperationSheet({
                     className="flex min-h-16 w-full flex-col items-center justify-center rounded-xl bg-surface-2 px-1"
                   >
                     <span className="text-lg">{d.symbol}</span>
-                    <span className="text-[11px] leading-tight text-muted">{d.name}</span>
+                    <span className="text-xs leading-tight text-muted">{d.name}</span>
                   </button>
                 </li>
               ))}

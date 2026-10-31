@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { create } from 'zustand';
 import { buildOptions, describeNode, judgeChoice, resolveChoice, type ApproachOption, type ChoiceVerdict } from '@/engine/approach';
 import { rng, type CalcInstance, type CalcTemplate } from '@/engine/template';
-import { itemId, recordAttempt } from '@/storage/progress';
+import { itemId } from '@/storage/progress';
+import { answer } from '../answer';
 import { FlagButton } from '@/ui/FlagButton';
 import { Tex } from '@/ui/Tex';
 import { TOPIC_TAG } from './topics';
@@ -59,7 +60,7 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
     };
     if (next.done.length === total && !state.recorded) {
       next.recorded = true;
-      void recordAttempt({
+      void answer({
         itemId: itemId.calc(t.id),
         section: 'calc',
         topic: t.topic,
@@ -148,7 +149,7 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
         )}
 
         {finished && (
-          <section role="status" className="rounded-2xl border border-good/50 p-4">
+          <section role="status" className="animate-pop rounded-2xl border border-good/50 p-4">
             <p className="mb-1 text-lg font-semibold text-good">Plan complete</p>
             <p className="mb-3 text-sm">
               {state.firstTry} of {total} steps right first time.
