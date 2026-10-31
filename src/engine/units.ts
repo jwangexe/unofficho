@@ -10,6 +10,8 @@ export interface Unit {
   factor: number;
   /** Only for absolute temperature scales (°C). Ignored for temperature differences. */
   offset?: number;
+  /** Never chosen automatically for a computed value (e.g. % would make K = 1.8×10⁻⁵ read "0.0018 %"). */
+  explicitOnly?: boolean;
 }
 
 const u = (id: string, symbol: string, latex: string, dim: Dim, factor: number, offset?: number): Unit => ({
@@ -22,6 +24,7 @@ const u = (id: string, symbol: string, latex: string, dim: Dim, factor: number, 
  */
 export const UNITS: readonly Unit[] = [
   u('1', '', '', D.none, 1),
+  { ...u('%', '%', '\\%', D.none, 0.01), explicitOnly: true },
   // energy
   u('kJ', 'kJ', '\\mathrm{kJ}', D.energy, 1e3),
   u('J', 'J', '\\mathrm{J}', D.energy, 1),
@@ -55,6 +58,8 @@ export const UNITS: readonly Unit[] = [
   u('kg', 'kg', '\\mathrm{kg}', D.mass, 1),
   u('mg', 'mg', '\\mathrm{mg}', D.mass, 1e-6),
   u('g/mol', 'g mol⁻¹', '\\mathrm{g\\,mol^{-1}}', D.molarMass, 1e-3),
+  u('g/dm3', 'g dm⁻³', '\\mathrm{g\\,dm^{-3}}', D.massConcentration, 1),
+  u('g/cm3', 'g cm⁻³', '\\mathrm{g\\,cm^{-3}}', D.massConcentration, 1e3),
   // concentration (mol dm⁻³ is 1000 mol m⁻³ in SI)
   u('mol/dm3', 'mol dm⁻³', '\\mathrm{mol\\,dm^{-3}}', D.concentration, 1e3),
   u('mmol/dm3', 'mmol dm⁻³', '\\mathrm{mmol\\,dm^{-3}}', D.concentration, 1),
@@ -120,7 +125,7 @@ export const unitsForDim = (d: Dim): Unit[] => UNITS.filter((x) => eqDim(x.dim, 
  * whose displayed magnitude is comfortable (10⁻³…10⁴), else the first one, else SI base units.
  */
 export function unitForDim(d: Dim, siValue?: number): Unit {
-  const candidates = unitsForDim(d).filter((x) => x.offset === undefined);
+  const candidates = unitsForDim(d).filter((x) => x.offset === undefined && !x.explicitOnly);
   if (candidates.length === 0) return siUnit(d);
   if (siValue !== undefined && siValue !== 0 && Number.isFinite(siValue)) {
     const comfy = candidates.find((x) => {

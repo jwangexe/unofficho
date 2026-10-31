@@ -70,36 +70,4 @@ export const other = [
     examples: [{ lambda: 400 }],
     reviewed: false,
   }),
-
-  defineFormula({
-    id: 'moles-mass',
-    name: 'Moles from mass',
-    topic: 'other',
-    latex: 'n = \\dfrac{m}{M}',
-    vars: [
-      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
-      { sym: 'm', label: 'm', latex: 'm', name: 'Mass', dim: D.mass, unit: 'g' },
-      { sym: 'M', label: 'M', latex: 'M', name: 'Molar mass', dim: D.molarMass, unit: 'g/mol' },
-    ],
-    relation: (v) => [v.n! * v.M!, v.m!],
-    rearranged: { n: 'n = \\dfrac{m}{M}', m: 'm = nM', M: 'M = \\dfrac{m}{n}' },
-    examples: [{ m: 5.85, M: 58.44 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
-    id: 'concentration',
-    name: 'Concentration from moles and volume',
-    topic: 'other',
-    latex: 'c = \\dfrac{n}{V}',
-    vars: [
-      conc('c', 'c', 'c', 'Concentration'),
-      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
-      { sym: 'V', label: 'V', latex: 'V', name: 'Volume', dim: D.volume, unit: 'dm3' },
-    ],
-    relation: (v) => [v.c! * v.V!, v.n!],
-    rearranged: { c: 'c = \\dfrac{n}{V}', n: 'n = cV', V: 'V = \\dfrac{n}{c}' },
-    examples: [{ n: 0.0025, V: 0.025 }],
-    reviewed: false,
-  }),
 ];

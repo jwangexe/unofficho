@@ -56,7 +56,13 @@ export function FormulaPanel({
   const group = base.species;
   const [nus, setNus] = useState<number[]>(() => (group ? [-1, 1] : []));
   const f = useMemo(() => (group ? withSpecies(base, nus.length) : base), [base, group, nus.length]);
-  const coefficients: Record<string, Quantity> = group ? Object.fromEntries(nus.map((nu, i) => [group.coefficient(i + 1), qty(nu, '1')])) : {};
+  // Small whole numbers (e.g. a and b in a mole ratio) are set with −/+ rather than chips.
+  const stepperVars = f.vars.filter((v) => v.stepper);
+  const [steps, setSteps] = useState<Record<string, number>>(() => Object.fromEntries(stepperVars.map((v) => [v.sym, v.stepper!.initial])));
+  const coefficients: Record<string, Quantity> = {
+    ...(group ? Object.fromEntries(nus.map((nu, i) => [group.coefficient(i + 1), qty(nu, '1')])) : {}),
+    ...Object.fromEntries(stepperVars.map((v) => [v.sym, qty(steps[v.sym] ?? v.stepper!.initial, '1')])),
+  };
 
   const inputs = useMemo(() => f.vars.filter((v) => v.sym !== unknown && !(v.sym in coefficients)), [f, unknown, coefficients]);
   const firstEmpty = (except?: string, state = filled) => inputs.find((v) => v.sym !== except && !state[v.sym])?.sym ?? null;
@@ -216,6 +222,34 @@ export function FormulaPanel({
             ))}
         </div>
       </div>
+
+      {unknown && stepperVars.length > 0 && (
+        <ul className="space-y-2" aria-label="Coefficients">
+          {stepperVars.map((v) => {
+            const n = steps[v.sym] ?? v.stepper!.initial;
+            const set = (x: number) => setSteps((s) => ({ ...s, [v.sym]: Math.min(v.stepper!.max, Math.max(v.stepper!.min, x)) }));
+            return (
+              <li key={v.sym} className="flex min-h-12 items-center gap-3 rounded-xl border border-border px-3">
+                <span className="w-14 shrink-0 text-right">
+                  <Tex>{v.latex}</Tex>
+                </span>
+                <span className="min-w-0 flex-1 text-sm text-muted">{v.name}</span>
+                <div className="flex items-center gap-1" role="group" aria-label={v.name}>
+                  <button type="button" aria-label={`Decrease ${v.name}`} disabled={n <= v.stepper!.min} onClick={() => set(n - 1)} className="min-h-10 min-w-10 rounded-lg bg-surface-2 disabled:opacity-40">
+                    −
+                  </button>
+                  <span className="w-7 text-center tabular-nums" aria-live="polite">
+                    {n}
+                  </span>
+                  <button type="button" aria-label={`Increase ${v.name}`} disabled={n >= v.stepper!.max} onClick={() => set(n + 1)} className="min-h-10 min-w-10 rounded-lg bg-surface-2 disabled:opacity-40">
+                    +
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       {unknown && (
         <ul className="space-y-2" aria-label="Inputs">

@@ -4,7 +4,7 @@ import type { QKind, Quantity } from './quantity';
 import { fail, ok, type Result } from './result';
 import { findRoots } from './solver';
 
-export type Topic = 'thermo' | 'kinetics' | 'equilibrium' | 'electro' | 'other';
+export type Topic = 'stoich' | 'thermo' | 'kinetics' | 'equilibrium' | 'electro' | 'other';
 
 export interface VarSpec {
   /** Key used in relations and data files, e.g. "dG". */
@@ -34,6 +34,11 @@ export interface VarSpec {
   solvable?: boolean;
   /** Typical SI value, used to choose between multiple roots. */
   typical?: number;
+  /**
+   * A small whole number set with −/+ in the app (e.g. a stoichiometric coefficient) instead of
+   * a chip. Such variables are never solved for.
+   */
+  stepper?: { min: number; max: number; initial: number };
 }
 
 /**

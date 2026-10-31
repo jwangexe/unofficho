@@ -54,6 +54,7 @@ export const D = {
   volume: dim({ L: 3 }),
   concentration: dim({ N: 1, L: -3 }),
   molarMass: dim({ M: 1, N: -1 }),
+  massConcentration: dim({ M: 1, L: -3 }),
   frequency: dim({ T: -1 }),
   rate: dim({ N: 1, L: -3, T: -1 }),
   rateConst2: dim({ L: 3, N: -1, T: -1 }),

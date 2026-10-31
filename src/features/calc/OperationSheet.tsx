@@ -9,6 +9,7 @@ import type { Chip } from './store';
 export type SheetMode = { kind: 'pick' } | { kind: 'formula'; id: string } | { kind: 'arith'; def: ArithDef; initial?: Chip };
 
 const TOPIC_NAMES: Record<string, string> = {
+  stoich: 'Stoichiometry',
   thermo: 'Thermodynamics',
   kinetics: 'Kinetics',
   equilibrium: 'Equilibrium & acids',
@@ -45,8 +46,31 @@ export function OperationSheet({
     </button>
   );
 
-  const topicFormulas = FORMULAS.filter((f) => f.topic === topic);
-  const otherTopics = [...new Set(FORMULAS.map((f) => f.topic))].filter((t) => t !== topic);
+  // Stoichiometry (n = m/M, c = n/V…) is pinned first for every question; then the question's topic.
+  const PINNED = 'stoich';
+  const pinnedFormulas = FORMULAS.filter((f) => f.topic === PINNED);
+  const topicFormulas = topic === PINNED ? [] : FORMULAS.filter((f) => f.topic === topic);
+  const otherTopics = [...new Set(FORMULAS.map((f) => f.topic))].filter((t) => t !== topic && t !== PINNED);
+
+  /** Compact tile for the pinned basics: the equation first, its name underneath. */
+  const formulaTile = (id: string) => {
+    const f = formulaById.get(id)!;
+    return (
+      <li key={id}>
+        <button
+          type="button"
+          onClick={() => setMode({ kind: 'formula', id })}
+          aria-label={f.name}
+          className="flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-xl bg-surface-2 px-3 py-2 text-left"
+        >
+          <span className="max-w-full overflow-hidden">
+            <Tex>{f.latex}</Tex>
+          </span>
+          <span className="text-xs leading-tight text-muted">{f.name}</span>
+        </button>
+      </li>
+    );
+  };
 
   const formulaButton = (id: string) => {
     const f = formulaById.get(id)!;
@@ -95,8 +119,16 @@ export function OperationSheet({
           </div>
           {tab === 'formulas' ? (
             <>
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{TOPIC_NAMES[topic] ?? topic}</h3>
-              <ul className="space-y-2">{topicFormulas.map((f) => formulaButton(f.id))}</ul>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{TOPIC_NAMES[PINNED]}</h3>
+              <ul className="grid grid-cols-2 gap-2" aria-label={TOPIC_NAMES[PINNED]}>
+                {pinnedFormulas.map((f) => formulaTile(f.id))}
+              </ul>
+              {topicFormulas.length > 0 && (
+                <>
+                  <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{TOPIC_NAMES[topic] ?? topic}</h3>
+                  <ul className="space-y-2">{topicFormulas.map((f) => formulaButton(f.id))}</ul>
+                </>
+              )}
               <button type="button" onClick={() => setShowAll((x) => !x)} aria-expanded={showAll} className="mt-3 min-h-11 text-sm text-muted">
                 {showAll ? '▾' : '▸'} Other topics
               </button>

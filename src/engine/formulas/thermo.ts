@@ -259,28 +259,6 @@ export const thermo = [
   }),
 
   defineFormula({
-    id: 'ideal-gas',
-    name: 'Ideal gas equation',
-    topic: 'thermo',
-    latex: 'pV = nRT',
-    vars: [
-      { sym: 'p', label: 'p', latex: 'p', name: 'Pressure', dim: D.pressure, unit: 'kPa' },
-      { sym: 'V', label: 'V', latex: 'V', name: 'Volume', dim: D.volume, unit: 'dm3' },
-      { sym: 'n', label: 'n', latex: 'n', name: 'Amount', dim: D.amount, unit: 'mol' },
-      temp(),
-    ],
-    relation: (v) => [v.p! * v.V!, v.n! * R * v.T!],
-    rearranged: {
-      p: 'p = \\dfrac{nRT}{V}',
-      V: 'V = \\dfrac{nRT}{p}',
-      n: 'n = \\dfrac{pV}{RT}',
-      T: 'T = \\dfrac{pV}{nR}',
-    },
-    examples: [{ V: 24.79, n: 1, T: 298.15 }],
-    reviewed: false,
-  }),
-
-  defineFormula({
     id: 'work-pv',
     name: 'Expansion work against constant pressure',
     topic: 'thermo',

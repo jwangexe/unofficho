@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { formulaById } from '@/engine/formulas';
 import { formulaForSymbols, solveFormula } from '@/engine/formula';
 import { displayValue, qty, type Quantity } from '@/engine/quantity';
+import { D } from '@/engine/dims';
+import { unitForDim } from '@/engine/units';
 
 function solve(id: string, unknown: string, given: Record<string, Quantity>) {
   const res = solveFormula(formulaForSymbols(formulaById.get(id)!, Object.keys(given)), unknown, given);
@@ -91,6 +93,17 @@ describe('textbook values', () => {
   it('ICE with a common ion: AgCl solubility in 0.010 mol dm⁻³ Cl⁻ (solid left out)', () => {
     const xi = val('ice', 'xi', { K: qty(1.8e-10, '1'), nu1: qty(1, '1'), X01: qty(0, 'mol/dm3'), nu2: qty(1, '1'), X02: qty(0.01, 'mol/dm3') });
     expect(xi * (0.01 + xi)).toBeCloseTo(1.8e-10, 18);
+  });
+
+  it('percentage yield comes out in %, from masses or amounts', () => {
+    const q = solve('percentage-yield', 'Y', { act: qty(4.2, 'g'), theo: qty(5.6, 'g') }).quantity;
+    expect(q.unit).toBe('%');
+    expect(displayValue(q)).toBeCloseTo(75, 10);
+    expect(val('percentage-yield', 'Y', { act: qty(0.03, 'mol'), theo: qty(0.04, 'mol') })).toBeCloseTo(75, 10);
+  });
+
+  it('dimensionless results never switch to % on their own', () => {
+    expect(unitForDim(D.none, 1.8e-5).id).toBe('1');
   });
 
   it('a 10 K rise doubling the rate near room temperature means Eₐ ≈ 52.9 kJ mol⁻¹', () => {
