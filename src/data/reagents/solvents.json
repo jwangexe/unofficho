@@ -1,0 +1,70 @@
+[
+  {
+    "id": "dcm",
+    "name": "Dichloromethane",
+    "aliases": [
+      "DCM",
+      "methylene chloride"
+    ],
+    "formula": "CH₂Cl₂",
+    "roles": [
+      "none"
+    ],
+    "primaryRole": "none",
+    "typicalUses": [
+      "Common inert solvent for oxidations, acylations and chromatography"
+    ],
+    "chemoselectivity": [
+      "Neither acidic, basic, oxidising nor reducing under normal conditions"
+    ],
+    "pitfalls": [
+      "Not completely inert: reacts with azide (explosive diazidomethane) and slowly with some amines"
+    ],
+    "topic": "solvents",
+    "reviewed": false
+  },
+  {
+    "id": "hexane",
+    "name": "Hexane",
+    "aliases": [],
+    "formula": "C₆H₁₄",
+    "smiles": "CCCCCC",
+    "roles": [
+      "none"
+    ],
+    "primaryRole": "none",
+    "typicalUses": [
+      "Non-polar solvent for extractions and chromatography"
+    ],
+    "chemoselectivity": [
+      "An alkane: no acidic, basic or redox chemistry under normal conditions"
+    ],
+    "pitfalls": [
+      "Flammable; n-hexane is neurotoxic (heptane is a safer substitute)"
+    ],
+    "topic": "solvents",
+    "reviewed": false
+  },
+  {
+    "id": "toluene",
+    "name": "Toluene",
+    "aliases": [],
+    "formula": "C₆H₅CH₃",
+    "smiles": "Cc1ccccc1",
+    "roles": [
+      "none"
+    ],
+    "primaryRole": "none",
+    "typicalUses": [
+      "Solvent for reactions above 100 °C and for Dean–Stark water removal"
+    ],
+    "chemoselectivity": [
+      "Inert as a solvent under most conditions"
+    ],
+    "pitfalls": [
+      "Not inert towards strong electrophiles (Friedel–Crafts) or very strong bases (benzylic deprotonation)"
+    ],
+    "topic": "solvents",
+    "reviewed": false
+  }
+]

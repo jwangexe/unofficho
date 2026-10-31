@@ -1,0 +1,110 @@
+[
+  {
+    "id": "nacn",
+    "name": "Sodium cyanide",
+    "aliases": [],
+    "formula": "NaCN",
+    "roles": [
+      "lewis-base"
+    ],
+    "primaryRole": "lewis-base",
+    "alsoAccept": [
+      "bronsted-base"
+    ],
+    "strength": {
+      "pKaH": 9.2,
+      "note": "HCN"
+    },
+    "typicalUses": [
+      "SN2 with primary/secondary halides: nitriles (adds one carbon)",
+      "Cyanohydrin formation",
+      "Catalyst for the benzoin condensation"
+    ],
+    "chemoselectivity": [
+      "Ambident: alkylation usually on carbon (nitrile); silver cyanide favours the isocyanide"
+    ],
+    "pitfalls": [
+      "Acid releases HCN gas, which is extremely toxic"
+    ],
+    "topic": "organic/nucleophiles",
+    "reviewed": false
+  },
+  {
+    "id": "nan3",
+    "name": "Sodium azide",
+    "aliases": [],
+    "formula": "NaN₃",
+    "roles": [
+      "lewis-base"
+    ],
+    "primaryRole": "lewis-base",
+    "strength": {
+      "pKaH": 4.7,
+      "note": "HN₃"
+    },
+    "typicalUses": [
+      "SN2 to alkyl azides, then reduction to primary amines",
+      "Azide–alkyne cycloaddition (click chemistry)"
+    ],
+    "chemoselectivity": [
+      "An excellent nucleophile but a weak base, so substitution beats elimination"
+    ],
+    "pitfalls": [
+      "HN₃ is toxic and explosive; heavy-metal azides are explosive; never use CH₂Cl₂ as solvent (diazidomethane)"
+    ],
+    "topic": "organic/nucleophiles",
+    "reviewed": false
+  },
+  {
+    "id": "pph3",
+    "name": "Triphenylphosphine",
+    "aliases": [],
+    "formula": "PPh₃",
+    "smiles": "c1ccc(cc1)P(c1ccccc1)c1ccccc1",
+    "roles": [
+      "lewis-base",
+      "reductant"
+    ],
+    "primaryRole": "lewis-base",
+    "typicalUses": [
+      "Wittig reactions (via the phosphonium salt)",
+      "Staudinger reduction of azides to amines (with water)",
+      "Appel (alcohol → alkyl halide) and Mitsunobu reactions"
+    ],
+    "chemoselectivity": [
+      "Nucleophilic at P; ends up as Ph₃P=O, whose strong P=O bond drives these reactions"
+    ],
+    "pitfalls": [
+      "Removing the Ph₃P=O by-product is a classic purification headache"
+    ],
+    "topic": "organic/nucleophiles",
+    "reviewed": false
+  },
+  {
+    "id": "nai-acetone",
+    "name": "Sodium iodide in acetone",
+    "aliases": [
+      "Finkelstein conditions"
+    ],
+    "formula": "NaI, acetone",
+    "roles": [
+      "lewis-base"
+    ],
+    "primaryRole": "lewis-base",
+    "alsoAccept": [
+      "reductant"
+    ],
+    "typicalUses": [
+      "Finkelstein reaction: R–Cl or R–Br → R–I"
+    ],
+    "chemoselectivity": [
+      "Driven by precipitation of NaCl/NaBr, which are insoluble in acetone",
+      "Works best for primary halides (SN2)"
+    ],
+    "pitfalls": [
+      "I⁻ is both an excellent nucleophile and an excellent leaving group"
+    ],
+    "topic": "organic/nucleophiles",
+    "reviewed": false
+  }
+]

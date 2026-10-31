@@ -40,8 +40,14 @@ export const Reagent = z
     aliases: z.array(z.string()),
     formula: z.string().min(1),
     smiles: z.string().optional(),
+    /** Roles this reagent is used for or clearly shows. Selecting all of them is full marks. */
     roles: z.array(Role).min(1),
     primaryRole: Role,
+    /**
+     * Defensible but not expected (e.g. hydride reagents as nucleophiles): picking these
+     * is neither rewarded nor penalised.
+     */
+    alsoAccept: z.array(Role).optional(),
     /** Condition-dependent behaviour (e.g. H2O2, SO2), shown with the explanation. */
     context: z.string().optional(),
     strength: z
@@ -67,8 +73,32 @@ export const Reagent = z
   })
   .refine((r) => !r.roles.includes('none') || r.roles.length === 1, {
     message: '"none" cannot be combined with other roles',
+  })
+  .refine((r) => !(r.alsoAccept ?? []).some((x) => r.roles.includes(x) || x === 'none'), {
+    message: 'alsoAccept must not repeat roles or include "none"',
   });
 export type Reagent = z.infer<typeof Reagent>;
+
+// ---------- "Will it react?" ----------
+
+export const ReactItem = z.object({
+  id,
+  substrate: z.object({ name: z.string(), smiles: z.string() }),
+  reagentId: id,
+  /** Extra conditions shown with the reagent, e.g. "then H₃O⁺ workup". */
+  conditions: z.string().optional(),
+  groups: z.array(z.object({ name: z.string(), reacts: z.boolean() })).min(2),
+  products: z
+    .array(z.object({ smiles: z.string(), label: z.string(), correct: z.boolean() }))
+    .min(3)
+    .max(4)
+    .refine((ps) => ps.filter((p) => p.correct).length === 1, { message: 'exactly one correct product' }),
+  explanation: z.string(),
+  topic: z.string(),
+  reviewed: z.boolean(),
+  todoVerify,
+});
+export type ReactItem = z.infer<typeof ReactItem>;
 
 // ---------- Book ----------
 

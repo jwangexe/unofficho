@@ -1,0 +1,384 @@
+[
+  {
+    "id": "lialh4",
+    "name": "Lithium aluminium hydride",
+    "aliases": [
+      "LAH",
+      "LiAlH4"
+    ],
+    "formula": "LiAlH₄",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-base",
+      "bronsted-base"
+    ],
+    "typicalUses": [
+      "Reduces esters, carboxylic acids and aldehydes/ketones to alcohols",
+      "Reduces amides and nitriles to amines",
+      "Opens epoxides at the less hindered carbon"
+    ],
+    "chemoselectivity": [
+      "Reduces almost every C=O group: aldehydes, ketones, esters, acids, acid chlorides, amides (to amines)",
+      "Reduces nitriles to primary amines and azides to amines",
+      "Leaves isolated C=C and C≡C bonds alone"
+    ],
+    "pitfalls": [
+      "Reacts violently with water and alcohols (H₂ evolves): use dry ether or THF and a careful workup",
+      "A carboxylic acid is first deprotonated (one hydride lost as H₂) before it is reduced to the primary alcohol",
+      "Amides give amines, not alcohols"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "nabh4",
+    "name": "Sodium borohydride",
+    "aliases": [
+      "NaBH4"
+    ],
+    "formula": "NaBH₄",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-base"
+    ],
+    "typicalUses": [
+      "Reduces aldehydes and ketones to alcohols, usually in MeOH or EtOH at 0 °C to room temperature",
+      "With CeCl₃ (Luche conditions): 1,2-reduction of enones to allylic alcohols"
+    ],
+    "chemoselectivity": [
+      "Reduces aldehydes, ketones and acyl chlorides",
+      "Does not reduce esters, amides, carboxylic acids or nitriles under normal conditions",
+      "Leaves isolated C=C bonds alone"
+    ],
+    "pitfalls": [
+      "It delivers H⁻ to carbon; it is not used as a base",
+      "Decomposes in acid with H₂ evolution and slowly reacts with protic solvents",
+      "Without CeCl₃, enones can undergo some 1,4-(conjugate) reduction"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "dibal-h",
+    "name": "Diisobutylaluminium hydride",
+    "aliases": [
+      "DIBAL",
+      "DIBAL-H",
+      "DIBALH"
+    ],
+    "formula": "i-Bu₂AlH",
+    "smiles": "CC(C)C[AlH]CC(C)C",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-acid"
+    ],
+    "typicalUses": [
+      "Ester → aldehyde with 1 equivalent at −78 °C",
+      "Nitrile → aldehyde after aqueous workup (via the aluminium imine)",
+      "Lactone → lactol"
+    ],
+    "chemoselectivity": [
+      "At −78 °C the tetrahedral intermediate from an ester is stable, so the aldehyde is only released on workup",
+      "With excess reagent or on warming, esters are reduced further to primary alcohols",
+      "Nitriles stop at the imine stage, which hydrolyses to the aldehyde",
+      "Not the usual reagent for azides: use H₂/Pd, LiAlH₄ or PPh₃/H₂O (Staudinger)"
+    ],
+    "pitfalls": [
+      "Aluminium is Lewis acidic: DIBAL-H coordinates the carbonyl oxygen before delivering hydride",
+      "Warming before the quench over-reduces esters to alcohols"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false,
+    "todoVerify": [
+      "Behaviour of DIBAL-H towards organic azides: treated here as not a standard method"
+    ]
+  },
+  {
+    "id": "l-selectride",
+    "name": "L-Selectride",
+    "aliases": [
+      "lithium tri-sec-butylborohydride"
+    ],
+    "formula": "LiBH(sec-Bu)₃",
+    "smiles": "[Li+].CCC(C)[BH-](C(C)CC)C(C)CC",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Diastereoselective reduction of cyclic ketones from the less hindered face",
+      "Conjugate (1,4) reduction of some enones"
+    ],
+    "chemoselectivity": [
+      "Very bulky: delivers hydride equatorially, so 4-tert-butylcyclohexanone gives mainly the axial (cis) alcohol",
+      "Small hydrides (NaBH₄, LiAlH₄) give mainly the equatorial (trans) alcohol from the same ketone"
+    ],
+    "pitfalls": [
+      "Opposite diastereoselectivity to NaBH₄ on unhindered cyclohexanones",
+      "Moisture- and air-sensitive; oxidative workup (H₂O₂/NaOH) removes the boron by-products"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false,
+    "todoVerify": [
+      "Extent of 1,4-reduction of enones by L-Selectride (substrate-dependent)"
+    ]
+  },
+  {
+    "id": "nabh3cn",
+    "name": "Sodium cyanoborohydride",
+    "aliases": [
+      "NaBH3CN"
+    ],
+    "formula": "NaBH₃CN",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Reductive amination (Borch) at pH ≈ 6–7"
+    ],
+    "chemoselectivity": [
+      "The electron-withdrawing CN makes it much weaker than NaBH₄ and stable in mildly acidic solution",
+      "At pH 6–7 it reduces iminium ions much faster than aldehydes or ketones"
+    ],
+    "pitfalls": [
+      "Strong acid releases HCN, which is highly toxic",
+      "Too low a pH protonates the amine and stops imine formation"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "nabh-oac-3",
+    "name": "Sodium triacetoxyborohydride",
+    "aliases": [
+      "STAB",
+      "NaBH(OAc)3"
+    ],
+    "formula": "NaBH(OAc)₃",
+    "smiles": "[Na+].CC(=O)O[BH-](OC(C)=O)OC(C)=O",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Reductive amination of aldehydes and ketones, often in 1,2-dichloroethane with AcOH"
+    ],
+    "chemoselectivity": [
+      "Reduces iminium ions quickly, aldehydes slowly and ketones very slowly",
+      "A milder, less toxic alternative to NaBH₃CN"
+    ],
+    "pitfalls": [
+      "Decomposed by methanol and water: use aprotic solvents",
+      "Not a general carbonyl reducing agent"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "bh3-thf",
+    "name": "Borane–THF",
+    "aliases": [
+      "BH3·THF",
+      "borane"
+    ],
+    "formula": "BH₃·THF",
+    "roles": [
+      "reductant",
+      "lewis-acid"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Hydroboration of alkenes (then H₂O₂/NaOH → anti-Markovnikov alcohol, syn addition)",
+      "Selective reduction of carboxylic acids to primary alcohols"
+    ],
+    "chemoselectivity": [
+      "Reduces carboxylic acids faster than esters: the opposite selectivity to NaBH₄",
+      "Electrophilic: it adds to C=C with B going to the less substituted carbon"
+    ],
+    "pitfalls": [
+      "BH₃ is a Lewis acid stabilised by THF (or Me₂S) as a donor",
+      "Hydroboration is syn; the subsequent oxidation proceeds with retention"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "na-nh3",
+    "name": "Sodium in liquid ammonia",
+    "aliases": [
+      "Birch conditions",
+      "dissolving metal reduction"
+    ],
+    "formula": "Na / NH₃(l)",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "strength": {
+      "E0": -2.71,
+      "note": "Na⁺/Na"
+    },
+    "typicalUses": [
+      "Alkyne → (E)-alkene (anti addition of H)",
+      "Birch reduction of arenes to 1,4-cyclohexadienes (with an alcohol as proton source)"
+    ],
+    "chemoselectivity": [
+      "Leaves isolated alkenes alone",
+      "Arenes with electron-donating groups (e.g. OMe) keep the substituent on a remaining C=C; electron-withdrawing groups end up on an sp³ carbon"
+    ],
+    "pitfalls": [
+      "Gives the E-alkene, the opposite of Lindlar hydrogenation",
+      "Lithium is often used instead of sodium"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "h2-pd-c",
+    "name": "Hydrogen over palladium on carbon",
+    "aliases": [
+      "catalytic hydrogenation"
+    ],
+    "formula": "H₂, Pd/C",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Hydrogenation of alkenes and alkynes to alkanes",
+      "Nitro groups to amines",
+      "Removal of benzyl ethers and Cbz groups by hydrogenolysis"
+    ],
+    "chemoselectivity": [
+      "Syn addition of H₂ from the less hindered face",
+      "Benzene rings, esters and most ketones are untouched under mild conditions",
+      "Aryl halides can be dehalogenated"
+    ],
+    "pitfalls": [
+      "Cannot stop at the alkene from an alkyne: use Lindlar's catalyst",
+      "Benzyl protecting groups are removed too"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "lindlar",
+    "name": "Lindlar's catalyst with hydrogen",
+    "aliases": [
+      "Lindlar hydrogenation"
+    ],
+    "formula": "H₂, Pd/CaCO₃/Pb(OAc)₂, quinoline",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "typicalUses": [
+      "Alkyne → (Z)-alkene"
+    ],
+    "chemoselectivity": [
+      "The poisoned catalyst stops at the alkene",
+      "Reduces alkynes much faster than alkenes already present"
+    ],
+    "pitfalls": [
+      "Syn addition gives the Z-alkene; use Na/NH₃ for the E-alkene"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "clemmensen",
+    "name": "Zinc amalgam and hydrochloric acid",
+    "aliases": [
+      "Clemmensen reduction"
+    ],
+    "formula": "Zn(Hg), conc. HCl",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "strength": {
+      "E0": -0.76,
+      "note": "Zn²⁺/Zn"
+    },
+    "typicalUses": [
+      "Clemmensen reduction: aryl ketone C=O → CH₂ (e.g. after Friedel–Crafts acylation)"
+    ],
+    "chemoselectivity": [
+      "Strongly acidic: acid-sensitive groups (acetals, tertiary alcohols) do not survive"
+    ],
+    "pitfalls": [
+      "Complementary to the Wolff–Kishner reduction, which works under strongly basic conditions"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wolff-kishner",
+    "name": "Hydrazine and KOH (Wolff–Kishner)",
+    "aliases": [
+      "Wolff–Kishner reduction",
+      "N2H4/KOH"
+    ],
+    "formula": "N₂H₄, KOH, heat",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-base",
+      "bronsted-base"
+    ],
+    "typicalUses": [
+      "Wolff–Kishner reduction: C=O → CH₂ via the hydrazone, with loss of N₂"
+    ],
+    "chemoselectivity": [
+      "Strongly basic and hot: esters are hydrolysed, base-sensitive groups suffer"
+    ],
+    "pitfalls": [
+      "Hydrazine first acts as a nucleophile (forming the hydrazone); the reduction follows on heating with base"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "sncl2",
+    "name": "Tin(II) chloride with HCl",
+    "aliases": [
+      "stannous chloride"
+    ],
+    "formula": "SnCl₂, HCl",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-acid"
+    ],
+    "strength": {
+      "E0": 0.15,
+      "note": "Sn⁴⁺/Sn²⁺"
+    },
+    "typicalUses": [
+      "Reduction of aromatic nitro groups to anilines"
+    ],
+    "chemoselectivity": [
+      "Chemoselective for NO₂: leaves ketones, esters and nitriles alone",
+      "Fe/HCl or Zn/HCl do the same job"
+    ],
+    "pitfalls": [
+      "The aniline is obtained as its ammonium salt; basify to isolate the free amine"
+    ],
+    "topic": "organic/reduction",
+    "reviewed": false
+  }
+]

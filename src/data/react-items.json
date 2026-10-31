@@ -1,0 +1,531 @@
+[
+  {
+    "id": "wir-nabh4-ketoester",
+    "substrate": {
+      "name": "Ethyl 4-acetylbenzoate",
+      "smiles": "CC(=O)c1ccc(cc1)C(=O)OCC"
+    },
+    "reagentId": "nabh4",
+    "conditions": "MeOH, 0 °C",
+    "groups": [
+      {
+        "name": "Ketone",
+        "reacts": true
+      },
+      {
+        "name": "Ester",
+        "reacts": false
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "CC(O)c1ccc(cc1)C(=O)OCC",
+        "label": "Ethyl 4-(1-hydroxyethyl)benzoate",
+        "correct": true
+      },
+      {
+        "smiles": "CC(O)c1ccc(CO)cc1",
+        "label": "Diol (both reduced)",
+        "correct": false
+      },
+      {
+        "smiles": "CC(=O)c1ccc(CO)cc1",
+        "label": "Ester reduced only",
+        "correct": false
+      },
+      {
+        "smiles": "CCc1ccc(cc1)C(=O)OCC",
+        "label": "Ketone reduced to CH₂",
+        "correct": false
+      }
+    ],
+    "explanation": "NaBH₄ reduces the ketone to a secondary alcohol and leaves the ester untouched under normal conditions.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-lialh4-ketoester",
+    "substrate": {
+      "name": "Ethyl 4-acetylbenzoate",
+      "smiles": "CC(=O)c1ccc(cc1)C(=O)OCC"
+    },
+    "reagentId": "lialh4",
+    "conditions": "Et₂O, then H₃O⁺ workup",
+    "groups": [
+      {
+        "name": "Ketone",
+        "reacts": true
+      },
+      {
+        "name": "Ester",
+        "reacts": true
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "CC(O)c1ccc(CO)cc1",
+        "label": "Diol (both reduced)",
+        "correct": true
+      },
+      {
+        "smiles": "CC(O)c1ccc(cc1)C(=O)OCC",
+        "label": "Ketone reduced only",
+        "correct": false
+      },
+      {
+        "smiles": "CC(=O)c1ccc(C=O)cc1",
+        "label": "Ester → aldehyde",
+        "correct": false
+      },
+      {
+        "smiles": "CCc1ccc(C)cc1",
+        "label": "Both reduced to CH₂/CH₃",
+        "correct": false
+      }
+    ],
+    "explanation": "LiAlH₄ reduces both carbonyls: the ketone to a secondary alcohol and the ester to a primary alcohol (losing ethanol).",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-dibal-ester",
+    "substrate": {
+      "name": "Methyl 3-phenylpropanoate",
+      "smiles": "COC(=O)CCc1ccccc1"
+    },
+    "reagentId": "dibal-h",
+    "conditions": "1.0 equiv, CH₂Cl₂, −78 °C, then aqueous workup",
+    "groups": [
+      {
+        "name": "Ester",
+        "reacts": true
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "O=CCCc1ccccc1",
+        "label": "3-Phenylpropanal",
+        "correct": true
+      },
+      {
+        "smiles": "OCCCc1ccccc1",
+        "label": "3-Phenylpropan-1-ol",
+        "correct": false
+      },
+      {
+        "smiles": "COCCCc1ccccc1",
+        "label": "Methyl ether",
+        "correct": false
+      },
+      {
+        "smiles": "OC(=O)CCc1ccccc1",
+        "label": "Carboxylic acid",
+        "correct": false
+      }
+    ],
+    "explanation": "With one equivalent of DIBAL-H at −78 °C, the tetrahedral aluminium intermediate survives until workup, which releases the aldehyde.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-bh3-acid-ester",
+    "substrate": {
+      "name": "4-(Methoxycarbonyl)benzoic acid",
+      "smiles": "COC(=O)c1ccc(cc1)C(=O)O"
+    },
+    "reagentId": "bh3-thf",
+    "conditions": "THF, then H₂O workup",
+    "groups": [
+      {
+        "name": "Carboxylic acid",
+        "reacts": true
+      },
+      {
+        "name": "Ester",
+        "reacts": false
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "COC(=O)c1ccc(CO)cc1",
+        "label": "Methyl 4-(hydroxymethyl)benzoate",
+        "correct": true
+      },
+      {
+        "smiles": "OC(=O)c1ccc(CO)cc1",
+        "label": "Ester reduced, acid kept",
+        "correct": false
+      },
+      {
+        "smiles": "OCc1ccc(CO)cc1",
+        "label": "Both reduced",
+        "correct": false
+      }
+    ],
+    "explanation": "Borane reduces carboxylic acids much faster than esters: the electron-rich carbonyl of the acyloxyborane intermediate coordinates the Lewis acidic BH₃. This is the reverse of NaBH₄.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-sncl2-nitro",
+    "substrate": {
+      "name": "4-Nitroacetophenone",
+      "smiles": "CC(=O)c1ccc(cc1)[N+](=O)[O-]"
+    },
+    "reagentId": "sncl2",
+    "conditions": "EtOH, heat; then NaOH",
+    "groups": [
+      {
+        "name": "Nitro group",
+        "reacts": true
+      },
+      {
+        "name": "Ketone",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "CC(=O)c1ccc(N)cc1",
+        "label": "4-Aminoacetophenone",
+        "correct": true
+      },
+      {
+        "smiles": "CC(O)c1ccc(N)cc1",
+        "label": "Both reduced",
+        "correct": false
+      },
+      {
+        "smiles": "CCc1ccc(N)cc1",
+        "label": "Nitro reduced, C=O → CH₂",
+        "correct": false
+      },
+      {
+        "smiles": "CC(O)c1ccc(cc1)[N+](=O)[O-]",
+        "label": "Ketone reduced only",
+        "correct": false
+      }
+    ],
+    "explanation": "Sn(II) in acid reduces the aromatic nitro group to an amine (isolated after basifying) and leaves the ketone alone.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-lindlar-enyne",
+    "substrate": {
+      "name": "Hept-1-en-5-yne",
+      "smiles": "C=CCCC#CC"
+    },
+    "reagentId": "lindlar",
+    "groups": [
+      {
+        "name": "Internal alkyne",
+        "reacts": true
+      },
+      {
+        "name": "Terminal alkene",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "C=CCC/C=C\\C",
+        "label": "(Z)-Hepta-1,5-diene",
+        "correct": true
+      },
+      {
+        "smiles": "C=CCC/C=C/C",
+        "label": "(E)-Hepta-1,5-diene",
+        "correct": false
+      },
+      {
+        "smiles": "CCCCC#CC",
+        "label": "Alkene reduced, alkyne kept",
+        "correct": false
+      },
+      {
+        "smiles": "CCCCCCC",
+        "label": "Heptane",
+        "correct": false
+      }
+    ],
+    "explanation": "The poisoned palladium catalyst reduces the alkyne by syn addition of H₂, stopping at the Z-alkene, and barely touches the alkene already present.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-birch-enyne",
+    "substrate": {
+      "name": "Hept-1-en-5-yne",
+      "smiles": "C=CCCC#CC"
+    },
+    "reagentId": "na-nh3",
+    "groups": [
+      {
+        "name": "Internal alkyne",
+        "reacts": true
+      },
+      {
+        "name": "Terminal alkene",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "C=CCC/C=C/C",
+        "label": "(E)-Hepta-1,5-diene",
+        "correct": true
+      },
+      {
+        "smiles": "C=CCC/C=C\\C",
+        "label": "(Z)-Hepta-1,5-diene",
+        "correct": false
+      },
+      {
+        "smiles": "CCCCC#CC",
+        "label": "Alkene reduced, alkyne kept",
+        "correct": false
+      },
+      {
+        "smiles": "CCCCCCC",
+        "label": "Heptane",
+        "correct": false
+      }
+    ],
+    "explanation": "Dissolving-metal reduction goes via a radical anion and a vinyl radical; the trans vinyl anion is preferred, giving the E-alkene. Isolated alkenes are not reduced.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-mcpba-acetophenone",
+    "substrate": {
+      "name": "Acetophenone",
+      "smiles": "CC(=O)c1ccccc1"
+    },
+    "reagentId": "mcpba",
+    "groups": [
+      {
+        "name": "Ketone",
+        "reacts": true
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "CC(=O)Oc1ccccc1",
+        "label": "Phenyl acetate",
+        "correct": true
+      },
+      {
+        "smiles": "COC(=O)c1ccccc1",
+        "label": "Methyl benzoate",
+        "correct": false
+      },
+      {
+        "smiles": "OC(=O)c1ccccc1",
+        "label": "Benzoic acid",
+        "correct": false
+      },
+      {
+        "smiles": "CC(=O)c1ccc(O)cc1",
+        "label": "4-Hydroxyacetophenone",
+        "correct": false
+      }
+    ],
+    "explanation": "Baeyer–Villiger oxidation: the group better able to stabilise positive charge migrates to oxygen. Phenyl migrates in preference to methyl, giving phenyl acetate.",
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "wir-kmno4-alkylbenzene",
+    "substrate": {
+      "name": "1-tert-Butyl-4-ethylbenzene",
+      "smiles": "CCc1ccc(cc1)C(C)(C)C"
+    },
+    "reagentId": "kmno4",
+    "conditions": "Hot, aqueous; then H₃O⁺",
+    "groups": [
+      {
+        "name": "Ethyl group",
+        "reacts": true
+      },
+      {
+        "name": "tert-Butyl group",
+        "reacts": false
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "OC(=O)c1ccc(cc1)C(C)(C)C",
+        "label": "4-tert-Butylbenzoic acid",
+        "correct": true
+      },
+      {
+        "smiles": "OC(=O)c1ccc(cc1)C(O)=O",
+        "label": "Terephthalic acid",
+        "correct": false
+      },
+      {
+        "smiles": "CC(=O)c1ccc(cc1)C(C)(C)C",
+        "label": "1-(4-tert-Butylphenyl)ethanone",
+        "correct": false
+      },
+      {
+        "smiles": "OCCc1ccc(cc1)C(C)(C)C",
+        "label": "Primary alcohol",
+        "correct": false
+      }
+    ],
+    "explanation": "Hot KMnO₄ oxidises any side chain with a benzylic C–H down to COOH. tert-Butyl has no benzylic hydrogen, so it survives.",
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "wir-stab-reductive-amination",
+    "substrate": {
+      "name": "Cyclohexanone + benzylamine",
+      "smiles": "O=C1CCCCC1.NCc1ccccc1"
+    },
+    "reagentId": "nabh-oac-3",
+    "conditions": "1,2-Dichloroethane, AcOH",
+    "groups": [
+      {
+        "name": "Iminium ion (formed from C=O + amine)",
+        "reacts": true
+      },
+      {
+        "name": "Benzene ring",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "C(NC1CCCCC1)c1ccccc1",
+        "label": "N-Benzylcyclohexylamine",
+        "correct": true
+      },
+      {
+        "smiles": "OC1CCCCC1",
+        "label": "Cyclohexanol",
+        "correct": false
+      },
+      {
+        "smiles": "C(N=C1CCCCC1)c1ccccc1",
+        "label": "N-Cyclohexylidenebenzylamine (imine)",
+        "correct": false
+      }
+    ],
+    "explanation": "The ketone and amine condense to an iminium ion, which NaBH(OAc)₃ reduces much faster than the ketone itself: reductive amination.",
+    "topic": "organic/reduction",
+    "reviewed": false
+  },
+  {
+    "id": "wir-tfa-boc",
+    "substrate": {
+      "name": "Boc-glycine methyl ester",
+      "smiles": "COC(=O)CNC(=O)OC(C)(C)C"
+    },
+    "reagentId": "tfa",
+    "conditions": "CH₂Cl₂, room temperature",
+    "groups": [
+      {
+        "name": "Boc carbamate",
+        "reacts": true
+      },
+      {
+        "name": "Methyl ester",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "COC(=O)CN",
+        "label": "Glycine methyl ester (as TFA salt)",
+        "correct": true
+      },
+      {
+        "smiles": "OC(=O)CNC(=O)OC(C)(C)C",
+        "label": "Boc-glycine (ester hydrolysed)",
+        "correct": false
+      },
+      {
+        "smiles": "NCC(=O)O",
+        "label": "Glycine (both cleaved)",
+        "correct": false
+      }
+    ],
+    "explanation": "TFA protonates the Boc group, which fragments to CO₂, isobutene (via the tert-butyl cation) and the free amine. Methyl esters survive anhydrous TFA.",
+    "topic": "organic/protecting-groups",
+    "reviewed": false
+  },
+  {
+    "id": "wir-tempo-diol",
+    "substrate": {
+      "name": "Butane-1,3-diol",
+      "smiles": "CC(O)CCO"
+    },
+    "reagentId": "tempo-bleach",
+    "conditions": "TEMPO (cat.), NaOCl, KBr, NaHCO₃, 0 °C",
+    "groups": [
+      {
+        "name": "Primary alcohol",
+        "reacts": true
+      },
+      {
+        "name": "Secondary alcohol",
+        "reacts": false
+      }
+    ],
+    "products": [
+      {
+        "smiles": "CC(O)CC=O",
+        "label": "3-Hydroxybutanal",
+        "correct": true
+      },
+      {
+        "smiles": "CC(=O)CCO",
+        "label": "4-Hydroxybutan-2-one",
+        "correct": false
+      },
+      {
+        "smiles": "CC(=O)CC=O",
+        "label": "3-Oxobutanal",
+        "correct": false
+      },
+      {
+        "smiles": "CC(O)CC(=O)O",
+        "label": "3-Hydroxybutanoic acid",
+        "correct": false
+      }
+    ],
+    "explanation": "The bulky oxoammonium oxidant reacts much faster with the less hindered primary alcohol, stopping at the aldehyde under Anelli conditions.",
+    "topic": "organic/oxidation",
+    "reviewed": false,
+    "todoVerify": [
+      "3-Hydroxybutanal readily undergoes retro-aldol/dehydration; product chosen to illustrate selectivity"
+    ]
+  }
+]

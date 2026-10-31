@@ -3,7 +3,8 @@
  * Drop a new JSON file into src/data/reagents/ and it is picked up automatically.
  */
 import { z } from 'zod';
-import { Reagent } from './schemas';
+import { ReactItem, Reagent } from './schemas';
+import reactData from './react-items.json';
 
 const reagentFiles = import.meta.glob<unknown>('./reagents/*.json', {
   eager: true,
@@ -24,3 +25,15 @@ function loadReagents(): Reagent[] {
 
 export const reagents: readonly Reagent[] = loadReagents();
 export const reagentById = new Map(reagents.map((r) => [r.id, r]));
+
+function loadReactItems(): ReactItem[] {
+  const parsed = z.array(ReactItem).safeParse(reactData);
+  if (!parsed.success) throw new Error(`Invalid react-items.json:\n${z.prettifyError(parsed.error)}`);
+  for (const item of parsed.data) {
+    if (!reagentById.has(item.reagentId)) throw new Error(`${item.id}: unknown reagent ${item.reagentId}`);
+  }
+  return parsed.data;
+}
+
+/** "Will it react?" questions. */
+export const reactItems: readonly ReactItem[] = loadReactItems();

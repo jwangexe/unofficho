@@ -1,0 +1,293 @@
+[
+  {
+    "id": "h2so4-conc",
+    "name": "Sulfuric acid (concentrated)",
+    "aliases": [
+      "sulfuric acid"
+    ],
+    "formula": "H₂SO₄",
+    "roles": [
+      "bronsted-acid"
+    ],
+    "primaryRole": "bronsted-acid",
+    "alsoAccept": [
+      "oxidant"
+    ],
+    "context": "A strong Brønsted acid; only hot and concentrated does it also act as an oxidant.",
+    "strength": {
+      "pKa": -3,
+      "note": "first dissociation (approximate)"
+    },
+    "typicalUses": [
+      "Acid catalyst (esterification, dehydration of alcohols)",
+      "With HNO₃: generates NO₂⁺ for nitration",
+      "Drying/dehydrating agent"
+    ],
+    "chemoselectivity": [
+      "Dilute H₂SO₄ is just a strong acid: Zn gives H₂, and Cu does not react"
+    ],
+    "pitfalls": [
+      "Hot and concentrated, it oxidises Cu to CuSO₄ (giving SO₂) and HBr/HI to Br₂/I₂",
+      "Dilution is strongly exothermic: add acid to water"
+    ],
+    "topic": "acids",
+    "reviewed": false
+  },
+  {
+    "id": "tfa",
+    "name": "Trifluoroacetic acid",
+    "aliases": [
+      "TFA"
+    ],
+    "formula": "CF₃CO₂H",
+    "smiles": "OC(=O)C(F)(F)F",
+    "roles": [
+      "bronsted-acid"
+    ],
+    "primaryRole": "bronsted-acid",
+    "strength": {
+      "pKa": 0.2,
+      "note": "in water"
+    },
+    "typicalUses": [
+      "Removal of Boc and tert-butyl ester protecting groups",
+      "Cleavage of peptides from resin"
+    ],
+    "chemoselectivity": [
+      "Strong enough to remove Boc (via the tert-butyl cation) but leaves methyl esters and Cbz intact"
+    ],
+    "pitfalls": [
+      "Volatile (b.p. 72 °C), so it is easily evaporated after deprotection; the amine is left as its TFA salt"
+    ],
+    "topic": "acids",
+    "reviewed": false
+  },
+  {
+    "id": "tsoh",
+    "name": "p-Toluenesulfonic acid",
+    "aliases": [
+      "TsOH",
+      "PTSA",
+      "pTSA"
+    ],
+    "formula": "p-MeC₆H₄SO₃H",
+    "smiles": "Cc1ccc(cc1)S(=O)(=O)O",
+    "roles": [
+      "bronsted-acid"
+    ],
+    "primaryRole": "bronsted-acid",
+    "strength": {
+      "pKa": -2.8,
+      "note": "estimated, in water"
+    },
+    "typicalUses": [
+      "Acetal formation with a Dean–Stark trap",
+      "Fischer esterification",
+      "Dehydration of alcohols"
+    ],
+    "chemoselectivity": [
+      "A strong acid that dissolves in organic solvents; the conjugate base is non-nucleophilic"
+    ],
+    "pitfalls": [
+      "Usually sold as the monohydrate, which brings water into the reaction"
+    ],
+    "topic": "acids",
+    "reviewed": false,
+    "todoVerify": [
+      "pKa of TsOH (≈ −2.8; values from −1.3 to −2.8 are quoted)"
+    ]
+  },
+  {
+    "id": "hcl",
+    "name": "Hydrochloric acid",
+    "aliases": [
+      "hydrogen chloride"
+    ],
+    "formula": "HCl",
+    "roles": [
+      "bronsted-acid"
+    ],
+    "primaryRole": "bronsted-acid",
+    "strength": {
+      "pKa": -6,
+      "note": "approximate, in water"
+    },
+    "typicalUses": [
+      "Strong acid for workups and hydrolyses",
+      "Converts tertiary alcohols to tertiary chlorides (SN1)"
+    ],
+    "chemoselectivity": [
+      "Cl⁻ is a modest nucleophile: primary alcohols react only slowly without ZnCl₂ (Lucas reagent)"
+    ],
+    "pitfalls": [
+      "A non-oxidising acid: it does not dissolve Cu or Ag"
+    ],
+    "topic": "acids",
+    "reviewed": false,
+    "todoVerify": [
+      "pKa of HCl (≈ −6 to −7)"
+    ]
+  },
+  {
+    "id": "bf3-oet2",
+    "name": "Boron trifluoride etherate",
+    "aliases": [
+      "BF3·OEt2",
+      "BF3 etherate"
+    ],
+    "formula": "BF₃·OEt₂",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Activates epoxides, carbonyls and acetals towards nucleophiles",
+      "Catalyses Mukaiyama aldol and other C–C bond formations"
+    ],
+    "chemoselectivity": [
+      "A strong, oxophilic Lewis acid; BF₃ is supplied complexed to diethyl ether so it can be handled as a liquid"
+    ],
+    "pitfalls": [
+      "Hydrolyses in moist air, fuming (giving HF-containing species)"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "alcl3",
+    "name": "Aluminium chloride",
+    "aliases": [],
+    "formula": "AlCl₃",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Friedel–Crafts alkylation and acylation"
+    ],
+    "chemoselectivity": [
+      "Alkylation: carbocations rearrange and the product is more reactive (polyalkylation)",
+      "Acylation: no rearrangement, and the product ketone is deactivated so it stops at monoacylation",
+      "Strongly deactivated rings (nitrobenzene) do not react"
+    ],
+    "pitfalls": [
+      "Acylation needs a full equivalent of AlCl₃, because the product ketone binds it",
+      "Reacts violently with water, releasing HCl"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "ticl4",
+    "name": "Titanium(IV) chloride",
+    "aliases": [],
+    "formula": "TiCl₄",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Mukaiyama aldol reaction",
+      "Chelation-controlled additions to α- or β-alkoxy carbonyls"
+    ],
+    "chemoselectivity": [
+      "Can chelate two oxygens at once, which locks the conformation and controls diastereoselectivity"
+    ],
+    "pitfalls": [
+      "Fumes in air (hydrolysis to TiO₂ + HCl)",
+      "With Zn or LiAlH₄ it forms low-valent titanium for McMurry coupling"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "zncl2",
+    "name": "Zinc chloride",
+    "aliases": [],
+    "formula": "ZnCl₂",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Lucas reagent (with conc. HCl): distinguishes 1°, 2° and 3° alcohols",
+      "Catalyst for Fischer indole synthesis"
+    ],
+    "chemoselectivity": [
+      "A mild Lewis acid; in the Lucas test, tertiary alcohols turn cloudy at once, secondary within minutes, primary not at room temperature"
+    ],
+    "pitfalls": [
+      "Very hygroscopic"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "febr3",
+    "name": "Iron(III) bromide",
+    "aliases": [],
+    "formula": "FeBr₃",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Catalyst for electrophilic aromatic bromination (with Br₂)"
+    ],
+    "chemoselectivity": [
+      "Polarises Br–Br to make a 'Br⁺' equivalent; often generated in situ from Fe and Br₂"
+    ],
+    "pitfalls": [
+      "Not needed for strongly activated rings (phenol, aniline), which brominate without it"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "bbr3",
+    "name": "Boron tribromide",
+    "aliases": [],
+    "formula": "BBr₃",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "typicalUses": [
+      "Cleavage of methyl ethers (especially aryl methyl ethers) to alcohols/phenols"
+    ],
+    "chemoselectivity": [
+      "Coordinates the ether oxygen, then bromide attacks the methyl group"
+    ],
+    "pitfalls": [
+      "Reacts violently with water and alcohols",
+      "Usually run from −78 °C in CH₂Cl₂"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  },
+  {
+    "id": "agno3",
+    "name": "Silver nitrate",
+    "aliases": [],
+    "formula": "AgNO₃",
+    "roles": [
+      "lewis-acid"
+    ],
+    "primaryRole": "lewis-acid",
+    "alsoAccept": [
+      "oxidant"
+    ],
+    "typicalUses": [
+      "Test for halide ions (AgCl white, AgBr cream, AgI yellow)",
+      "Promotes SN1 reactions of alkyl halides by removing the halide"
+    ],
+    "chemoselectivity": [
+      "Ag⁺ binds halides strongly; the precipitates' solubility in NH₃(aq) distinguishes them (AgCl dissolves, AgI does not)"
+    ],
+    "pitfalls": [
+      "Ag⁺ is also a mild oxidant (Tollens' reagent)"
+    ],
+    "topic": "lewis-acids",
+    "reviewed": false
+  }
+]

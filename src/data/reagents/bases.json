@@ -2,24 +2,428 @@
   {
     "id": "lda",
     "name": "Lithium diisopropylamide",
-    "aliases": ["LDA"],
+    "aliases": [
+      "LDA"
+    ],
     "formula": "LiN(i-Pr)₂",
     "smiles": "[Li+].CC(C)[N-]C(C)C",
-    "roles": ["bronsted-base"],
+    "roles": [
+      "bronsted-base"
+    ],
     "primaryRole": "bronsted-base",
-    "strength": { "pKaH": 36, "note": "pKa of diisopropylamine" },
+    "strength": {
+      "pKaH": 36,
+      "note": "diisopropylamine"
+    },
     "typicalUses": [
       "Quantitative, irreversible formation of kinetic enolates at −78 °C in THF"
     ],
     "chemoselectivity": [
-      "Deprotonates α-C–H of ketones, esters and nitriles",
+      "Deprotonates the α-C–H of ketones, esters and nitriles",
       "Bulky and poorly nucleophilic, so it rarely adds to C=O"
     ],
     "pitfalls": [
-      "With an unsymmetrical ketone it gives the less substituted (kinetic) enolate, not the thermodynamic one"
+      "With an unsymmetrical ketone it gives the less substituted (kinetic) enolate, not the thermodynamic one",
+      "Usually made fresh from diisopropylamine and n-BuLi"
     ],
     "topic": "organic/bases",
     "reviewed": false,
-    "todoVerify": ["pKaH value: ~36 is the commonly quoted figure; solvent-dependent"]
+    "todoVerify": [
+      "pKaH of LDA: ~36 is the commonly quoted figure; solvent-dependent"
+    ]
+  },
+  {
+    "id": "nah",
+    "name": "Sodium hydride",
+    "aliases": [],
+    "formula": "NaH",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 35,
+      "note": "H₂ (approximate, DMSO)"
+    },
+    "typicalUses": [
+      "Deprotonation of alcohols, phenols, 1,3-dicarbonyls and N–H bonds (e.g. Williamson ether synthesis)"
+    ],
+    "chemoselectivity": [
+      "A strong, non-nucleophilic base that works irreversibly (H₂ escapes)"
+    ],
+    "pitfalls": [
+      "Although it is a 'hydride', NaH does not reduce carbonyls in normal use: it acts as a base",
+      "Sold as a dispersion in mineral oil; reacts violently with water",
+      "NaH in DMF or DMSO can undergo dangerous runaway decomposition"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false,
+    "todoVerify": [
+      "pKa of H₂ (≈ 35–36 in DMSO)"
+    ]
+  },
+  {
+    "id": "kotbu",
+    "name": "Potassium tert-butoxide",
+    "aliases": [
+      "KOtBu",
+      "t-BuOK"
+    ],
+    "formula": "KOC(CH₃)₃",
+    "smiles": "[K+].CC(C)(C)[O-]",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 17,
+      "note": "t-BuOH in water"
+    },
+    "typicalUses": [
+      "E2 elimination favouring the less substituted (Hofmann) alkene",
+      "Deprotonation of moderately acidic C–H, O–H and N–H"
+    ],
+    "chemoselectivity": [
+      "Bulky: a poor nucleophile, so it eliminates rather than substitutes"
+    ],
+    "pitfalls": [
+      "Much stronger in DMSO than in tert-butanol (pKa of t-BuOH ≈ 17 in water, ≈ 32 in DMSO)"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false,
+    "todoVerify": [
+      "pKa of tert-butanol in water (16.5–19 quoted) and DMSO (≈ 32)"
+    ]
+  },
+  {
+    "id": "dbu",
+    "name": "1,8-Diazabicyclo[5.4.0]undec-7-ene",
+    "aliases": [
+      "DBU"
+    ],
+    "formula": "C₉H₁₆N₂",
+    "smiles": "C1CCC2=NCCCN2CC1",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "alsoAccept": [
+      "lewis-base"
+    ],
+    "strength": {
+      "pKaH": 24.3,
+      "note": "in MeCN (≈ 12–13.5 in water)"
+    },
+    "typicalUses": [
+      "Non-nucleophilic base for E2 eliminations",
+      "Base in Horner–Wadsworth–Emmons reactions (Masamune–Roush conditions, with LiCl)"
+    ],
+    "chemoselectivity": [
+      "A strong amidine base: protonation gives a resonance-stabilised amidinium ion"
+    ],
+    "pitfalls": [
+      "Not completely non-nucleophilic: it can add to very reactive electrophiles"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false,
+    "todoVerify": [
+      "pKaH of DBU in water (≈ 12–13.5)"
+    ]
+  },
+  {
+    "id": "net3",
+    "name": "Triethylamine",
+    "aliases": [
+      "NEt3",
+      "TEA",
+      "Et3N"
+    ],
+    "formula": "Et₃N",
+    "smiles": "CCN(CC)CC",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "alsoAccept": [
+      "lewis-base"
+    ],
+    "strength": {
+      "pKaH": 10.75
+    },
+    "typicalUses": [
+      "Scavenges HCl in acylations and sulfonylations",
+      "Base in Swern oxidations"
+    ],
+    "chemoselectivity": [
+      "Hindered: a poorer nucleophile than pyridine or DMAP"
+    ],
+    "pitfalls": [
+      "Forms Et₃NH⁺Cl⁻, which often precipitates from the reaction mixture"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "pyridine",
+    "name": "Pyridine",
+    "aliases": [],
+    "formula": "C₅H₅N",
+    "smiles": "c1ccncc1",
+    "roles": [
+      "bronsted-base",
+      "lewis-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 5.2
+    },
+    "typicalUses": [
+      "Base and solvent for acylations (via an acylpyridinium ion)",
+      "Ligand in coordination chemistry"
+    ],
+    "chemoselectivity": [
+      "The lone pair is in an sp² orbital in the ring plane, not part of the aromatic π system, so it is available"
+    ],
+    "pitfalls": [
+      "A weak base (pKaH 5.2): much weaker than aliphatic amines"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "dmap",
+    "name": "4-Dimethylaminopyridine",
+    "aliases": [
+      "DMAP"
+    ],
+    "formula": "C₇H₁₀N₂",
+    "smiles": "CN(C)c1ccncc1",
+    "roles": [
+      "lewis-base",
+      "bronsted-base"
+    ],
+    "primaryRole": "lewis-base",
+    "strength": {
+      "pKaH": 9.6
+    },
+    "typicalUses": [
+      "Nucleophilic catalyst (5–10 mol%) for acylating hindered alcohols",
+      "Steglich esterification with DCC"
+    ],
+    "chemoselectivity": [
+      "The ring nitrogen attacks the acylating agent, giving a very reactive acylpyridinium ion stabilised by the NMe₂ group"
+    ],
+    "pitfalls": [
+      "Toxic and readily absorbed through the skin"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "nbuli",
+    "name": "n-Butyllithium",
+    "aliases": [
+      "n-BuLi",
+      "BuLi"
+    ],
+    "formula": "n-C₄H₉Li",
+    "smiles": "[Li+].CCC[CH2-]",
+    "roles": [
+      "bronsted-base",
+      "lewis-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 50,
+      "note": "butane (approximate)"
+    },
+    "typicalUses": [
+      "Deprotonation of terminal alkynes and very weak C–H acids; directed ortho-metallation",
+      "Lithium–halogen exchange",
+      "Making LDA from diisopropylamine"
+    ],
+    "chemoselectivity": [
+      "Also a strong nucleophile: it adds to aldehydes, ketones and nitriles"
+    ],
+    "pitfalls": [
+      "When only deprotonation is wanted next to a C=O, use LDA instead",
+      "Pyrophoric; slowly attacks THF at room temperature"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "naoh",
+    "name": "Sodium hydroxide",
+    "aliases": [],
+    "formula": "NaOH",
+    "roles": [
+      "bronsted-base",
+      "lewis-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 15.7,
+      "note": "water (14.0 with the activity-based convention)"
+    },
+    "typicalUses": [
+      "Saponification of esters",
+      "Neutralisation; aldol condensations"
+    ],
+    "chemoselectivity": [
+      "Saponification is irreversible because the carboxylate is formed"
+    ],
+    "pitfalls": [
+      "Not strong enough to fully deprotonate a ketone α-C–H (pKa ≈ 19–20): only a small equilibrium amount of enolate forms"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false,
+    "todoVerify": [
+      "Conventions for pKa of water: 15.7 vs 14.0"
+    ]
+  },
+  {
+    "id": "naoet",
+    "name": "Sodium ethoxide",
+    "aliases": [
+      "ethoxide"
+    ],
+    "formula": "NaOEt",
+    "smiles": "[Na+].CC[O-]",
+    "roles": [
+      "bronsted-base",
+      "lewis-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 16,
+      "note": "ethanol"
+    },
+    "typicalUses": [
+      "Claisen condensation; malonic and acetoacetic ester alkylation",
+      "E2 elimination (Zaitsev product) from secondary/tertiary halides"
+    ],
+    "chemoselectivity": [
+      "With primary halides it mostly substitutes (Williamson ether synthesis)"
+    ],
+    "pitfalls": [
+      "Match the alkoxide to the ester (EtO⁻ with ethyl esters) to avoid transesterification"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "k2co3",
+    "name": "Potassium carbonate",
+    "aliases": [],
+    "formula": "K₂CO₃",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 10.3,
+      "note": "HCO₃⁻"
+    },
+    "typicalUses": [
+      "Mild base for alkylating phenols (in acetone or DMF)",
+      "Methanolysis of acetates (K₂CO₃/MeOH)"
+    ],
+    "chemoselectivity": [
+      "Deprotonates phenols (pKa ≈ 10) but not ordinary alcohols (pKa ≈ 16)"
+    ],
+    "pitfalls": [
+      "Largely insoluble in organic solvents: these reactions are heterogeneous"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "nahco3",
+    "name": "Sodium hydrogencarbonate",
+    "aliases": [
+      "sodium bicarbonate"
+    ],
+    "formula": "NaHCO₃",
+    "roles": [
+      "bronsted-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "alsoAccept": [
+      "bronsted-acid"
+    ],
+    "strength": {
+      "pKaH": 6.35,
+      "note": "H₂CO₃ (CO₂(aq))"
+    },
+    "typicalUses": [
+      "Neutralising acid in workups",
+      "Test for carboxylic acids (CO₂ effervescence)"
+    ],
+    "chemoselectivity": [
+      "Carboxylic acids (pKa ≈ 4–5) fizz with NaHCO₃; most phenols (pKa ≈ 10) do not"
+    ],
+    "pitfalls": [
+      "Amphoteric: HCO₃⁻ is also a weak acid (pKa 10.3)"
+    ],
+    "topic": "organic/bases",
+    "reviewed": false
+  },
+  {
+    "id": "ammonia",
+    "name": "Ammonia",
+    "aliases": [],
+    "formula": "NH₃",
+    "roles": [
+      "bronsted-base",
+      "lewis-base"
+    ],
+    "primaryRole": "bronsted-base",
+    "strength": {
+      "pKaH": 9.25
+    },
+    "typicalUses": [
+      "Ligand (e.g. [Cu(NH₃)₄]²⁺, [Ag(NH₃)₂]⁺)",
+      "Nucleophile: amides from acyl chlorides or esters; amines from alkyl halides"
+    ],
+    "chemoselectivity": [
+      "Alkylation of NH₃ with alkyl halides gives mixtures (over-alkylation): Gabriel synthesis avoids this"
+    ],
+    "pitfalls": [
+      "Liquid NH₃ (b.p. −33 °C) is the solvent for Birch reductions"
+    ],
+    "topic": "inorganic/acid-base",
+    "reviewed": false
+  },
+  {
+    "id": "memgbr",
+    "name": "Methylmagnesium bromide",
+    "aliases": [
+      "Grignard reagent",
+      "MeMgBr"
+    ],
+    "formula": "CH₃MgBr",
+    "smiles": "C[Mg]Br",
+    "roles": [
+      "lewis-base",
+      "bronsted-base"
+    ],
+    "primaryRole": "lewis-base",
+    "strength": {
+      "pKaH": 50,
+      "note": "methane (approximate)"
+    },
+    "typicalUses": [
+      "Adds to aldehydes (→ 2° alcohols), ketones (→ 3° alcohols), CO₂ (→ carboxylic acids) and epoxides"
+    ],
+    "chemoselectivity": [
+      "Esters react twice to give tertiary alcohols: the intermediate ketone is more reactive than the ester"
+    ],
+    "pitfalls": [
+      "Destroyed by any O–H or N–H (water, alcohols, acids, even terminal alkynes), which give methane",
+      "Hindered ketones may be enolised or reduced instead of attacked"
+    ],
+    "topic": "organic/nucleophiles",
+    "reviewed": false
   }
 ]

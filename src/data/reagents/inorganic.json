@@ -1,0 +1,115 @@
+[
+  {
+    "id": "na2s2o3",
+    "name": "Sodium thiosulfate",
+    "aliases": [
+      "thiosulfate"
+    ],
+    "formula": "Na₂S₂O₃",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "lewis-base"
+    ],
+    "strength": {
+      "E0": 0.08,
+      "note": "S₄O₆²⁻/S₂O₃²⁻"
+    },
+    "typicalUses": [
+      "Iodometric titration: 2S₂O₃²⁻ + I₂ → S₄O₆²⁻ + 2I⁻",
+      "Quenching excess halogens or oxidants in workups",
+      "Photographic fixer (dissolves AgBr)"
+    ],
+    "chemoselectivity": [
+      "Reduces I₂ cleanly to I⁻ (1 mol I₂ per 2 mol S₂O₃²⁻)"
+    ],
+    "pitfalls": [
+      "Disproportionates in acid to S (cloudy precipitate) and SO₂"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "feso4",
+    "name": "Iron(II) sulfate",
+    "aliases": [
+      "ferrous sulfate"
+    ],
+    "formula": "FeSO₄",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "strength": {
+      "E0": 0.77,
+      "note": "Fe³⁺/Fe²⁺"
+    },
+    "typicalUses": [
+      "Titrated with KMnO₄ or K₂Cr₂O₇",
+      "Brown-ring test for nitrate"
+    ],
+    "chemoselectivity": [
+      "Fe²⁺ is a mild reductant: oxidised to Fe³⁺"
+    ],
+    "pitfalls": [
+      "Solutions slowly oxidise in air, so standardise them shortly before use"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "zinc",
+    "name": "Zinc metal",
+    "aliases": [],
+    "formula": "Zn",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "strength": {
+      "E0": -0.76,
+      "note": "Zn²⁺/Zn"
+    },
+    "typicalUses": [
+      "Displaces Cu²⁺ from solution",
+      "With acid: H₂ and reduction of nitro groups",
+      "Reductive workup of ozonides (Zn/AcOH)"
+    ],
+    "chemoselectivity": [
+      "More reducing than H₂ (E° < 0), so it dissolves in dilute non-oxidising acids"
+    ],
+    "pitfalls": [
+      "Amphoteric: it also dissolves in strong alkali as zincate, releasing H₂"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "sodium",
+    "name": "Sodium metal",
+    "aliases": [],
+    "formula": "Na",
+    "roles": [
+      "reductant"
+    ],
+    "primaryRole": "reductant",
+    "strength": {
+      "E0": -2.71,
+      "note": "Na⁺/Na"
+    },
+    "typicalUses": [
+      "Birch and alkyne reductions (in NH₃)",
+      "Drying ethers and hydrocarbons (with benzophenone as indicator)"
+    ],
+    "chemoselectivity": [
+      "Reacts with water and alcohols to give H₂ and hydroxide/alkoxide"
+    ],
+    "pitfalls": [
+      "Never use to dry halogenated solvents (explosive reaction)"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  }
+]

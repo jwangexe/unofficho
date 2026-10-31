@@ -1,0 +1,658 @@
+[
+  {
+    "id": "pcc",
+    "name": "Pyridinium chlorochromate",
+    "aliases": [
+      "PCC"
+    ],
+    "formula": "[C₅H₅NH]⁺[CrO₃Cl]⁻",
+    "smiles": "[O-][Cr](=O)(=O)Cl.c1cc[nH+]cc1",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "bronsted-acid"
+    ],
+    "typicalUses": [
+      "Primary alcohol → aldehyde in dry CH₂Cl₂",
+      "Secondary alcohol → ketone"
+    ],
+    "chemoselectivity": [
+      "Stops at the aldehyde because no water is present to form the hydrate",
+      "Tertiary alcohols are not oxidised"
+    ],
+    "pitfalls": [
+      "Cr(VI) is toxic",
+      "Mildly acidic: buffer with NaOAc for acid-sensitive substrates"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "swern",
+    "name": "Swern oxidation",
+    "aliases": [
+      "Swern"
+    ],
+    "formula": "DMSO, (COCl)₂, then NEt₃, −78 °C",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Primary alcohol → aldehyde; secondary alcohol → ketone under mild, metal-free conditions"
+    ],
+    "chemoselectivity": [
+      "Does not over-oxidise aldehydes to acids",
+      "Tolerates most other functional groups"
+    ],
+    "pitfalls": [
+      "The oxidant is activated DMSO (a chlorosulfonium ion); NEt₃ is only the base for the final elimination",
+      "Must be kept cold: above about −60 °C side reactions take over",
+      "Produces Me₂S (foul smell), CO and CO₂"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "dmp",
+    "name": "Dess–Martin periodinane",
+    "aliases": [
+      "DMP",
+      "Dess-Martin"
+    ],
+    "formula": "C₁₃H₁₃IO₈",
+    "smiles": "CC(=O)OI1(OC(C)=O)(OC(C)=O)OC(=O)c2ccccc21",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Primary alcohol → aldehyde; secondary alcohol → ketone at room temperature"
+    ],
+    "chemoselectivity": [
+      "Neutral, fast and very tolerant of sensitive groups",
+      "Does not over-oxidise to the carboxylic acid"
+    ],
+    "pitfalls": [
+      "Releases acetic acid: add NaHCO₃ or pyridine for acid-sensitive substrates",
+      "Hypervalent iodine(V) reagent; its precursor IBX can be shock-sensitive"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "kmno4",
+    "name": "Potassium permanganate",
+    "aliases": [
+      "permanganate"
+    ],
+    "formula": "KMnO₄",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "context": "The outcome depends on conditions: cold, dilute and basic gives the diol; hot or acidic cleaves the C=C bond.",
+    "strength": {
+      "E0": 1.51,
+      "note": "MnO₄⁻/Mn²⁺ in acid"
+    },
+    "typicalUses": [
+      "Cold, dilute, alkaline: syn-dihydroxylation of alkenes",
+      "Hot or acidic: cleaves C=C; oxidises primary alcohols and aldehydes to carboxylic acids",
+      "Alkylbenzene side chain → benzoic acid"
+    ],
+    "chemoselectivity": [
+      "A side chain is oxidised only if it has a benzylic C–H: tert-butylbenzene is untouched",
+      "Hard to stop at the diol except under cold, dilute, basic conditions"
+    ],
+    "pitfalls": [
+      "Purple MnO₄⁻ → brown MnO₂ (neutral/basic) or colourless Mn²⁺ (acidic)"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "oso4",
+    "name": "Osmium tetroxide (catalytic, with NMO)",
+    "aliases": [
+      "OsO4",
+      "Upjohn dihydroxylation"
+    ],
+    "formula": "OsO₄, NMO",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Syn-dihydroxylation of alkenes (Upjohn); asymmetric version with chiral ligands (Sharpless AD)"
+    ],
+    "chemoselectivity": [
+      "Stereospecific: cis-alkenes give the syn (e.g. meso) diol",
+      "Electron-rich alkenes react fastest",
+      "Does not cleave the diol (add NaIO₄ for that)"
+    ],
+    "pitfalls": [
+      "Volatile and very toxic, so used catalytically with NMO to re-oxidise Os(VI)"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "mcpba",
+    "name": "meta-Chloroperoxybenzoic acid",
+    "aliases": [
+      "mCPBA",
+      "MCPBA"
+    ],
+    "formula": "m-ClC₆H₄CO₃H",
+    "smiles": "OOC(=O)c1cccc(Cl)c1",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Epoxidation of alkenes",
+      "Baeyer–Villiger oxidation of ketones to esters (and cyclic ketones to lactones)",
+      "Sulfide → sulfoxide → sulfone; amine → N-oxide"
+    ],
+    "chemoselectivity": [
+      "Epoxidation is stereospecific (syn); electron-rich alkenes react faster",
+      "Baeyer–Villiger migratory aptitude: tertiary alkyl > secondary alkyl ≈ phenyl > primary alkyl > methyl, with retention of configuration"
+    ],
+    "pitfalls": [
+      "The m-chlorobenzoic acid by-product can open acid-sensitive epoxides: buffer with NaHCO₃"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false,
+    "todoVerify": [
+      "Relative migratory aptitude of secondary alkyl vs phenyl in Baeyer–Villiger (often quoted as comparable)"
+    ]
+  },
+  {
+    "id": "ozone",
+    "name": "Ozone",
+    "aliases": [
+      "ozonolysis"
+    ],
+    "formula": "O₃",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "context": "The products depend on the workup: reductive gives aldehydes, oxidative gives carboxylic acids.",
+    "typicalUses": [
+      "Ozonolysis: cleavage of C=C into two carbonyl compounds"
+    ],
+    "chemoselectivity": [
+      "Reductive workup (Me₂S, Zn/AcOH or PPh₃) gives aldehydes and ketones",
+      "Oxidative workup (H₂O₂) turns the aldehydes into carboxylic acids"
+    ],
+    "pitfalls": [
+      "Ozonides are explosive: always work them up before isolating"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "naio4",
+    "name": "Sodium periodate",
+    "aliases": [
+      "periodate"
+    ],
+    "formula": "NaIO₄",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Cleavage of 1,2-diols into two carbonyl compounds",
+      "With catalytic OsO₄ (Lemieux–Johnson): cleaves alkenes like ozonolysis"
+    ],
+    "chemoselectivity": [
+      "Needs a 1,2-diol (or 1,2-amino alcohol): an isolated alkene is untouched without OsO₄",
+      "cis-Diols react faster, via a cyclic periodate ester"
+    ],
+    "pitfalls": [
+      "Each C–C bond cleaved consumes one equivalent of IO₄⁻"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "jones",
+    "name": "Jones reagent",
+    "aliases": [
+      "Jones oxidation",
+      "chromic acid"
+    ],
+    "formula": "CrO₃, H₂SO₄, acetone",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "bronsted-acid"
+    ],
+    "typicalUses": [
+      "Primary alcohol → carboxylic acid",
+      "Secondary alcohol → ketone"
+    ],
+    "chemoselectivity": [
+      "Water is present, so the aldehyde hydrate is oxidised further to the acid",
+      "Tertiary alcohols are not oxidised (orange stays orange)"
+    ],
+    "pitfalls": [
+      "Strongly acidic: acetals and other acid-sensitive groups are hydrolysed",
+      "Orange Cr(VI) turns green Cr(III) as it works"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "tempo-bleach",
+    "name": "TEMPO with bleach (Anelli)",
+    "aliases": [
+      "TEMPO",
+      "Anelli oxidation"
+    ],
+    "formula": "TEMPO (cat.), NaOCl, KBr, NaHCO₃",
+    "smiles": "CC1(C)CCCC(C)(C)N1[O]",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Selective oxidation of primary alcohols to aldehydes"
+    ],
+    "chemoselectivity": [
+      "Primary alcohols react much faster than secondary ones",
+      "The active oxidant is the oxoammonium ion; NaOCl regenerates it, so TEMPO is catalytic"
+    ],
+    "pitfalls": [
+      "With a co-oxidant such as NaClO₂, the aldehyde goes on to the carboxylic acid",
+      "TEMPO itself is a stable nitroxyl radical"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "h2o2",
+    "name": "Hydrogen peroxide",
+    "aliases": [
+      "peroxide"
+    ],
+    "formula": "H₂O₂",
+    "roles": [
+      "oxidant",
+      "reductant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "lewis-base"
+    ],
+    "context": "Usually an oxidant (H₂O₂/H₂O, E° = +1.78 V). Towards stronger oxidants such as MnO₄⁻ or Cl₂ it is oxidised to O₂ and acts as a reductant (O₂/H₂O₂, E° = +0.70 V).",
+    "strength": {
+      "E0": 1.78,
+      "note": "H₂O₂/H₂O"
+    },
+    "typicalUses": [
+      "Oxidative workup of hydroboration (with NaOH)",
+      "Oxidation of I⁻, Fe²⁺ and sulfides",
+      "Nucleophilic epoxidation of enones (as HOO⁻)"
+    ],
+    "chemoselectivity": [
+      "As HOO⁻ in base it is a good nucleophile"
+    ],
+    "pitfalls": [
+      "Disproportionates to O₂ and H₂O, catalysed by MnO₂ or catalase"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "so2",
+    "name": "Sulfur dioxide",
+    "aliases": [],
+    "formula": "SO₂",
+    "roles": [
+      "reductant",
+      "lewis-acid"
+    ],
+    "primaryRole": "reductant",
+    "alsoAccept": [
+      "oxidant",
+      "bronsted-acid"
+    ],
+    "context": "Usually a reductant (oxidised to sulfate), but it oxidises stronger reductants such as H₂S, being reduced to sulfur.",
+    "typicalUses": [
+      "Reduces I₂, acidified MnO₄⁻ and Cr₂O₇²⁻ (decolourising them)",
+      "Forms adducts with amines (Lewis acid at S)"
+    ],
+    "chemoselectivity": [
+      "Towards H₂S it is the oxidant: 2H₂S + SO₂ → 3S + 2H₂O"
+    ],
+    "pitfalls": [
+      "SO₂ itself has no H to donate; its aqueous solution is acidic because it forms HSO₃⁻ + H⁺"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "naocl",
+    "name": "Sodium hypochlorite (bleach)",
+    "aliases": [
+      "bleach",
+      "hypochlorite"
+    ],
+    "formula": "NaOCl",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "bronsted-base"
+    ],
+    "strength": {
+      "E0": 0.89,
+      "note": "ClO⁻/Cl⁻ in base"
+    },
+    "typicalUses": [
+      "Co-oxidant in TEMPO oxidations",
+      "Haloform reaction of methyl ketones",
+      "Oxidation of secondary alcohols in acetic acid"
+    ],
+    "chemoselectivity": [
+      "Methyl ketones are converted to carboxylates plus CHCl₃ (haloform)"
+    ],
+    "pitfalls": [
+      "Mixing with acid releases Cl₂; mixing with ammonia gives toxic chloramines"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "k2cr2o7",
+    "name": "Potassium dichromate (acidified)",
+    "aliases": [
+      "dichromate"
+    ],
+    "formula": "K₂Cr₂O₇, H₂SO₄",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "strength": {
+      "E0": 1.33,
+      "note": "Cr₂O₇²⁻/Cr³⁺"
+    },
+    "typicalUses": [
+      "Primary alcohol → aldehyde (distil off as formed) or carboxylic acid (reflux)",
+      "Secondary alcohol → ketone"
+    ],
+    "chemoselectivity": [
+      "Tertiary alcohols are not oxidised: the classic test"
+    ],
+    "pitfalls": [
+      "Orange Cr₂O₇²⁻ → green Cr³⁺"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "tollens",
+    "name": "Tollens' reagent",
+    "aliases": [
+      "ammoniacal silver nitrate"
+    ],
+    "formula": "[Ag(NH₃)₂]⁺",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "strength": {
+      "E0": 0.8,
+      "note": "Ag⁺/Ag (lower for the ammine complex)"
+    },
+    "typicalUses": [
+      "Test for aldehydes: silver mirror"
+    ],
+    "chemoselectivity": [
+      "Oxidises aldehydes to carboxylates but not ketones",
+      "α-Hydroxy ketones such as fructose give a positive test, because they isomerise to aldehydes in the basic solution"
+    ],
+    "pitfalls": [
+      "Prepare fresh and do not store: aged ammoniacal silver solutions can form explosive silver nitride"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "seo2",
+    "name": "Selenium dioxide",
+    "aliases": [
+      "Riley oxidation"
+    ],
+    "formula": "SeO₂",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "typicalUses": [
+      "Allylic oxidation (to allylic alcohols or enones)",
+      "Riley oxidation: α-CH₂ of a ketone → 1,2-dicarbonyl"
+    ],
+    "chemoselectivity": [
+      "Attacks the allylic position, not the C=C itself"
+    ],
+    "pitfalls": [
+      "Selenium compounds are toxic and malodorous"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "nbs",
+    "name": "N-Bromosuccinimide",
+    "aliases": [
+      "NBS"
+    ],
+    "formula": "C₄H₄BrNO₂",
+    "smiles": "BrN1C(=O)CCC1=O",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "lewis-acid"
+    ],
+    "typicalUses": [
+      "Radical allylic and benzylic bromination (with light or an initiator)",
+      "Bromohydrin formation from alkenes in aqueous DMSO"
+    ],
+    "chemoselectivity": [
+      "Keeps [Br₂] very low, so allylic substitution wins over addition to the C=C"
+    ],
+    "pitfalls": [
+      "Brominations of C–H are oxidations of carbon; NBS is a source of Br• or 'Br⁺'"
+    ],
+    "topic": "organic/oxidation",
+    "reviewed": false
+  },
+  {
+    "id": "iodine",
+    "name": "Iodine",
+    "aliases": [],
+    "formula": "I₂",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "lewis-acid"
+    ],
+    "strength": {
+      "E0": 0.54,
+      "note": "I₂/I⁻"
+    },
+    "typicalUses": [
+      "Iodometric titrations",
+      "Iodoform test (with NaOH) for methyl ketones and ethanol"
+    ],
+    "chemoselectivity": [
+      "A mild oxidant: oxidises S₂O₃²⁻ and SO₂ but not Cl⁻ or Br⁻"
+    ],
+    "pitfalls": [
+      "Dissolves in KI(aq) as I₃⁻ (I₂ acting as a Lewis acid towards I⁻)"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "bromine",
+    "name": "Bromine",
+    "aliases": [],
+    "formula": "Br₂",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "alsoAccept": [
+      "lewis-acid"
+    ],
+    "strength": {
+      "E0": 1.07,
+      "note": "Br₂/Br⁻"
+    },
+    "typicalUses": [
+      "Anti addition to alkenes (via the bromonium ion)",
+      "Bromine water test for unsaturation; tribromination of phenol"
+    ],
+    "chemoselectivity": [
+      "Arenes need a Lewis acid (FeBr₃) unless strongly activated (phenol, aniline)"
+    ],
+    "pitfalls": [
+      "Decolourisation of bromine water is not specific to C=C: phenols and enols also react"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "chlorine",
+    "name": "Chlorine",
+    "aliases": [],
+    "formula": "Cl₂",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "strength": {
+      "E0": 1.36,
+      "note": "Cl₂/Cl⁻"
+    },
+    "typicalUses": [
+      "Oxidises Br⁻ and I⁻ to Br₂ and I₂ (halogen displacement)",
+      "Radical chlorination of alkanes under UV light"
+    ],
+    "chemoselectivity": [
+      "Stronger oxidant than Br₂ and I₂ but weaker than F₂"
+    ],
+    "pitfalls": [
+      "Disproportionates in cold NaOH to Cl⁻ + ClO⁻ (and to ClO₃⁻ when hot)"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "fluorine",
+    "name": "Fluorine",
+    "aliases": [],
+    "formula": "F₂",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "strength": {
+      "E0": 2.87,
+      "note": "F₂/F⁻"
+    },
+    "typicalUses": [
+      "The strongest elemental oxidant; oxidises water to O₂"
+    ],
+    "chemoselectivity": [
+      "Oxidises every other halide ion"
+    ],
+    "pitfalls": [
+      "Fluorine can only ever be in the −1 oxidation state in compounds (except F₂ itself, at 0)"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false
+  },
+  {
+    "id": "hno3-conc",
+    "name": "Nitric acid (concentrated)",
+    "aliases": [
+      "nitric acid"
+    ],
+    "formula": "HNO₃",
+    "roles": [
+      "oxidant",
+      "bronsted-acid"
+    ],
+    "primaryRole": "oxidant",
+    "context": "Both a strong acid and an oxidant; which reduction product forms (NO₂, NO, N₂O, NH₄⁺) depends on concentration and on the metal.",
+    "strength": {
+      "E0": 0.8,
+      "note": "NO₃⁻/NO₂"
+    },
+    "typicalUses": [
+      "Dissolves copper and silver (which do not react with non-oxidising acids)",
+      "With H₂SO₄: nitration of arenes via NO₂⁺"
+    ],
+    "chemoselectivity": [
+      "Concentrated HNO₃ is usually reduced to NO₂; dilute HNO₃ to NO"
+    ],
+    "pitfalls": [
+      "In nitrating mixture, HNO₃ is protonated by H₂SO₄: there it acts as a base",
+      "Passivates Fe, Al and Cr"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false,
+    "todoVerify": [
+      "E° for NO₃⁻/NO₂ couple (≈ +0.80 V)"
+    ]
+  },
+  {
+    "id": "can",
+    "name": "Ceric ammonium nitrate",
+    "aliases": [
+      "CAN",
+      "ceric ammonium nitrate"
+    ],
+    "formula": "(NH₄)₂Ce(NO₃)₆",
+    "roles": [
+      "oxidant"
+    ],
+    "primaryRole": "oxidant",
+    "strength": {
+      "E0": 1.61,
+      "note": "Ce⁴⁺/Ce³⁺ (medium-dependent)"
+    },
+    "typicalUses": [
+      "Removal of p-methoxybenzyl (PMB) ethers",
+      "Hydroquinone → quinone"
+    ],
+    "chemoselectivity": [
+      "A one-electron oxidant: leaves ordinary benzyl ethers alone while removing PMB"
+    ],
+    "pitfalls": [
+      "Orange Ce(IV) → colourless Ce(III)"
+    ],
+    "topic": "inorganic/redox",
+    "reviewed": false,
+    "todoVerify": [
+      "Ce(IV)/Ce(III) potential varies strongly with the acid (≈1.44 V in H₂SO₄, ≈1.61 V in HNO₃)"
+    ]
+  }
+]
