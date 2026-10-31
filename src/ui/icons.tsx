@@ -54,3 +54,11 @@ export const InfoIcon = (p: P) => (
     <path d="M12 11v5M12 8h.01" />
   </svg>
 );
+/** Two species joined by equilibrium half-arrows: for reaction mechanisms. */
+export const MechanismIcon = (p: P) => (
+  <svg {...base} {...p}>
+    <circle cx="3.5" cy="12" r="2" />
+    <circle cx="20.5" cy="12" r="2" />
+    <path d="M7 10h10l-3-3M17 14H7l3 3" />
+  </svg>
+);

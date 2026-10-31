@@ -11,6 +11,7 @@ import { ApproachCard } from './ApproachCard';
 import { QuestionCard } from './QuestionCard';
 import { useCalcStore } from './store';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { useSavedMode } from '../useSavedMode';
 
 type Mode = 'feed' | 'approach' | 'multi' | 'exam' | 'mechanisms';
 
@@ -137,26 +138,9 @@ function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] })
   );
 }
 
-function readMode(): Mode {
-  try {
-    const m = localStorage.getItem(MODE_KEY);
-    return MODES.some((x) => x.id === m) ? (m as Mode) : 'feed';
-  } catch {
-    return 'feed';
-  }
-}
-
 export default function CalcHome() {
   useDocumentTitle('Calculations');
-  const [chosen, setMode] = useState<Mode>(readMode);
-  const pick = (m: Mode) => {
-    setMode(m);
-    try {
-      localStorage.setItem(MODE_KEY, m);
-    } catch {
-      // Not persisted in private mode; fine.
-    }
-  };
+  const [chosen, pick] = useSavedMode<Mode>(MODE_KEY, MODES.map((m) => m.id), 'feed');
 
   const [focus, clearFocus] = useFocus();
   const due = useDueIds('calc', !!focus?.due);

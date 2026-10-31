@@ -4,6 +4,7 @@ import type { ReactItem, Reagent } from '@/data/schemas';
 import { itemId } from '@/storage/progress';
 import { Feed, type FeedHandle } from '@/ui/Feed';
 import { EmptyFocus, FocusBanner, useDueIds, useFocus, type Focus } from '../focus';
+import { useSavedMode } from '../useSavedMode';
 import { ClassifyCard, FastCard } from './ClassifyCard';
 import { ReactCard } from './ReactCard';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
@@ -81,18 +82,9 @@ function ModeFeed({ mode, deck }: { mode: Mode; deck: Deck }) {
   );
 }
 
-function readMode(): Mode {
-  try {
-    const m = localStorage.getItem(MODE_KEY);
-    return MODES.some((x) => x.id === m) ? (m as Mode) : 'classify';
-  } catch {
-    return 'classify';
-  }
-}
-
 export default function ReagentsHome() {
   useDocumentTitle('Reagents');
-  const [chosen, setMode] = useState<Mode>(readMode);
+  const [chosen, pick] = useSavedMode<Mode>(MODE_KEY, MODES.map((m) => m.id), 'classify');
   const [focus, clearFocus] = useFocus();
   const due = useDueIds('reagents', !!focus?.due);
   const deck = useMemo(() => (focus ? (focus.due && !due ? null : focusDeck(focus, due)) : FULL_DECK), [focus, due]);
@@ -105,14 +97,6 @@ export default function ReagentsHome() {
           ? 'react'
           : chosen
       : chosen;
-  const pick = (m: Mode) => {
-    setMode(m);
-    try {
-      localStorage.setItem(MODE_KEY, m);
-    } catch {
-      // Not persisted in private mode; fine.
-    }
-  };
   return (
     <div className="flex h-full flex-col">
       <nav aria-label="Reagent modes" className="mx-auto flex w-full max-w-xl gap-1 overflow-x-auto px-4 pt-2">

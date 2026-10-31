@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { Layout } from './Layout';
 
+const Home = lazy(() => import('@/features/home/Home'));
 const BookHome = lazy(() => import('@/features/book/BookHome'));
 const ReagentsHome = lazy(() => import('@/features/reagents/ReagentsHome'));
 const CalcHome = lazy(() => import('@/features/calc/CalcHome'));
@@ -16,7 +17,7 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Navigate to="/calc" replace />} />
+          <Route index element={<Home />} />
           <Route path="book/*" element={<BookHome />} />
           <Route path="reagents/*" element={<ReagentsHome />} />
           <Route path="calc/*" element={<CalcHome />} />
@@ -24,7 +25,7 @@ export function App() {
           <Route path="about" element={<About />} />
           {Debug && <Route path="debug" element={<Debug />} />}
           {Review && <Route path="review" element={<Review />} />}
-          <Route path="*" element={<Navigate to="/calc" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>

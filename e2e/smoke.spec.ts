@@ -8,7 +8,8 @@ const tab = (page: Page, name: string) => page.getByRole('navigation', { name: '
 
 test('tab bar reaches every section, and About shows the disclaimer', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveURL(/\/calc$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('UnoffIChO');
+  await expect(page.getByRole('note', { name: 'About the author' })).toContainText('IChO gold medallist');
   await tab(page, 'Book').click();
   await expect(page.getByRole('heading', { name: 'Book', level: 1 })).toBeVisible();
   await expect(page).toHaveTitle('Book · UnoffIChO');
@@ -18,6 +19,16 @@ test('tab bar reaches every section, and About shows the disclaimer', async ({ p
   await expect(page.getByRole('heading', { name: 'Progress', level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'About' }).click();
   await expect(page.getByText(DISCLAIMER).first()).toBeVisible();
+});
+
+test('homepage buttons open the right feature and mode', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Derive a rate law' }).click();
+  await expect(page).toHaveURL(/\/calc$/);
+  await expect(page.getByRole('navigation', { name: 'Calculation modes' }).getByRole('button', { name: 'Mechanisms' })).toHaveAttribute('aria-current', 'page');
+  await page.getByRole('link', { name: 'UnoffIChO' }).click();
+  await page.getByRole('link', { name: 'Will it react?' }).click();
+  await expect(page.getByRole('navigation', { name: 'Reagent modes' }).getByRole('button', { name: 'Will it react?' })).toHaveAttribute('aria-current', 'page');
 });
 
 test('a calculation card shows labelled chips and the keyboard moves the feed', async ({ page }) => {
@@ -128,6 +139,8 @@ test('installable PWA that works offline after the first visit', async ({ page, 
 
 test.describe('accessibility (axe, WCAG 2.1 AA)', () => {
   for (const [path, theme] of [
+    ['/', 'dark'],
+    ['/', 'light'],
     ['/calc', 'dark'],
     ['/reagents', 'dark'],
     ['/book/combining-potentials', 'dark'],
