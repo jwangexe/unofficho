@@ -6,6 +6,7 @@ import { endOfDay } from '@/storage/srs';
 import { Footer } from '@/ui/Footer';
 import { BookIcon, CalcIcon, ChartIcon, FlaskIcon, MechanismIcon } from '@/ui/icons';
 import { Logo } from '@/ui/Logo';
+import { useSuggest } from '../feedback/Suggest';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
 
 /** Items due for review today, or null before IndexedDB answers. */
@@ -122,7 +123,11 @@ export default function Home() {
               Your data stays with you
             </h2>
             Progress is stored on this device only; nothing is sent anywhere. Export it from Progress to move devices. Items marked
-            "unreviewed" have not yet been checked for accuracy, so flag anything that looks wrong.{' '}
+            "unreviewed" have not yet been checked for accuracy, so flag anything that looks wrong, or{' '}
+            <button type="button" onClick={() => useSuggest.getState().setOpen(true)} className="text-accent underline underline-offset-4">
+              send a suggestion
+            </button>
+            .{' '}
             <Link to="/about" className="text-accent underline underline-offset-4">
               About UnoffIChO
             </Link>

@@ -18,7 +18,8 @@ export default function About() {
           from formula operations rather than typing numbers into a calculator.
         </p>
         <p>
-          All content is original and stored on your device. Nothing you do is sent anywhere. Items
+          All content is original and your progress is stored on your device. Nothing you do is sent anywhere,
+          except a suggestion when you choose to send one (the speech-bubble button at the top). Items
           marked "unreviewed" have not yet been checked for accuracy, so treat them with care and flag
           anything that looks wrong.
         </p>

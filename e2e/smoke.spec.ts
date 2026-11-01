@@ -148,6 +148,37 @@ test('derive it yourself: equations, then solving by substitution', async ({ pag
   await expect(rate.getByText('✓ Derived')).toBeVisible();
 });
 
+test('the suggestion button sends the message, the page and nothing else', async ({ page }) => {
+  let sent: unknown = null;
+  await page.route('**/api/suggestions', async (route) => {
+    sent = route.request().postDataJSON();
+    await route.fulfill({ status: 201, contentType: 'application/json', body: '{"ok":true}' });
+  });
+  await page.goto('/book');
+  await page.getByRole('button', { name: 'Send a suggestion' }).click();
+  const sheet = page.getByRole('dialog');
+  await sheet.getByRole('radio', { name: 'Chemistry error' }).click();
+  // Typed key by key, as a person would: focus must stay in the box between keystrokes.
+  const box = sheet.getByLabel('Your suggestion');
+  await box.click();
+  await box.pressSequentially('A typo on the buffers page');
+  await expect(box).toBeFocused();
+  await expect(box).toHaveValue('A typo on the buffers page');
+  await sheet.getByRole('button', { name: 'Send' }).click();
+  await expect(sheet.getByText('Thank you!')).toBeVisible();
+  expect(sent).toEqual({ kind: 'content-error', message: 'A typo on the buffers page', name: '', page: '/book', website: '' });
+});
+
+test('typing a flag note keeps focus in the text box', async ({ page }) => {
+  await page.goto('/book/diels-alder');
+  await page.getByRole('button', { name: 'Flag as wrong' }).click();
+  const note = page.getByRole('dialog').getByRole('textbox');
+  await note.click();
+  await note.pressSequentially('Endo rule wording');
+  await expect(note).toBeFocused();
+  await expect(note).toHaveValue('Endo rule wording');
+});
+
 test('installable PWA that works offline after the first visit', async ({ page, context }) => {
   await page.goto('/');
   const manifest = await page.evaluate(async () => {

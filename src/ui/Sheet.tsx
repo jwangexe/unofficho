@@ -19,13 +19,19 @@ export function Sheet({
   footer?: ReactNode;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  // Latest onClose, so callers can pass a new function each render without re-running the
+  // effect below (which would steal focus from a text field on every keystroke).
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  // Only when the sheet opens: focus the close button and listen for Escape.
   useEffect(() => {
     if (!open) return;
     closeRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onCloseRef.current();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
   return createPortal(

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router';
 import { Logo } from '@/ui/Logo';
 import { InfoIcon, MoonIcon, SunIcon } from '@/ui/icons';
+import { SuggestButton, SuggestSheet } from '@/features/feedback/Suggest';
 import { TabBar } from './TabBar';
 import { useTheme } from './theme';
 
@@ -20,6 +21,7 @@ export function Layout() {
           <Logo />
         </Link>
         <div className="flex items-center">
+          <SuggestButton />
           <button
             type="button"
             onClick={toggle}
@@ -39,6 +41,7 @@ export function Layout() {
         </Suspense>
       </main>
       <TabBar />
+      <SuggestSheet />
     </div>
   );
 }

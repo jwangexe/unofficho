@@ -62,3 +62,10 @@ export const MechanismIcon = (p: P) => (
     <path d="M7 10h10l-3-3M17 14H7l3 3" />
   </svg>
 );
+/** Speech bubble with a plus: send a suggestion. */
+export const SuggestIcon = (p: P) => (
+  <svg {...base} {...p}>
+    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A1.5 1.5 0 0 1 4 14.5z" />
+    <path d="M12 6.5v6M9 9.5h6" />
+  </svg>
+);

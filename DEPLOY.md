@@ -84,6 +84,33 @@ DNS and the certificate usually take a few minutes; allow up to 24 hours.
 
 Custom domains on Cloudflare need the domain's DNS to be on Cloudflare (step 2). If you keep DNS elsewhere, use the `workers.dev` address, or move the DNS.
 
+## Suggestions from friends
+
+The speech-bubble button at the top of every screen lets anyone send a suggestion. Each one goes to a **D1 database** called `unofficho-feedback`, attached to the same Cloudflare project. The Worker in `worker/index.ts` handles `/api/suggestions`.
+
+**One-time setup:**
+
+1. **The database.** The first deploy after this change creates `unofficho-feedback` for you, because `wrangler.jsonc` names it without an ID and Wrangler provisions it automatically. The table inside is created on the first suggestion. If that deploy fails while creating the database, create it yourself and paste the `database_id` it prints into `wrangler.jsonc`:
+
+   ```bash
+   npx wrangler d1 create unofficho-feedback
+   ```
+
+2. **Your inbox password.** In the dashboard, open your project, then **Settings → Variables and Secrets → Add**. Choose type **Secret**, name it `ADMIN_TOKEN`, and give it a long password only you know. Alternatively, run:
+
+   ```bash
+   npx wrangler secret put ADMIN_TOKEN
+   ```
+
+**Reading suggestions:**
+
+- **In the app:** open `https://<your site>/inbox` and enter that password. It is remembered on that device. You can filter by type and download a CSV. The page is not linked anywhere, and without the password the server returns nothing.
+- **In the dashboard:** **Storage & Databases → D1 → unofficho-feedback → Explore data → suggestions**. You can also run SQL in the console, e.g. `SELECT * FROM suggestions ORDER BY id DESC`.
+
+**What is stored:** the type, the message, the optional name or contact, the app page it was sent from, and the time. Nothing else is stored: no IP address and no progress data.
+
+**Trying it locally:** run `npm run build`, then `npx wrangler dev`. This serves the app and the API at <http://localhost:8787> with a local copy of D1. Put `ADMIN_TOKEN=…` in a `.dev.vars` file, which git ignores.
+
 ## 4. Check the live site
 
 - [ ] `https://unofficho.org` loads, and `https://www.unofficho.org/book` redirects to `https://unofficho.org/book`
@@ -106,6 +133,6 @@ To roll back, open the project's **Deployments** list and roll back to an earlie
 
 ## Notes
 
-- **Privacy.** The site has no analytics, cookies or server-side storage. Progress lives in each user's browser (IndexedDB) and leaves the device only through the user's own export.
+- **Privacy.** The site has no analytics or cookies. Progress lives in each user's browser (IndexedDB) and leaves the device only through the user's own export. The only thing stored on the server is a suggestion someone chooses to send.
 - **Branding.** UnoffIChO is unofficial. Keep the disclaimer in the footer and on the About screen, and don't use olympiad logos in the icon or the store listing.
 - **Other hosts.** On Netlify or classic Cloudflare Pages, add `public/_redirects` containing `/* /index.html 200` for the SPA fallback (`_headers` works as is). On Vercel or GitHub Pages, configure an SPA fallback to `index.html` and the same caching rules instead.

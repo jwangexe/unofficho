@@ -52,9 +52,13 @@ export default defineConfig({
         // All content is bundled, so precaching the build output gives full offline support.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         navigateFallback: '/index.html',
+        // The suggestions API must always reach the network.
+        navigateFallbackDenylist: [/^\/api\//],
       },
     }),
   ],
+  // `npm run dev` has no API; run `npx wrangler dev` alongside it to try suggestions locally.
+  server: { proxy: { '/api': 'http://localhost:8787' } },
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],
