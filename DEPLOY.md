@@ -107,6 +107,8 @@ The speech-bubble button at the top of every screen lets anyone send a suggestio
 - **In the app:** open `https://<your site>/inbox` and enter that password. It is remembered on that device. You can filter by type and download a CSV. The page is not linked anywhere, and without the password the server returns nothing.
 - **In the dashboard:** **Storage & Databases → D1 → unofficho-feedback → Explore data → suggestions**. You can also run SQL in the console, e.g. `SELECT * FROM suggestions ORDER BY id DESC`.
 
+**Review mode:** the same password opens `https://<your site>/review`, for checking content accuracy on your phone. See CONTENT.md.
+
 **What is stored:** the type, the message, the optional name or contact, the app page it was sent from, and the time. Nothing else is stored: no IP address and no progress data.
 
 **Trying it locally:** run `npm run build`, then `npx wrangler dev`. This serves the app and the API at <http://localhost:8787> with a local copy of D1. Put `ADMIN_TOKEN=…` in a `.dev.vars` file, which git ignores.

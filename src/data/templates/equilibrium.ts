@@ -79,7 +79,7 @@ export const equilibriumTemplates: CalcTemplate[] = [
       'Find the pH of a solution made from {nHA} of a weak acid (pKₐ = {pKa}) and {nA} of its sodium salt.',
     ],
     explanation: 'Both species share one volume, so the mole ratio equals the concentration ratio: pH = pKₐ + log₁₀(n(A⁻)/n(HA)).',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'calc-ideal-gas-n',

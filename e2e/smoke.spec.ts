@@ -179,6 +179,21 @@ test('typing a flag note keeps focus in the text box', async ({ page }) => {
   await expect(note).toHaveValue('Endo rule wording');
 });
 
+test('review mode is password-protected on the live build, then shows the review queue', async ({ page }) => {
+  await page.route('**/api/admin/check', (route) =>
+    route.fulfill(route.request().headers().authorization === 'Bearer right' ? { status: 204 } : { status: 401, contentType: 'application/json', body: '{"error":"Wrong password."}' }),
+  );
+  await page.goto('/review');
+  const password = page.getByLabel(/Password/);
+  await password.fill('wrong');
+  await page.getByRole('button', { name: 'Open review mode' }).click();
+  await expect(page.getByRole('alert')).toHaveText('Wrong password.');
+  await password.fill('right');
+  await page.getByRole('button', { name: 'Open review mode' }).click();
+  await expect(page.getByRole('list', { name: 'Progress' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Your answer' })).toBeVisible();
+});
+
 test('installable PWA that works offline after the first visit', async ({ page, context }) => {
   await page.goto('/');
   const manifest = await page.evaluate(async () => {

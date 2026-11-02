@@ -4,6 +4,7 @@
  *
  *   POST /api/suggestions   anyone: store a suggestion in D1
  *   GET  /api/suggestions   owner only (Authorization: Bearer <ADMIN_TOKEN>): list them
+ *   GET  /api/admin/check   owner only: 204 if the password is right (used by /review)
  */
 import { parseSuggestion } from './suggestions';
 
@@ -65,9 +66,8 @@ async function suggestions(request: Request, env: Env): Promise<Response> {
   }
 
   if (request.method === 'GET') {
-    const auth = request.headers.get('Authorization') ?? '';
-    if (!env.ADMIN_TOKEN) return json({ error: 'Reading is disabled until ADMIN_TOKEN is set.' }, 503);
-    if (!sameToken(auth, `Bearer ${env.ADMIN_TOKEN}`)) return json({ error: 'Wrong password.' }, 401);
+    const denied = requireOwner(request, env);
+    if (denied) return denied;
     const { results } = await env.DB.prepare('SELECT id, created_at, kind, message, name, page FROM suggestions ORDER BY id DESC LIMIT 500').all();
     return json({ suggestions: results });
   }
@@ -75,10 +75,18 @@ async function suggestions(request: Request, env: Env): Promise<Response> {
   return json({ error: 'Method not allowed.' }, 405);
 }
 
+/** null if the request carries the owner's password, else the error response to send. */
+function requireOwner(request: Request, env: Env): Response | null {
+  if (!env.ADMIN_TOKEN) return json({ error: 'Reading is disabled until ADMIN_TOKEN is set.' }, 503);
+  if (!sameToken(request.headers.get('Authorization') ?? '', `Bearer ${env.ADMIN_TOKEN}`)) return json({ error: 'Wrong password.' }, 401);
+  return null;
+}
+
 export default {
   async fetch(request, env): Promise<Response> {
     const { pathname } = new URL(request.url);
     try {
+      if (pathname === '/api/admin/check') return requireOwner(request, env) ?? new Response(null, { status: 204 });
       if (pathname === '/api/suggestions') return await suggestions(request, env);
       if (pathname.startsWith('/api/')) return json({ error: 'Not found.' }, 404);
     } catch (e) {

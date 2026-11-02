@@ -1,208 +1,292 @@
 /**
- * Dev-only content review. Lists every item with `reviewed: false`, with its TODO(verify)
- * notes and any local "flag as wrong" reports. "Mark reviewed" asks the dev server to flip
- * the flag in the item's source file (scripts/review.ts); Vite then reloads the content.
+ * Review mode (/review, not linked anywhere): check every item still marked `reviewed: false`.
+ *
+ * - On the dev server it opens directly, and "Correct, mark reviewed" edits the source file.
+ * - On the live site it asks for the owner's password (ADMIN_TOKEN, checked by the Worker),
+ *   and marks are kept on this device and included in the export.
+ *
+ * Calculation templates are solved blind; everything else is checked against a checklist.
+ * "Problem found" notes are exported as a markdown list to paste back to Claude.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router';
-import { reactItems, reagents } from '@/data';
-import { bookPages } from '@/data/book';
-import { MECHANISMS } from '@/data/mechanisms';
-import { ALL_TEMPLATES } from '@/data/templates';
-import { FORMULAS } from '@/engine/formulas';
-import { F, R } from '@/features/book/mdx';
-import { focusQuery } from '@/features/focus';
-import { db, type Flag } from '@/storage/db';
-import { downloadJson } from '@/storage/exportImport';
-import { itemId } from '@/storage/itemIds';
 import { Page } from '@/ui/Page';
-import type { ReviewKind } from '../../../scripts/review';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { CalcReview } from './CalcReview';
+import { ChecklistReview } from './ChecklistReview';
+import { allItems, exportMarkdown, progressBySection, SECTION_LABEL, SECTIONS, type ReviewSection } from './reviewLogic';
+import { useReview } from './store';
 
-interface Row {
-  kind: ReviewKind;
-  id: string;
-  title: string;
-  /** Item id used for flags. */
-  flagId: string;
-  todo: string[];
-  view: React.ReactNode;
-}
-
-const KIND_LABEL: Record<ReviewKind, string> = {
-  book: 'Book pages',
-  reagent: 'Reagents',
-  react: 'Will it react?',
-  formula: 'Formulas',
-  template: 'Questions',
-  mechanism: 'Mechanisms',
+const TOKEN_KEY = 'unofficho.inboxToken';
+const readToken = () => {
+  try {
+    return localStorage.getItem(TOKEN_KEY) ?? '';
+  } catch {
+    return '';
+  }
 };
 
-const linkCls = 'text-accent underline underline-offset-4';
+/** The dev server needs no password; the live site checks it with the Worker. */
+function useGate(): [boolean | null, (token: string) => Promise<string | null>] {
+  const [ok, setOk] = useState<boolean | null>(import.meta.env.DEV ? true : null);
+  const check = async (token: string) => {
+    try {
+      const res = await fetch('/api/admin/check', { headers: { Authorization: `Bearer ${token}` } });
+      if (res.status === 204) {
+        try {
+          localStorage.setItem(TOKEN_KEY, token);
+        } catch {
+          // Kept for this visit only.
+        }
+        setOk(true);
+        return null;
+      }
+      setOk(false);
+      return res.status === 503 ? 'Set the ADMIN_TOKEN secret on Cloudflare first.' : 'Wrong password.';
+    } catch {
+      setOk(false);
+      return 'Could not reach the server.';
+    }
+  };
+  useEffect(() => {
+    if (import.meta.env.DEV) return;
+    const t = readToken();
+    if (t) void check(t);
+    else setOk(false);
+  }, []);
+  return [ok, check];
+}
 
-function unreviewed(): Row[] {
-  return [
-    ...bookPages
-      .filter((p) => !p.reviewed && !p.stub)
-      .map((p) => ({ kind: 'book' as const, id: p.id, title: p.title, flagId: `book:${p.id}`, todo: p.todoVerify ?? [], view: <Link className={linkCls} to={`/book/${p.id}`}>Open page</Link> })),
-    ...reagents
-      .filter((r) => !r.reviewed)
-      .map((r) => ({ kind: 'reagent' as const, id: r.id, title: r.name, flagId: itemId.reagent(r.id), todo: r.todoVerify ?? [], view: <R id={r.id}>Open card</R> })),
-    ...reactItems
-      .filter((x) => !x.reviewed)
-      .map((x) => ({
-        kind: 'react' as const, id: x.id, title: `${x.substrate.name} + ${x.reagentId}`, flagId: itemId.react(x.id), todo: x.todoVerify ?? [],
-        view: <Link className={linkCls} to={`/reagents${focusQuery({ ids: [itemId.react(x.id)] })}`}>Try it</Link>,
-      })),
-    ...FORMULAS.filter((f) => !f.reviewed).map((f) => ({ kind: 'formula' as const, id: f.id, title: f.name, flagId: f.id, todo: f.todoVerify ?? [], view: <F id={f.id}>Open formula</F> })),
-    ...MECHANISMS.filter((m) => !m.reviewed).map((m) => ({
-      kind: 'mechanism' as const, id: m.id, title: m.title, flagId: itemId.mech(m.id), todo: m.todoVerify ?? [],
-      view: <Link className={linkCls} to={`/calc${focusQuery({ ids: [itemId.mech(m.id)] })}`}>Try it</Link>,
-    })),
-    ...ALL_TEMPLATES.filter((t) => !t.reviewed).map((t) => ({
-      kind: 'template' as const, id: t.id, title: t.title, flagId: itemId.calc(t.id), todo: t.todoVerify ?? [],
-      view: <Link className={linkCls} to={`/calc${focusQuery({ ids: [itemId.calc(t.id)] })}`}>Try it</Link>,
-    })),
-  ];
+function Gate({ check }: { check: (t: string) => Promise<string | null> }) {
+  const [draft, setDraft] = useState('');
+  const [error, setError] = useState('');
+  const submit = async () => setError((await check(draft)) ?? '');
+  return (
+    <div className="space-y-3">
+      {error && (
+        <p className="text-sm text-bad" role="alert">
+          {error}
+        </p>
+      )}
+      <label className="block text-sm">
+        <span className="text-muted">Password (the same ADMIN_TOKEN as the suggestions inbox)</span>
+        <input
+          type="password"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && draft && void submit()}
+          autoComplete="current-password"
+          className="mt-1 min-h-11 w-full rounded-xl border border-border bg-surface-2 px-3 text-base text-text"
+        />
+      </label>
+      <button type="button" onClick={submit} disabled={!draft} className="min-h-11 w-full rounded-xl bg-accent font-semibold text-accent-ink disabled:opacity-40">
+        Open review mode
+      </button>
+    </div>
+  );
+}
+
+function Notes() {
+  const { notes, marks, removeNote, clear } = useReview();
+  const [copied, setCopied] = useState(false);
+  const md = exportMarkdown(notes, marks);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(md);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([md], { type: 'text/markdown' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `unofficho-review-${new Date().toISOString().slice(0, 10)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  return (
+    <section className="rounded-2xl border border-border p-4" aria-label="Notes">
+      <h2 className="font-semibold">
+        Notes: {notes.length} {notes.length === 1 ? 'problem' : 'problems'}
+        {marks.length > 0 && `, ${marks.length} marked here`}
+      </h2>
+      <p className="mt-1 text-xs text-muted">Kept in this browser. Export them and paste the list to Claude to fix in one batch.</p>
+      {notes.length > 0 && (
+        <ul className="mt-2 space-y-1 text-sm">
+          {notes.map((n) => (
+            <li key={n.createdAt} className="flex items-start gap-2 rounded-lg bg-surface-2 px-2 py-1">
+              <span className="min-w-0 flex-1">
+                <span className="font-semibold">{n.title}</span>: {n.note}
+              </span>
+              <button type="button" onClick={() => removeNote(n.createdAt)} aria-label={`Delete note on ${n.title}`} className="shrink-0 px-1 text-muted">
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={copy} className="min-h-10 rounded-xl bg-accent px-3 text-sm font-semibold text-accent-ink">
+          {copied ? 'Copied ✓' : 'Copy as markdown'}
+        </button>
+        <button type="button" onClick={download} className="min-h-10 rounded-xl bg-surface-2 px-3 text-sm">
+          Download .md
+        </button>
+        {(notes.length > 0 || marks.length > 0) && (
+          <button type="button" onClick={() => window.confirm('Delete all notes and marks in this browser?') && clear()} className="min-h-10 px-2 text-sm text-muted">
+            Clear
+          </button>
+        )}
+      </div>
+    </section>
+  );
 }
 
 export default function Review() {
-  useDocumentTitle('Review content');
-  const all = useMemo(unreviewed, []);
-  const [kind, setKind] = useState<ReviewKind | 'all'>('all');
-  const [onlyTodo, setOnlyTodo] = useState(false);
-  const [query, setQuery] = useState('');
-  const [flags, setFlags] = useState<Flag[]>([]);
-  const [status, setStatus] = useState<Record<string, string>>({});
-  const [done, setDone] = useState<{ kind: ReviewKind; id: string }[]>([]);
+  useDocumentTitle('Review mode');
+  const [ok, check] = useGate();
+  const { marks, written } = useReview();
+  const [section, setSection] = useState<ReviewSection | 'all'>('all');
+  const [topic, setTopic] = useState('all');
+  const [current, setCurrent] = useState<string | null>(null);
+  const [message, setMessage] = useState('');
+  const [skipped, setSkipped] = useState<string[]>([]);
 
-  useEffect(() => {
-    void db.flags.toArray().then(setFlags);
-  }, []);
+  const items = useMemo(allItems, []);
+  const done = useMemo(() => new Set([...marks.map((m) => m.key), ...written]), [marks, written]);
+  const progress = progressBySection(items, done);
+  const topics = [...new Set(items.filter((i) => section === 'all' || i.section === section).map((i) => i.topic))].sort();
+  const queue = items.filter((i) => !i.reviewed && !done.has(i.key) && (section === 'all' || i.section === section) && (topic === 'all' || i.topic === topic));
+  // Skipped items go to the back of the queue.
+  const ordered = [...queue.filter((i) => !skipped.includes(i.key)), ...skipped.map((k) => queue.find((i) => i.key === k)).filter((i) => !!i)];
+  const item = ordered.find((i) => i.key === current) ?? ordered[0];
 
-  // Rows marked here stay hidden until Vite reloads the content, which drops them from `all` itself.
-  const doneKeys = new Set(done.map((d) => `${d.kind}:${d.id}`));
-  const remaining = all.filter((r) => !doneKeys.has(`${r.kind}:${r.id}`)).length;
-  const rows = all.filter(
-    (r) =>
-      !doneKeys.has(`${r.kind}:${r.id}`) &&
-      (kind === 'all' || r.kind === kind) &&
-      (!onlyTodo || r.todo.length > 0) &&
-      (!query || `${r.title} ${r.id}`.toLowerCase().includes(query.toLowerCase())),
-  );
-  const flagsFor = (r: Row) => flags.filter((f) => f.itemId === r.flagId || f.itemId.startsWith(`${r.flagId}:`));
-
-  async function mark(r: Row) {
-    const key = `${r.kind}:${r.id}`;
-    setStatus((s) => ({ ...s, [key]: 'Saving…' }));
-    try {
-      const res = await fetch('/__unofficho/review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: r.kind, id: r.id }) });
-      const body = (await res.json()) as { file?: string; error?: string };
-      if (!res.ok) throw new Error(body.error ?? res.statusText);
-      setDone((d) => [...d, { kind: r.kind, id: r.id }]);
-      setStatus((s) => ({ ...s, [key]: `Saved in ${body.file}` }));
-    } catch (e) {
-      setStatus((s) => ({ ...s, [key]: e instanceof Error ? e.message : String(e) }));
-    }
+  if (ok === null) return <Page title="Review mode">Checking…</Page>;
+  if (!ok) {
+    return (
+      <Page title="Review mode">
+        <Gate check={check} />
+      </Page>
+    );
   }
 
-  const counts = Object.fromEntries((Object.keys(KIND_LABEL) as ReviewKind[]).map((k) => [k, all.filter((r) => r.kind === k && !doneKeys.has(`${k}:${r.id}`)).length]));
+  const next = (msg: string, outcome: 'reviewed' | 'noted') => {
+    setMessage(msg);
+    if (outcome === 'noted' && item) setSkipped((s) => [...s.filter((k) => k !== item.key), item.key]);
+    setCurrent(null);
+    document.querySelector('main')?.scrollTo(0, 0);
+  };
 
   return (
-    <Page title="Review content">
-      <p className="-mt-2 mb-3 text-sm text-muted">
-        Dev only. {remaining} items still have <code>reviewed: false</code>. Marking one edits its source file; commit the change as usual.
+    <div className="mx-auto w-full max-w-3xl px-4 pt-4 pb-10">
+      <h1 className="text-2xl font-semibold">Review mode</h1>
+      <p className="mt-1 text-sm text-muted">
+        {import.meta.env.DEV ? 'Dev server: marking an item reviewed edits its source file.' : 'Live site: marks are kept on this device and listed in the export.'}
       </p>
-      <nav aria-label="Kinds" className="mb-2 flex gap-1 overflow-x-auto">
-        {(['all', ...Object.keys(KIND_LABEL)] as const).map((k) => (
-          <button
-            key={k}
-            type="button"
-            onClick={() => setKind(k as ReviewKind | 'all')}
-            aria-current={k === kind ? 'page' : undefined}
-            className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${k === kind ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
-          >
-            {k === 'all' ? 'All' : `${KIND_LABEL[k as ReviewKind]} ${counts[k]}`}
-          </button>
+
+      <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Progress">
+        {progress.map((p) => (
+          <li key={p.section} className="rounded-xl bg-surface p-3">
+            <p className="text-xs text-muted">{SECTION_LABEL[p.section]}</p>
+            <p className="font-semibold tabular-nums">
+              {p.reviewed} / {p.total}
+            </p>
+            <div className="mt-1 h-1.5 rounded-full bg-accent/15" role="meter" aria-label={`${SECTION_LABEL[p.section]} reviewed`} aria-valuemin={0} aria-valuemax={p.total} aria-valuenow={p.reviewed}>
+              <div className="h-full rounded-full bg-accent" style={{ width: `${p.total ? (100 * p.reviewed) / p.total : 0}%` }} />
+            </div>
+          </li>
         ))}
-      </nav>
-      <div className="mb-3 flex items-center gap-3">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search"
-          aria-label="Search items"
-          className="min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-surface-2 px-3"
-        />
-        <label className="flex shrink-0 items-center gap-2 text-sm">
-          <input type="checkbox" checked={onlyTodo} onChange={(e) => setOnlyTodo(e.target.checked)} className="size-4 accent-[var(--accent)]" />
-          Has TODO
+      </ul>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap gap-1" role="group" aria-label="Section">
+          {(['all', ...SECTIONS] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={section === s}
+              onClick={() => {
+                setSection(s);
+                setTopic('all');
+                setCurrent(null);
+              }}
+              className={`min-h-9 rounded-full px-3 text-sm ${section === s ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+            >
+              {s === 'all' ? 'All' : SECTION_LABEL[s]}
+            </button>
+          ))}
+        </div>
+        <label className="flex items-center gap-2 text-sm">
+          <span className="text-muted">Topic</span>
+          <select
+            value={topic}
+            onChange={(e) => {
+              setTopic(e.target.value);
+              setCurrent(null);
+            }}
+            className="min-h-9 rounded-lg border border-border bg-surface-2 px-2 text-text"
+          >
+            <option value="all">All</option>
+            {topics.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
         </label>
       </div>
 
-      <ul className="space-y-2">
-        {rows.map((r) => {
-          const key = `${r.kind}:${r.id}`;
-          const fl = flagsFor(r);
-          return (
-            <li key={key} className="rounded-2xl bg-surface p-3">
-              <div className="flex items-start gap-2">
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{r.title}</p>
-                  <p className="text-xs text-muted">
-                    {KIND_LABEL[r.kind]} · <code>{r.id}</code> · {r.view}
-                  </p>
-                </div>
-                <button type="button" onClick={() => mark(r)} className="min-h-10 shrink-0 rounded-xl border border-good/60 px-3 text-sm font-medium">
-                  Mark reviewed
-                </button>
-              </div>
-              {r.todo.length > 0 && (
-                <ul className="mt-2 space-y-1 rounded-xl border border-warn/40 px-3 py-2 text-sm">
-                  {r.todo.map((t) => (
-                    <li key={t}>
-                      <span className="font-semibold text-warn">TODO(verify) </span>
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {fl.length > 0 && (
-                <ul className="mt-2 space-y-1 rounded-xl border border-bad/40 px-3 py-2 text-sm">
-                  {fl.map((f) => (
-                    <li key={f.id}>
-                      <span className="font-semibold text-bad">Flagged </span>
-                      {f.note || '(no note)'}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {status[key] && (
-                <p className="mt-2 text-xs text-muted" role="status">
-                  {status[key]}
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-      {rows.length === 0 && <p className="text-sm text-muted">Nothing to review with these filters.</p>}
+      {message && (
+        <p className="mt-3 rounded-xl bg-accent/15 px-3 py-2 text-sm" role="status">
+          {message}
+        </p>
+      )}
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        <button
-          type="button"
-          className="min-h-11 rounded-xl bg-surface-2 px-4 text-sm font-medium"
-          onClick={() =>
-            downloadJson(
-              { format: 'unofficho-review', exportedAt: Date.now(), reviewed: done, unreviewed: rows.map(({ kind, id, todo }) => ({ kind, id, todoVerify: todo })) },
-              `unofficho-review-${new Date().toISOString().slice(0, 10)}.json`,
-            )
-          }
-        >
-          Export review state
-        </button>
+      {!item ? (
+        <p className="mt-6 text-muted">Nothing left to review with these filters. 🎉</p>
+      ) : (
+        <section className="mt-4" aria-label="Current item">
+          <div className="mb-2 flex items-center gap-2">
+            <h2 className="min-w-0 flex-1 truncate text-lg font-semibold">{item.title}</h2>
+            <span className="shrink-0 text-xs text-muted">
+              {SECTION_LABEL[item.section]} · {item.topic} · {ordered.length} left
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setSkipped((s) => [...s.filter((k) => k !== item.key), item.key]);
+                setCurrent(null);
+                setMessage('');
+              }}
+              className="min-h-9 shrink-0 rounded-lg bg-surface-2 px-3 text-sm"
+            >
+              Skip →
+            </button>
+          </div>
+          {item.kind === 'template' ? <CalcReview key={item.key} item={item} onDone={next} /> : <ChecklistReview key={item.key} item={item} onDone={next} />}
+        </section>
+      )}
+
+      {ordered.length > 1 && (
+        <details className="mt-6 rounded-2xl bg-surface p-4">
+          <summary className="cursor-pointer text-sm font-semibold">Up next ({ordered.length - 1})</summary>
+          <ol className="mt-2 max-h-80 space-y-1 overflow-y-auto text-sm">
+            {ordered.slice(1).map((i) => (
+              <li key={i.key}>
+                <button type="button" onClick={() => setCurrent(i.key)} className="w-full rounded-lg px-2 py-1 text-left hover:bg-surface-2">
+                  {i.title} <span className="text-xs text-muted">· {SECTION_LABEL[i.section]}{i.difficulty ? ` · d${i.difficulty}` : ''}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
+
+      <div className="mt-6">
+        <Notes />
       </div>
-    </Page>
+    </div>
   );
 }
