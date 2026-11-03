@@ -14,22 +14,31 @@ import { useDocumentTitle } from '@/ui/useDocumentTitle';
 import { useSavedMode } from '../useSavedMode';
 import { markTutorialSeen, Tutorial, tutorialSeen } from '@/ui/Tutorial';
 import { CALC_TOUR, MECHANISMS_TOUR } from './tours';
+import { LEVELS, type LevelId } from '@/data/levels';
+import { inLevel, pickWeighted, weightedPool, type LevelPrefs, type Weighted } from '@/data/levels/pool';
+import { LevelChip } from '../level/LevelChip';
+import { useLevelPrefs } from '../level/store';
 
 type Mode = 'feed' | 'approach' | 'multi' | 'exam' | 'mechanisms';
 
-const MODES: { id: Mode; label: string; pool: readonly CalcTemplate[] }[] = [
-  { id: 'feed', label: 'Feed', pool: CALC_TEMPLATES },
+const difficultyAt = (t: CalcTemplate, level: LevelId) => t.difficultyByLevel?.[level] ?? t.difficulty;
+
+const MODES: { id: Mode; label: string; pool: (level: LevelId) => readonly CalcTemplate[] }[] = [
+  { id: 'feed', label: 'Feed', pool: () => CALC_TEMPLATES },
   // Planning only means something when there is more than one step.
-  { id: 'approach', label: 'Approach', pool: ALL_TEMPLATES.filter((t) => t.reference.length >= 2) },
-  { id: 'multi', label: 'Multi-step', pool: PROBLEMS },
-  { id: 'exam', label: 'Exam', pool: [...CALC_TEMPLATES.filter((t) => t.difficulty >= 2), ...PROBLEMS] },
+  { id: 'approach', label: 'Approach', pool: () => ALL_TEMPLATES.filter((t) => t.reference.length >= 2) },
+  { id: 'multi', label: 'Multi-step', pool: () => PROBLEMS },
+  { id: 'exam', label: 'Exam', pool: (level) => [...CALC_TEMPLATES.filter((t) => difficultyAt(t, level) >= 2), ...PROBLEMS] },
   // Steady-state and pre-equilibrium derivations; this mode deals mechanisms, not templates.
-  { id: 'mechanisms', label: 'Mechanisms', pool: [] },
+  { id: 'mechanisms', label: 'Mechanisms', pool: () => [] },
 ];
 
+/** A mode's questions at a level: core ones, plus warm-ups from easier levels if that is on. */
+const levelModePool = (mode: Mode, prefs: LevelPrefs) => weightedPool(MODES.find((m) => m.id === mode)!.pool(prefs.level), prefs);
+
 /** Mechanisms matching a focus (only topic, item and due focuses apply). */
-function focusMechanisms(focus: Focus | null, due: Set<string> | null): Mechanism[] {
-  if (!focus) return [...MECHANISMS];
+function focusMechanisms(focus: Focus | null, due: Set<string> | null, prefs: LevelPrefs): Mechanism[] {
+  if (!focus) return MECHANISMS.filter((m) => inLevel(m.levels, prefs));
   if (focus.formula) return [];
   return MECHANISMS.filter(
     (m) =>
@@ -68,12 +77,14 @@ const MODE_KEY = 'unofficho.calcMode';
 
 /**
  * Templates matching a focus within a mode. A focused feed draws from every template,
- * multi-step problems included, since a weak spot may be one.
+ * multi-step problems included, since a weak spot may be one. Topic and formula focuses stay
+ * within the level; due items and specific items are the student's own, so any level.
  */
-function focusPool(mode: Mode, focus: Focus, due: Set<string> | null): CalcTemplate[] {
-  const base = mode === 'feed' ? ALL_TEMPLATES : MODES.find((m) => m.id === mode)!.pool;
-  return base.filter(
-    (t) =>
+function focusPool(mode: Mode, focus: Focus, due: Set<string> | null, prefs: LevelPrefs): Weighted<CalcTemplate>[] {
+  const base = mode === 'feed' ? ALL_TEMPLATES : MODES.find((m) => m.id === mode)!.pool(prefs.level);
+  const ownItems = !!focus.ids || focus.due;
+  return (ownItems ? base.map((item) => ({ item, weight: 1 })) : weightedPool(base, prefs)).filter(
+    ({ item: t }) =>
       (!focus.topic || t.topic === focus.topic) &&
       (!focus.formula || templateFormulas(t).includes(focus.formula)) &&
       (!focus.ids || focus.ids.includes(itemId.calc(t.id))) &&
@@ -89,13 +100,12 @@ const randomSeed = () => {
   }
 };
 
-/** Generate `n` more cards from `pool`, never repeating the template of the card before. */
-function generate(pool: readonly CalcTemplate[], n: number, lastTemplate?: string): CalcInstance[] {
+/** Generate `n` more cards from `pool` by weight, never repeating the template of the card before. */
+function generate(pool: readonly Weighted<CalcTemplate>[], n: number, lastTemplate?: string): CalcInstance[] {
   const out: CalcInstance[] = [];
   let last = lastTemplate;
   while (out.length < n) {
-    const choices = pool.length > 1 ? pool.filter((t) => t.id !== last) : pool;
-    const t = choices[Math.floor(Math.random() * choices.length)]!;
+    const t = pickWeighted(pool, Math.random, (x) => x.id === last);
     const res = instantiate(t, randomSeed());
     if (!res.ok) continue;
     useCalcStore.getState().ensure(res.value);
@@ -105,7 +115,7 @@ function generate(pool: readonly CalcTemplate[], n: number, lastTemplate?: strin
   return out;
 }
 
-function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] }) {
+function ModeFeed({ mode, pool, examSeconds }: { mode: Mode; pool: readonly Weighted<CalcTemplate>[]; examSeconds: number }) {
   const [items, setItems] = useState<CalcInstance[]>(() => generate(pool, 5));
   const [locked, setLocked] = useState(false);
   const feed = useRef<FeedHandle>(null);
@@ -132,7 +142,7 @@ function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] })
           return mode === 'approach' ? (
             <ApproachCard inst={inst} template={t} onNext={next} />
           ) : (
-            <QuestionCard inst={inst} template={t} mode={mode} exam={mode === 'exam'} active={active} onNext={next} onSheetChange={setLocked} />
+            <QuestionCard inst={inst} template={t} mode={mode} exam={mode === 'exam'} examSeconds={examSeconds} active={active} onNext={next} onSheetChange={setLocked} />
           );
         }}
       />
@@ -143,17 +153,25 @@ function ModeFeed({ mode, pool }: { mode: Mode; pool: readonly CalcTemplate[] })
 export default function CalcHome() {
   useDocumentTitle('Calculations');
   const [chosen, pick] = useSavedMode<Mode>(MODE_KEY, MODES.map((m) => m.id), 'feed');
+  const prefs = useLevelPrefs();
+  const scope = LEVELS[prefs.level];
+  const modes = MODES.filter((m) => scope.modes.calc.includes(m.id));
 
   const [focus, clearFocus] = useFocus();
   const due = useDueIds('calc', !!focus?.due);
   // A focus on mechanisms only (e.g. a weak spot) opens Mechanisms mode without changing the saved choice.
-  const mode: Mode = focus?.ids?.length && focus.ids.every((id) => id.startsWith('mech:')) ? 'mechanisms' : chosen;
+  // A mode the level does not have (saved from another level) falls back to the level's first.
+  const mode: Mode =
+    focus?.ids?.length && focus.ids.every((id) => id.startsWith('mech:'))
+      ? 'mechanisms'
+      : modes.some((m) => m.id === chosen)
+        ? chosen
+        : modes[0]!.id;
   const waiting = !!focus?.due && !due;
-  const mechPool = useMemo(() => (mode === 'mechanisms' && !waiting ? focusMechanisms(focus, due) : []), [mode, focus, due, waiting]);
+  const mechPool = useMemo(() => (mode === 'mechanisms' && !waiting ? focusMechanisms(focus, due, prefs) : []), [mode, focus, due, waiting, prefs]);
   const pool = useMemo(
-    () =>
-      waiting || mode === 'mechanisms' ? null : focus ? focusPool(mode, focus, due) : MODES.find((m) => m.id === mode)!.pool,
-    [focus, due, mode, waiting],
+    () => (waiting || mode === 'mechanisms' ? null : focus ? focusPool(mode, focus, due, prefs) : levelModePool(mode, prefs)),
+    [focus, due, mode, waiting, prefs],
   );
   const count = mode === 'mechanisms' ? mechPool.length : (pool?.length ?? 0);
 
@@ -178,7 +196,7 @@ export default function CalcHome() {
     <div className="flex h-full flex-col">
       <div className="mx-auto flex w-full max-w-xl items-center gap-1 px-4 pt-2" data-tour="modes">
       <nav ref={nav} aria-label="Calculation modes" className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
-        {MODES.map((m) => (
+        {modes.map((m) => (
           <button
             key={m.id}
             type="button"
@@ -190,6 +208,7 @@ export default function CalcHome() {
           </button>
         ))}
       </nav>
+        <LevelChip />
         <button
           type="button"
           onClick={() => setTour(tourId)}
@@ -219,7 +238,12 @@ export default function CalcHome() {
         ) : mode === 'mechanisms' ? (
           <MechanismFeed key={`mech|${mechPool.map((m) => m.id).join(',')}`} pool={mechPool} />
         ) : (
-          <ModeFeed key={`${mode}|${pool!.map((t) => t.id).join(',')}`} mode={mode as Exclude<Mode, 'mechanisms'>} pool={pool!} />
+          <ModeFeed
+            key={`${mode}|${pool!.map((x) => `${x.item.id}:${x.weight}`).join(',')}`}
+            mode={mode as Exclude<Mode, 'mechanisms'>}
+            pool={pool!}
+            examSeconds={scope.exam.secondsPerItem}
+          />
         )}
       </div>
     </div>

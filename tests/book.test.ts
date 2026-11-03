@@ -73,3 +73,22 @@ describe('book pages', () => {
     }
   });
 });
+
+describe('derivations', () => {
+  it('each formula is derived on at most one written page, and the lookup agrees', async () => {
+    const { derivationFor } = await import('@/data/book/derivations');
+    const seen = new Map<string, string>();
+    for (const p of bookPages) {
+      for (const f of p.derives) {
+        expect(formulaById.has(f), `${p.id}: derives unknown ${f}`).toBe(true);
+        expect(p.stub, `${p.id} derives ${f} but is only an outline`).toBe(false);
+        expect(seen.get(f), `${f} is derived on ${seen.get(f)} and ${p.id}`).toBeUndefined();
+        seen.set(f, p.id);
+        expect(derivationFor(f)?.pageId).toBe(p.id);
+      }
+    }
+    expect(derivationFor('arrhenius-two-point')?.pageId).toBe('two-point-forms');
+    expect(derivationFor('vant-hoff')?.pageId).toBe('two-point-forms');
+    expect(derivationFor('nernst')).toBeUndefined();
+  });
+});

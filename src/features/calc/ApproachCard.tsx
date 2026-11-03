@@ -7,6 +7,8 @@ import { answer } from '../answer';
 import { FlagButton } from '@/ui/FlagButton';
 import { Tex } from '@/ui/Tex';
 import { TOPIC_TAG } from './topics';
+import { DerivationLinks } from '../book/DerivationLink';
+import { templateFormulas } from '@/data/templates';
 
 interface ApproachState {
   done: string[];
@@ -155,6 +157,9 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
               {state.firstTry} of {total} steps right first time.
             </p>
             <p className="text-sm leading-relaxed text-muted">{t.explanation}</p>
+            <div className="mt-3">
+              <DerivationLinks formulas={templateFormulas(t)} />
+            </div>
           </section>
         )}
       </div>

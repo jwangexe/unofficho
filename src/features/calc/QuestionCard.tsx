@@ -13,6 +13,8 @@ import type { ComputeOutput } from './FormulaPanel';
 import { OperationSheet, type SheetMode } from './OperationSheet';
 import { RouteList } from './RouteList';
 import { ResultPanel } from './ResultPanel';
+import { DerivationLinks } from '../book/DerivationLink';
+import { templateFormulas } from '@/data/templates';
 import { useCalcStore } from './store';
 
 import { TOPIC_TAG } from './topics';
@@ -42,6 +44,7 @@ export function QuestionCard({
   template: t,
   mode = 'feed',
   exam = false,
+  examSeconds,
   active = true,
   onNext,
   onSheetChange,
@@ -51,6 +54,8 @@ export function QuestionCard({
   mode?: string;
   /** Exam mode: strict units, no explanation before answering, timer shown. */
   exam?: boolean;
+  /** Exam mode: the target time per question at the student's level. */
+  examSeconds?: number;
   active?: boolean;
   onNext: () => void;
   onSheetChange: (open: boolean) => void;
@@ -116,8 +121,13 @@ export function QuestionCard({
         )}
         <span className="flex-1" />
         {exam ? (
-          <span className="tabular-nums text-sm text-muted" aria-label="Time on this question" role="timer">
+          <span
+            className={`tabular-nums text-sm ${examSeconds && elapsed > examSeconds * 1000 && !card.result ? 'text-warn' : 'text-muted'}`}
+            aria-label={examSeconds ? `Time on this question, target ${mmss(examSeconds * 1000)}` : 'Time on this question'}
+            role="timer"
+          >
             ⏱ {mmss(card.result ? (elapsedAtSubmit.current ?? elapsed) : elapsed)}
+            {examSeconds ? ` / ${mmss(examSeconds * 1000)}` : ''}
           </span>
         ) : (
           <button
@@ -183,6 +193,9 @@ export function QuestionCard({
             <RouteList template={t} inst={inst} />
           </section>
         )}
+
+        {/* After answering (or asking for the explanation): where the formulas used come from. */}
+        {(card.result || card.revealed) && <DerivationLinks formulas={templateFormulas(t)} />}
 
         <p className="pt-4 text-center text-xs leading-snug text-muted">{DISCLAIMER}</p>
       </div>

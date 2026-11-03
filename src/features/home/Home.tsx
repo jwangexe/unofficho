@@ -8,6 +8,9 @@ import { BookIcon, CalcIcon, ChartIcon, FlaskIcon, MechanismIcon } from '@/ui/ic
 import { Logo } from '@/ui/Logo';
 import { useSuggest } from '../feedback/Suggest';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { LEVELS } from '@/data/levels';
+import { LevelChip } from '../level/LevelChip';
+import { useLevelPrefs } from '../level/store';
 
 /** Items due for review today, or null before IndexedDB answers. */
 function useDueCount() {
@@ -50,6 +53,19 @@ function Feature({ icon, title, to, children, links }: { icon: ReactNode; title:
 export default function Home() {
   useDocumentTitle('Home');
   const due = useDueCount();
+  // Only the modes the student's level has.
+  const { modes } = LEVELS[useLevelPrefs().level];
+  const calcLinks = [
+    { id: 'feed', label: 'Feed' },
+    { id: 'approach', label: 'Approach' },
+    { id: 'multi', label: 'Multi-step' },
+    { id: 'exam', label: 'Exam' },
+  ] as const;
+  const reagentLinks = [
+    { id: 'classify', label: 'Classify' },
+    { id: 'fast', label: 'Fast' },
+    { id: 'react', label: 'Will it react?' },
+  ] as const;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pt-6">
@@ -65,7 +81,7 @@ export default function Home() {
               instead of typing numbers into a calculator. Everything works offline, and missed questions come back
               when you need them.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-wrap items-center gap-2">
               <Link to="/calc" className="inline-flex min-h-12 items-center rounded-xl bg-accent px-5 font-semibold text-accent-ink active:opacity-80">
                 Start practising
               </Link>
@@ -78,6 +94,7 @@ export default function Home() {
                   Read the Book
                 </Link>
               )}
+              <LevelChip />
             </div>
           </section>
 
@@ -91,22 +108,19 @@ export default function Home() {
               What's inside
             </h2>
             <ul className="grid gap-3 sm:grid-cols-2">
-              <Feature icon={<CalcIcon />} title="Calculations" to="/calc" links={[
-                { label: 'Feed', to: '/calc?mode=feed' },
-                { label: 'Approach', to: '/calc?mode=approach' },
-                { label: 'Multi-step', to: '/calc?mode=multi' },
-                { label: 'Exam', to: '/calc?mode=exam' },
-              ]}>
+              <Feature icon={<CalcIcon />} title="Calculations" to="/calc" links={calcLinks
+                .filter((m) => modes.calc.includes(m.id))
+                .map((m) => ({ label: m.label, to: `/calc?mode=${m.id}` }))}>
                 Build each answer from formulas and operations, with unit checks and feedback on where a route went wrong.
               </Feature>
-              <Feature icon={<MechanismIcon />} title="Mechanisms" to="/calc?mode=mechanisms" links={[{ label: 'Derive a rate law', to: '/calc?mode=mechanisms' }]}>
-                Put intermediates in steady state or pre-equilibrium and derive the rate law yourself, step by step.
-              </Feature>
-              <Feature icon={<FlaskIcon />} title="Reagents" to="/reagents" links={[
-                { label: 'Classify', to: '/reagents?mode=classify' },
-                { label: 'Fast', to: '/reagents?mode=fast' },
-                { label: 'Will it react?', to: '/reagents?mode=react' },
-              ]}>
+              {modes.calc.includes('mechanisms') && (
+                <Feature icon={<MechanismIcon />} title="Mechanisms" to="/calc?mode=mechanisms" links={[{ label: 'Derive a rate law', to: '/calc?mode=mechanisms' }]}>
+                  Put intermediates in steady state or pre-equilibrium and derive the rate law yourself, step by step.
+                </Feature>
+              )}
+              <Feature icon={<FlaskIcon />} title="Reagents" to="/reagents" links={reagentLinks
+                .filter((m) => modes.reagents.includes(m.id))
+                .map((m) => ({ label: m.label, to: `/reagents?mode=${m.id}` }))}>
                 Sort reagents by role, then decide which groups react and which product forms.
               </Feature>
               <Feature icon={<BookIcon />} title="Book" to="/book" links={[{ label: 'Contents', to: '/book' }]}>

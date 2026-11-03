@@ -153,6 +153,8 @@ export const BookPageMeta = z
         formulas: z.array(id).default([]),
       })
       .default({ reagents: [], formulas: [] }),
+    /** Formulas this page derives: questions using them link here. */
+    derives: z.array(id).default([]),
     quickChecks: z.array(QuickCheck).max(3).default([]),
     /** Stub pages have a title and outline only. */
     stub: z.boolean().default(false),

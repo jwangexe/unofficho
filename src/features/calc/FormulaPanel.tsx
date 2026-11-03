@@ -1,3 +1,4 @@
+import { DerivationLink } from '../book/DerivationLink';
 import { useMemo, useState } from 'react';
 import { checkAssignment, solveFormula, withSpecies, type Formula, type VarSpec } from '@/engine/formula';
 import { qty, type Quantity } from '@/engine/quantity';
@@ -159,6 +160,7 @@ export function FormulaPanel({
       <div className="overflow-x-auto overflow-y-hidden rounded-xl bg-surface-2 p-3 text-center">
         <Tex>{group ? group.latexFor(nus) : unknown ? (f.rearranged[unknown] ?? f.latex) : f.latex}</Tex>
       </div>
+      <DerivationLink formula={base.id} className="-mt-2" />
 
       {group && (
         <div>

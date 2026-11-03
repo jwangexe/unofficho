@@ -4,9 +4,11 @@ import { expect, test, type Page } from '@playwright/test';
 const DISCLAIMER =
   'An unofficial, independent study resource. Not affiliated with or endorsed by the International Chemistry Olympiad or its organisers.';
 
-// Rad's first-visit tours would cover the screen; tests that want them clear these flags.
+// Rad's first-visit tours and the level picker would cover the screen; tests that want them clear these flags.
+// IChO is the level with every mode and all content.
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
+    localStorage.setItem('unofficho.level', 'icho');
     localStorage.setItem('unofficho.tutorial.calc', '1');
     localStorage.setItem('unofficho.tutorial.mechanisms', '1');
   });
@@ -235,4 +237,62 @@ test.describe('accessibility (axe, WCAG 2.1 AA)', () => {
       expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`)).toEqual([]);
     });
   }
+});
+
+test('first launch: the level picker, the placement quiz, and the chip that changes level', async ({ page }) => {
+  // First load only: no level chosen yet (the stored choice then wins over the preset above).
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('picker-test')) {
+      sessionStorage.setItem('picker-test', '1');
+      localStorage.removeItem('unofficho.level');
+    }
+  });
+  await page.goto('/');
+  const picker = page.getByRole('dialog', { name: 'What are you preparing for?' });
+  await expect(picker).toBeVisible();
+  await expect(picker.getByRole('button', { name: /^C3L6/ })).toBeVisible();
+  const start = picker.getByRole('button', { name: 'Choose a level to start' });
+  await expect(start).toBeDisabled();
+
+  // The quiz: five questions, then a recommendation the student can change.
+  await picker.getByRole('button', { name: /placement quiz/ }).click();
+  const quiz = page.getByRole('dialog', { name: 'Placement quiz' });
+  for (let i = 1; i <= 5; i++) {
+    await expect(quiz.getByText(`Question ${i} of 5`)).toBeVisible();
+    await quiz.getByRole('button', { name: 'I don’t know' }).click();
+    await quiz.getByRole('button', { name: i === 5 ? 'See my level' : 'Next' }).click();
+  }
+  await expect(quiz.getByRole('heading', { name: 'I’d start you on A-Level (AQA)' })).toBeVisible();
+  await quiz.getByRole('button', { name: /^A-Level \(AQA\)/ }).click();
+  await quiz.getByRole('button', { name: 'Start with A-Level (AQA)' }).click();
+  await expect(quiz).toBeHidden();
+
+  // A-level has no Mechanisms or Approach mode; the choice survives a reload.
+  await page.getByRole('link', { name: 'Start practising' }).click();
+  const modes = page.getByRole('navigation', { name: 'Calculation modes' });
+  await expect(modes.getByRole('button', { name: 'Feed' })).toBeVisible();
+  await expect(modes.getByRole('button', { name: 'Mechanisms' })).toHaveCount(0);
+  await page.getByRole('button', { name: /^Level: A-Level\b/ }).click();
+  await page.getByRole('dialog').getByRole('button', { name: /^IChO/ }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).last().click();
+  await expect(modes.getByRole('button', { name: 'Mechanisms' })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('button', { name: /^Level: IChO/ })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'What are you preparing for?' })).toBeHidden();
+});
+
+test('level picker has no accessibility violations and fits 320 px', async ({ page }) => {
+  // First load only: no level chosen yet (the stored choice then wins over the preset above).
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('picker-test')) {
+      sessionStorage.setItem('picker-test', '1');
+      localStorage.removeItem('unofficho.level');
+    }
+  });
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/');
+  await expect(page.getByRole('dialog', { name: 'What are you preparing for?' })).toBeVisible();
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });

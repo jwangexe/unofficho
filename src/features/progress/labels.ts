@@ -10,6 +10,7 @@ import { topicLabel } from '@/features/reagents/ReagentHeader';
 import type { Section } from '@/storage/db';
 import { parseItemId } from '@/storage/itemIds';
 import { focusQuery } from '../focus';
+import type { LevelId } from '@/data/levels';
 
 export const SECTION_LABEL: Record<Section, string> = { book: 'Book', reagents: 'Reagents', calc: 'Calculations' };
 export const SECTION_PATH: Record<Section, string> = { book: '/book', reagents: '/reagents', calc: '/calc' };
@@ -68,3 +69,21 @@ export function itemHref(id: string): string {
 }
 
 export const formulaHref = (id: string) => `/calc${focusQuery({ formula: id, label: formulaName(id) })}`;
+
+/** The levels an item is tagged with (undefined for an id no longer in the content). */
+export function itemLevels(id: string): readonly LevelId[] | undefined {
+  const p = parseItemId(id);
+  if (!p) return undefined;
+  switch (p.kind) {
+    case 'reagent':
+      return reagentById.get(p.id)?.levels;
+    case 'react':
+      return reactById.get(p.id)?.levels;
+    case 'calc':
+      return calcTemplateById.get(p.id)?.levels;
+    case 'mech':
+      return mechanismById.get(p.id)?.levels;
+    case 'book':
+      return bookPageById.get(p.id)?.levels;
+  }
+}

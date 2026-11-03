@@ -5,6 +5,10 @@ import { CHAPTERS, type Chapter } from '@/data/schemas';
 import { Page } from '@/ui/Page';
 import { BookPageView } from './BookPageView';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { topicInScope } from '@/data/levels';
+import { inLevel } from '@/data/levels/pool';
+import { LevelChip } from '../level/LevelChip';
+import { useLevelPrefs } from '../level/store';
 
 const CHAPTER_KEY = 'unofficho.bookChapter';
 
@@ -19,7 +23,13 @@ function readChapter(): Chapter {
 
 function Contents() {
   useDocumentTitle('Book');
-  const [chapter, setChapter] = useState<Chapter>(readChapter);
+  const prefs = useLevelPrefs();
+  // Pages at this level (and easier ones, if on); sections and chapters outside the level's syllabus are hidden.
+  const pages = bookPages.filter((p) => inLevel(p.levels, prefs));
+  const sectionShown = (c: Chapter, s: string) => topicInScope(prefs.level, `${c}/${s}`) || pages.some((p) => p.chapter === c && p.section === s);
+  const chapters = CHAPTERS.filter((c) => BOOK_OUTLINE[c].sections.some((s) => sectionShown(c, s.id)));
+  const [saved, setChapter] = useState<Chapter>(readChapter);
+  const chapter = chapters.includes(saved) ? saved : (chapters[0] ?? saved);
   const pick = (c: Chapter) => {
     setChapter(c);
     try {
@@ -28,15 +38,18 @@ function Contents() {
       // Not persisted in private mode; fine.
     }
   };
-  const written = bookPages.filter((p) => !p.stub).length;
+  const written = pages.filter((p) => !p.stub).length;
 
   return (
     <Page title="Book">
-      <p className="-mt-2 mb-4 text-sm text-muted">
-        {written} pages written · {bookPages.length - written} outlined
-      </p>
+      <div className="-mt-2 mb-4 flex items-center gap-2">
+        <p className="min-w-0 flex-1 text-sm text-muted">
+          {written} pages written · {pages.length - written} outlined
+        </p>
+        <LevelChip />
+      </div>
       <nav aria-label="Chapters" className="mb-4 flex gap-1 overflow-x-auto">
-        {CHAPTERS.map((c) => (
+        {chapters.map((c) => (
           <button
             key={c}
             type="button"
@@ -48,18 +61,18 @@ function Contents() {
           </button>
         ))}
       </nav>
-      {BOOK_OUTLINE[chapter].sections.map((s) => {
-        const pages = bookPages.filter((p) => p.chapter === chapter && p.section === s.id);
+      {BOOK_OUTLINE[chapter].sections.filter((s) => sectionShown(chapter, s.id)).map((s) => {
+        const here = pages.filter((p) => p.chapter === chapter && p.section === s.id);
         return (
           <section key={s.id} className="mb-5" aria-labelledby={`sec-${s.id}`}>
             <h2 id={`sec-${s.id}`} className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
               {s.title}
             </h2>
-            {pages.length === 0 ? (
+            {here.length === 0 ? (
               <p className="text-sm text-muted">No pages yet.</p>
             ) : (
               <ul className="divide-y divide-border overflow-hidden rounded-xl bg-surface">
-                {pages.map((p) => (
+                {here.map((p) => (
                   <li key={p.id}>
                     <Link to={p.id} className="flex min-h-12 items-center gap-3 px-4 py-2.5">
                       <span className={`min-w-0 flex-1 ${p.stub ? 'text-muted' : ''}`}>{p.title}</span>

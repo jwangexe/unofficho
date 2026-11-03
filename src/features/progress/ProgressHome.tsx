@@ -7,9 +7,11 @@ import { parseItemId } from '@/storage/itemIds';
 import { DAY } from '@/storage/srs';
 import { Page } from '@/ui/Page';
 import { focusQuery } from '../focus';
-import { formulaHref, formulaName, itemHref, itemName, SECTION_LABEL, SECTION_PATH, topicHref, topicName } from './labels';
+import { formulaHref, formulaName, itemHref, itemLevels, itemName, SECTION_LABEL, SECTION_PATH, topicHref, topicName } from './labels';
 import { dueToday, recent, RECENT_DAYS, streaks, tallyBy, weakSpots, type Tally } from './stats';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { LEVEL_LIST, type LevelId } from '@/data/levels';
+import { useLevelStore } from '../level/store';
 
 const SECTIONS: Section[] = ['calc', 'reagents', 'book'];
 const btn = 'min-h-11 rounded-xl bg-surface-2 px-4 text-sm font-medium active:opacity-70';
@@ -88,11 +90,16 @@ export default function ProgressHome() {
   const data = useProgress(version);
   const [msg, setMsg] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  // Show progress on every item, or only on items tagged with one level.
+  const [levelFilter, setLevelFilter] = useState<LevelId | 'all'>('all');
 
   const stats = useMemo(() => {
     if (!data) return null;
     const now = Date.now();
-    const last = recent(data.attempts, now);
+    const atLevel = (id: string) => levelFilter === 'all' || !!itemLevels(id)?.includes(levelFilter);
+    const attempts = data.attempts.filter((a) => atLevel(a.itemId));
+    const srs = data.srs.filter((s) => atLevel(s.itemId));
+    const last = recent(attempts, now);
     const bySection = tallyBy(last, (a) => a.section);
     const byTopic = tallyBy(last, (a) => `${a.section}|${a.topic}`);
     const byItem = tallyBy(last, (a) => a.itemId);
@@ -111,7 +118,7 @@ export default function ProgressHome() {
         key: `f|${key}`, kind: 'formula' as const, label: formulaName(key), sub: 'Formula', href: formulaHref(key), tally,
       })),
       ...weakSpots(byItem, { minAttempts: 2 }).map(({ key, tally }) => ({
-        key, kind: 'item' as const, label: itemName(key), sub: SECTION_LABEL[data.attempts.find((a) => a.itemId === key)!.section], href: itemHref(key), tally,
+        key, kind: 'item' as const, label: itemName(key), sub: SECTION_LABEL[attempts.find((a) => a.itemId === key)!.section], href: itemHref(key), tally,
       })),
     ]
       // A formula used by only one practised question just repeats that question's row.
@@ -120,14 +127,14 @@ export default function ProgressHome() {
       .slice(0, 8);
 
     return {
-      streak: streaks(data.attempts, now),
-      week: data.attempts.filter((a) => a.ts > now - 7 * DAY).length,
-      due: dueToday(data.srs, now),
+      streak: streaks(attempts, now),
+      week: attempts.filter((a) => a.ts > now - 7 * DAY).length,
+      due: dueToday(srs, now),
       bySection,
       byTopic,
       weak,
     };
-  }, [data]);
+  }, [data, levelFilter]);
 
   const stamp = () => new Date().toISOString().slice(0, 10);
   async function onImport(file: File) {
@@ -135,6 +142,8 @@ export default function ProgressHome() {
       const res = await importAll(JSON.parse(await file.text()), 'merge');
       setMsg(`Imported ${res.attempts} answers, ${res.flags} flags and ${res.srs} review states.`);
       setVersion((v) => v + 1);
+      // The file may carry a level choice.
+      await useLevelStore.getState().load();
     } catch (e) {
       setMsg(e instanceof Error ? e.message : String(e));
     }
@@ -145,6 +154,21 @@ export default function ProgressHome() {
 
   return (
     <Page title="Progress">
+      <label className="-mt-2 mb-4 flex items-center gap-2 text-sm text-muted">
+        Show
+        <select
+          value={levelFilter}
+          onChange={(e) => setLevelFilter(e.target.value as LevelId | 'all')}
+          className="min-h-9 rounded-full border border-border bg-surface px-3 text-text"
+        >
+          <option value="all">All levels</option>
+          {LEVEL_LIST.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.name} items
+            </option>
+          ))}
+        </select>
+      </label>
       {!stats ? (
         // Hold the space until the stats load, so the cards below do not jump (layout shift).
         <div className="min-h-[100dvh]" aria-busy="true" />

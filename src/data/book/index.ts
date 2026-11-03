@@ -36,6 +36,7 @@ function loadPages(): BookPage[] {
     }
     for (const r of meta.related.reagents) if (!reagentById.has(r)) throw new Error(`${where}: unknown reagent ${r}`);
     for (const f of meta.related.formulas) if (!formulaById.has(f)) throw new Error(`${where}: unknown formula ${f}`);
+    for (const f of meta.derives) if (!formulaById.has(f)) throw new Error(`${where}: derives unknown formula ${f}`);
     pages.push({ ...meta, Content: mod.default, path: path.slice(2) });
   }
   const ids = new Set<string>();

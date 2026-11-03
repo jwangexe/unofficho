@@ -29,6 +29,19 @@ const srs = (itemId: string, lastReviewed: number) => ({
 });
 
 describe('export/import', () => {
+  it('carries the level and the easier-levels switch', async () => {
+    await db.settings.bulkPut([
+      { key: 'level', value: 'c3l6' },
+      { key: 'includeEasier', value: false },
+    ]);
+    const file = JSON.parse(JSON.stringify(await exportAll(db)));
+    const other = new UnoffIChODB(`test-${n++}`);
+    await importAll(file, 'replace', other);
+    expect((await other.settings.get('level'))?.value).toBe('c3l6');
+    expect((await other.settings.get('includeEasier'))?.value).toBe(false);
+    await other.delete();
+  });
+
   it('round-trips through replace', async () => {
     await db.srs.put(srs('calc:a', 100));
     await db.attempts.add({ itemId: 'calc:a', section: 'calc', topic: 'thermo', ts: 100, score: 1 });
