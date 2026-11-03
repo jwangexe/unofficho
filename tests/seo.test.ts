@@ -18,7 +18,8 @@ describe('pre-rendered pages', () => {
     for (const { meta, html } of pages) {
       expect(meta.description.length, meta.path).toBeGreaterThan(50);
       expect(meta.description.length, meta.path).toBeLessThanOrEqual(160);
-      expect(meta.description, meta.path).not.toMatch(/<|\\[a-z]+/);
+      // Plain text: no HTML tags or LaTeX commands (a bare "<" is fine; it is escaped in the head).
+      expect(meta.description, meta.path).not.toMatch(/<[a-z/]|\\[a-z]+/);
       expect(html.replace(/<[^>]+>/g, '').length, meta.path).toBeGreaterThan(300);
       // Links in the markup are what let crawlers find the other pages.
       expect(html, meta.path).toContain('href="/book"');

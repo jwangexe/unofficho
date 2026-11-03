@@ -21,6 +21,8 @@ import Home from '@/features/home/Home';
 import { topicLabel } from '@/features/reagents/ReagentHeader';
 import { Logo } from '@/ui/Logo';
 import { Page } from '@/ui/Page';
+import PracticePages from '@/features/practice/PracticePages';
+import { PRACTICE, practiceDescription, practicePath } from '@/features/practice/practice';
 
 export { headTags, SITE_URL };
 
@@ -35,6 +37,7 @@ const NAV: [string, string][] = [
   ['/book', 'Book'],
   ['/reagents', 'Reagents'],
   ['/calc', 'Calculations'],
+  ['/practice', 'Question types'],
   ['/about', 'About'],
 ];
 
@@ -106,7 +109,11 @@ function CalcIndex() {
           <h2 className="mb-1.5 font-semibold">{TOPIC_TAG[topic] ?? topic}</h2>
           <ul className="list-disc space-y-1 pl-5">
             {ALL_TEMPLATES.filter((t) => t.topic === topic).map((t) => (
-              <li key={t.id}>{t.title}</li>
+              <li key={t.id}>
+                <Link to={practicePath(t)} className="text-accent underline underline-offset-4">
+                  {t.title}
+                </Link>
+              </li>
             ))}
           </ul>
         </section>
@@ -179,6 +186,38 @@ function bookMeta(page: BookPage): PageMeta {
   };
 }
 
+/** The app's own practice routes, so the HTML matches what the app shows. */
+const PracticeRoutes = () => (
+  <Routes>
+    <Route path="/practice/*" element={<PracticePages />} />
+  </Routes>
+);
+
+function practiceMeta(t: (typeof PRACTICE)[number]): PageMeta {
+  const path = practicePath(t);
+  const description = practiceDescription(t);
+  return {
+    path,
+    title: t.title,
+    description,
+    type: 'article',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'LearningResource',
+      name: t.title,
+      description,
+      url: `${SITE_URL}${path}`,
+      inLanguage: 'en-GB',
+      isAccessibleForFree: true,
+      learningResourceType: ['Worked example', 'Practice problem'],
+      educationalLevel: t.levels.map((l) => LEVELS[l].name),
+      about: TOPIC_TAG[t.topic] ?? t.topic,
+      interactivityType: 'mixed',
+      isPartOf: { '@type': 'WebSite', name: APP_NAME, url: `${SITE_URL}/` },
+    },
+  };
+}
+
 export function renderPages(): RenderedPage[] {
   const meta = (path: string) => STATIC_PAGES.find((p) => p.path === path)!;
   const render = (path: string, body: ReactNode) => renderToString(<Shell path={path}>{body}</Shell>);
@@ -188,6 +227,8 @@ export function renderPages(): RenderedPage[] {
     { meta: meta('/book'), html: render('/book', <BookIndex />) },
     { meta: meta('/calc'), html: render('/calc', <CalcIndex />) },
     { meta: meta('/reagents'), html: render('/reagents', <ReagentIndex />) },
+    { meta: meta('/practice'), html: render('/practice', <PracticeRoutes />) },
+    ...PRACTICE.map((t) => ({ meta: practiceMeta(t), html: render(practicePath(t), <PracticeRoutes />) })),
     ...written().map((p) => ({
       meta: bookMeta(p),
       html: render(

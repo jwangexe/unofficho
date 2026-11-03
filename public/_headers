@@ -26,6 +26,10 @@
   Cache-Control: no-cache
 /reagents
   Cache-Control: no-cache
+/practice
+  Cache-Control: no-cache
+/practice/*
+  Cache-Control: no-cache
 /sitemap.xml
   Cache-Control: no-cache
 

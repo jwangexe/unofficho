@@ -111,7 +111,8 @@ export default function Home() {
             <ul className="grid gap-3 sm:grid-cols-2">
               <Feature icon={<CalcIcon />} title="Calculations" to="/calc" links={calcLinks
                 .filter((m) => modes.calc.includes(m.id))
-                .map((m) => ({ label: m.label, to: `/calc?mode=${m.id}` }))}>
+                .map((m): { label: string; to: string } => ({ label: m.label, to: `/calc?mode=${m.id}` }))
+                .concat({ label: 'Worked examples', to: '/practice' })}>
                 Build each answer from formulas and operations, with unit checks and feedback on where a route went wrong.
               </Feature>
               {modes.calc.includes('mechanisms') && (

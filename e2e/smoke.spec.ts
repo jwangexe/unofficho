@@ -296,3 +296,16 @@ test('level picker has no accessibility violations and fits 320 px', async ({ pa
   expect(results.violations).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
+
+test('a practice page shows a worked example and opens that question in the app', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('unofficho.level'));
+  await page.goto('/practice/born-haber-nacl');
+  // Public landing page: no level picker over it.
+  await expect(page.getByRole('dialog', { name: 'What are you preparing for?' })).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Born–Haber cycle: lattice enthalpy of NaCl', level: 1 })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Worked example' })).toContainText('Answer:');
+  await expect(page.getByRole('region', { name: 'Common mistakes' })).toContainText('lattice dissociation');
+  await page.getByRole('link', { name: 'Practise this with fresh numbers' }).first().click();
+  await expect(page).toHaveURL(/\/calc\?/);
+  await expect(page.getByText('Focus:')).toBeVisible();
+});

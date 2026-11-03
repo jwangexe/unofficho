@@ -9,6 +9,7 @@ const CalcHome = lazy(() => import('@/features/calc/CalcHome'));
 const ProgressHome = lazy(() => import('@/features/progress/ProgressHome'));
 const About = lazy(() => import('@/features/about/About'));
 const Settings = lazy(() => import('@/features/settings/Settings'));
+const PracticePages = lazy(() => import('@/features/practice/PracticePages'));
 const Inbox = lazy(() => import('@/features/feedback/Inbox'));
 // Dev-only route; the ternary lets the production build drop the chunk entirely.
 const Debug = import.meta.env.DEV ? lazy(() => import('@/features/debug/Debug')) : null;
@@ -27,6 +28,8 @@ export function App() {
           <Route path="progress" element={<ProgressHome />} />
           <Route path="about" element={<About />} />
           <Route path="settings" element={<Settings />} />
+          {/* Public worked examples, one per question type (search-engine landing pages). */}
+          <Route path="practice/*" element={<PracticePages />} />
           {/* Private: your suggestions inbox (password-protected by the Worker). */}
           <Route path="inbox" element={<Inbox />} />
           {Debug && <Route path="debug" element={<Debug />} />}

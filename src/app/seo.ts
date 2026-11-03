@@ -27,6 +27,7 @@ export const TITLES = {
   reagents: 'Reagent drill: what each reagent does',
   book: 'Book: short chemistry olympiad revision pages',
   about: 'About',
+  practice: 'Chemistry calculation question types with worked examples',
 } as const;
 
 /** "<title> · UnoffIChO", or the title alone if it already names the app. */
@@ -69,6 +70,12 @@ export const STATIC_PAGES: PageMeta[] = [
     title: TITLES.book,
     description:
       'Two-minute chemistry revision pages for olympiad students: physical, inorganic, organic and analytical chemistry, each with quick checks.',
+  },
+  {
+    path: '/practice',
+    title: TITLES.practice,
+    description:
+      'Every type of chemistry calculation in UnoffIChO, from A-Level to IChO, each with a worked example, the method and the common mistakes.',
   },
   {
     path: '/about',
