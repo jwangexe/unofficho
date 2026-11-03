@@ -21,7 +21,12 @@
       "Not completely inert: reacts with azide (explosive diazidomethane) and slowly with some amines"
     ],
     "topic": "solvents",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "hexane",
@@ -43,7 +48,14 @@
       "Flammable; n-hexane is neurotoxic (heptane is a safer substitute)"
     ],
     "topic": "solvents",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "toluene",
@@ -65,6 +77,11 @@
       "Not inert towards strong electrophiles (Friedel–Crafts) or very strong bases (benzylic deprotonation)"
     ],
     "topic": "solvents",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   }
 ]

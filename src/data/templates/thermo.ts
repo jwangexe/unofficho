@@ -28,6 +28,7 @@ export const thermoTemplates: CalcTemplate[] = [
     ],
     explanation:
       'ΔG = ΔH − TΔS. ΔH is usually in kJ mol⁻¹ and ΔS in J K⁻¹ mol⁻¹, so put them in the same units before combining, and use T in kelvin.',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -64,6 +65,7 @@ export const thermoTemplates: CalcTemplate[] = [
       'A reaction has a standard Gibbs energy change of {dG0} at {T}. What is K?',
     ],
     explanation: 'Rearrange ΔG° = −RT ln K to K = exp(−ΔG°/RT), with ΔG° in J mol⁻¹ and T in kelvin.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -87,6 +89,7 @@ export const thermoTemplates: CalcTemplate[] = [
       'At {T}, K = {K}. What is the standard Gibbs energy change?',
     ],
     explanation: 'ΔG° = −RT ln K. A K above 1 gives a negative ΔG°.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -115,6 +118,7 @@ export const thermoTemplates: CalcTemplate[] = [
       'Estimate the equilibrium constant at {T} for a reaction with ΔH° = {dH} and ΔS° = {dS}.',
     ],
     explanation: 'Two steps: ΔG° = ΔH° − TΔS°, then K = exp(−ΔG°/RT).',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -154,6 +158,7 @@ export const thermoTemplates: CalcTemplate[] = [
       'A reaction with ΔH° = {dH0} has K = {K1} at {T1}. What is K at {T2}, assuming ΔH° is constant?',
     ],
     explanation: "ln(K₂/K₁) = −(ΔH°/R)(1/T₂ − 1/T₁). Raising T favours the endothermic direction.",
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
 ];

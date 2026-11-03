@@ -46,6 +46,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
     ],
     approachText: 'A ⇌ I → P with all three rate constants known; steady state on I.',
     explanation: 'd[I]/dt = k₁[A] − k₋₁[I] − k₂[I] = 0 gives [I] = k₁[A]/(k₋₁ + k₂), so rate = k₂[I] = k₁k₂[A]/(k₋₁ + k₂): k_eff = k₁k₂/(k₋₁ + k₂).',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -83,6 +84,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
     ],
     approachText: 'A ⇌ I fast pre-equilibrium, then slow I → P; all rate constants known. Find the half-life of A.',
     explanation: 'Pre-equilibrium: k₁[A] = k₋₁[I], so [I] = K₁[A] with K₁ = k₁/k₋₁. Then rate = k₂[I] = K₁k₂[A], first order with k_obs = k₁k₂/k₋₁, and t½ = ln 2/k_obs.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -134,6 +136,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
     ],
     approachText: 'Lindemann mechanism with k₁, k₋₁, k₂ and [M] known; find the effective unimolecular rate constant.',
     explanation: 'd[A*]/dt = k₁[A][M] − k₋₁[A*][M] − k₂[A*] = 0, so [A*] = k₁[A][M]/(k₋₁[M] + k₂) and rate = k₂[A*]: k_uni = k₁k₂[M]/(k₋₁[M] + k₂). It tends to k₁k₂/k₋₁ at high [M] and k₁[M] at low [M].',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -174,6 +177,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'Find the initial rate of an enzyme-catalysed reaction at [S] = {S}, given K_M = {Km} and V_max = {Vmax}.',
     ],
     explanation: 'Steady state on ES, with [E] = [E]₀ − [ES], gives v = k₂[E]₀[S]/(K_M + [S]) = V_max[S]/(K_M + [S]). At [S] = K_M the rate is exactly half of V_max.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -199,6 +203,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'A radioisotope (half-life {thalf}) decays from {N0} to {N}. How much time has passed?',
     ],
     explanation: 't = t½ · ln(N₀/N) / ln 2.',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -221,6 +226,7 @@ export const kineticsTemplates2: CalcTemplate[] = [
       'What is the Gibbs energy of activation for a first-order process with k = {k} at {T}?',
     ],
     explanation: 'ΔG‡ = RT ln(k_BT / hk). At 298 K, k_BT/h ≈ 6.2 × 10¹² s⁻¹.',
+    levels: ['icho'],
     reviewed: false,
   },
 ];

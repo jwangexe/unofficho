@@ -28,6 +28,10 @@
     ],
     "topic": "organic/bases",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "pKaH of LDA: ~36 is the commonly quoted figure; solvent-dependent"
     ]
@@ -58,6 +62,10 @@
     ],
     "topic": "organic/bases",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "pKa of H₂ (≈ 35–36 in DMSO)"
     ]
@@ -91,6 +99,11 @@
     ],
     "topic": "organic/bases",
     "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "pKa of tert-butanol in water (16.5–19 quoted) and DMSO (≈ 32)"
     ]
@@ -126,6 +139,10 @@
     ],
     "topic": "organic/bases",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "pKaH of DBU in water (≈ 12–13.5)"
     ]
@@ -161,7 +178,12 @@
       "Forms Et₃NH⁺Cl⁻, which often precipitates from the reaction mixture"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "pyridine",
@@ -188,7 +210,12 @@
       "A weak base (pKaH 5.2): much weaker than aliphatic amines"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "dmap",
@@ -217,7 +244,11 @@
       "Toxic and readily absorbed through the skin"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nbuli",
@@ -250,7 +281,11 @@
       "Pyrophoric; slowly attacks THF at room temperature"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "naoh",
@@ -278,6 +313,13 @@
     ],
     "topic": "organic/bases",
     "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "Conventions for pKa of water: 15.7 vs 14.0"
     ]
@@ -310,7 +352,13 @@
       "Match the alkoxide to the ester (EtO⁻ with ethyl esters) to avoid transesterification"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "k2co3",
@@ -336,7 +384,13 @@
       "Largely insoluble in organic solvents: these reactions are heterogeneous"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nahco3",
@@ -367,7 +421,14 @@
       "Amphoteric: HCO₃⁻ is also a weak acid (pKa 10.3)"
     ],
     "topic": "organic/bases",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "ammonia",
@@ -393,7 +454,14 @@
       "Liquid NH₃ (b.p. −33 °C) is the solvent for Birch reductions"
     ],
     "topic": "inorganic/acid-base",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "memgbr",
@@ -424,6 +492,11 @@
       "Hindered ketones may be enolised or reduced instead of attacked"
     ],
     "topic": "organic/nucleophiles",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   }
 ]

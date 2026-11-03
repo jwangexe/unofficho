@@ -45,7 +45,12 @@
     ],
     "explanation": "NaBH₄ reduces the ketone to a secondary alcohol and leaves the ester untouched under normal conditions.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-lialh4-ketoester",
@@ -93,7 +98,12 @@
     ],
     "explanation": "LiAlH₄ reduces both carbonyls: the ketone to a secondary alcohol and the ester to a primary alcohol (losing ethanol).",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-dibal-ester",
@@ -137,7 +147,11 @@
     ],
     "explanation": "With one equivalent of DIBAL-H at −78 °C, the tetrahedral aluminium intermediate survives until workup, which releases the aldehyde.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-bh3-acid-ester",
@@ -180,7 +194,11 @@
     ],
     "explanation": "Borane reduces carboxylic acids much faster than esters: the electron-rich carbonyl of the acyloxyborane intermediate coordinates the Lewis acidic BH₃. This is the reverse of NaBH₄.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-sncl2-nitro",
@@ -224,7 +242,11 @@
     ],
     "explanation": "Sn(II) in acid reduces the aromatic nitro group to an amine (isolated after basifying) and leaves the ketone alone.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-lindlar-enyne",
@@ -267,7 +289,11 @@
     ],
     "explanation": "The poisoned palladium catalyst reduces the alkyne by syn addition of H₂, stopping at the Z-alkene, and barely touches the alkene already present.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-birch-enyne",
@@ -310,7 +336,11 @@
     ],
     "explanation": "Dissolving-metal reduction goes via a radical anion and a vinyl radical; the trans vinyl anion is preferred, giving the E-alkene. Isolated alkenes are not reduced.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-mcpba-acetophenone",
@@ -353,7 +383,11 @@
     ],
     "explanation": "Baeyer–Villiger oxidation: the group better able to stabilise positive charge migrates to oxygen. Phenyl migrates in preference to methyl, giving phenyl acetate.",
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-kmno4-alkylbenzene",
@@ -401,7 +435,12 @@
     ],
     "explanation": "Hot KMnO₄ oxidises any side chain with a benzylic C–H down to COOH. tert-Butyl has no benzylic hydrogen, so it survives.",
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-stab-reductive-amination",
@@ -440,7 +479,11 @@
     ],
     "explanation": "The ketone and amine condense to an iminium ion, which NaBH(OAc)₃ reduces much faster than the ketone itself: reductive amination.",
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-tfa-boc",
@@ -479,7 +522,11 @@
     ],
     "explanation": "TFA protonates the Boc group, which fragments to CO₂, isobutene (via the tert-butyl cation) and the free amine. Methyl esters survive anhydrous TFA.",
     "topic": "organic/protecting-groups",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wir-tempo-diol",
@@ -524,6 +571,10 @@
     "explanation": "The bulky oxoammonium oxidant reacts much faster with the less hindered primary alcohol, stopping at the aldehyde under Anelli conditions.",
     "topic": "organic/oxidation",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "3-Hydroxybutanal readily undergoes retro-aldol/dehydration; product chosen to illustrate selectivity"
     ]

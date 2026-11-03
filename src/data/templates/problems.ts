@@ -53,6 +53,7 @@ export const problems: CalcTemplate[] = [
     approachText: 'Fast pre-equilibrium 2NO ⇌ N₂O₂ then slow N₂O₂ + O₂ → 2NO₂; rate constants and initial concentrations known. Find d[NO₂]/dt.',
     explanation:
       'K₁ = k₁/k₋₁ gives [N₂O₂] = K₁[NO]². The slow step has rate k₂[N₂O₂][O₂] = K₁k₂[NO]²[O₂], and it forms two NO₂, so d[NO₂]/dt = 2K₁k₂[NO]²[O₂]. Overall third order.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -102,6 +103,7 @@ export const problems: CalcTemplate[] = [
     ],
     approachText: 'Lindemann mechanism with rate constants known; the gas pressure and temperature are given. Find the half-life.',
     explanation: '[M] = p/RT. Then k_uni = k₁k₂[M]/(k₋₁[M] + k₂), which is first order in A, so t½ = ln 2/k_uni.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -162,6 +164,7 @@ export const problems: CalcTemplate[] = [
     approachText: 'CO + 2H₂ ⇌ CH₃OH with standard ΔfH° and S° tabulated; find K at a given temperature.',
     explanation:
       'ΔrH° = ΔfH°(CH₃OH) − ΔfH°(CO) (H₂ is an element, ΔfH° = 0). ΔrS° = S°(CH₃OH) − S°(CO) − 2S°(H₂). Then ΔrG° = ΔrH° − TΔrS° and K = exp(−ΔrG°/RT). K falls steeply with T because the reaction is exothermic.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
     todoVerify: ['Gas-phase data: ΔfH°(CO) −110.5, ΔfH°(CH₃OH,g) −201.0 kJ/mol; S° CO 197.7, H₂ 130.7, CH₃OH(g) 239.9 J/K/mol'],
   },
@@ -220,6 +223,7 @@ export const problems: CalcTemplate[] = [
     ],
     approachText: 'Daniell cell with standard potentials and non-standard ion concentrations; find ΔrG under these conditions.',
     explanation: 'E° = 0.34 − (−0.76) = 1.10 V. Q = [Zn²⁺]/[Cu²⁺]; E = E° − (RT/2F) ln Q; then ΔrG = −2FE.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -267,6 +271,7 @@ export const problems: CalcTemplate[] = [
     ],
     approachText: 'A weighed mass of a weak acid with known M and Kₐ is made up to a known volume; find the pH without the small-x approximation.',
     explanation: 'n = m/M, c = n/V, then solve Kₐ = x²/(c − x) for x = [H⁺] and take pH = −log₁₀ x.',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
     todoVerify: ['Benzoic acid Ka = 6.3e-5 (pKa 4.20) at 25 °C'],
   },
@@ -313,6 +318,7 @@ export const problems: CalcTemplate[] = [
     ],
     approachText: 'First-order reaction: ΔG‡ known at T₁ and Eₐ known; find the time to reach a given fraction remaining at T₂.',
     explanation: 'Eyring gives k at T₁; two-point Arrhenius moves it to T₂; then t = ln([A]₀/[A])/k.',
+    levels: ['icho'],
     reviewed: false,
   },
   {
@@ -368,6 +374,7 @@ export const problems: CalcTemplate[] = [
     ],
     approachText: 'Enzyme mechanism with all three elementary rate constants, [E]₀ and [S] known; steady state on ES. Find the initial rate.',
     explanation: 'Steady state on ES gives K_M = (k₋₁ + k₂)/k₁ and V_max = k₂[E]₀; then v₀ = V_max[S]/(K_M + [S]).',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -426,6 +433,7 @@ export const problems: CalcTemplate[] = [
     approachText: 'H₂ + I₂ ⇌ 2HI in a sealed flask with Kc and initial amounts known; find the equilibrium amount of HI using the ICE helper.',
     explanation:
       'Convert to concentrations, solve Kc = (2ξ)²/(([H₂]₀ − ξ)([I₂]₀ − ξ)) for ξ with every concentration positive, then n(HI) = 2ξV. (Δn_gas = 0, so the volume actually cancels.)',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
 ];

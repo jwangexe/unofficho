@@ -6,6 +6,7 @@
  * equations by mass action, solves them exactly, substitutes into the rate of interest,
  * and lists the limiting cases (one denominator term dominating).
  */
+import type { LevelId } from '@/data/levels/types';
 import {
   add,
   asMonomial,
@@ -64,6 +65,10 @@ export interface Mechanism {
   explanation: string;
   reviewed: boolean;
   todoVerify?: string[];
+  /** Levels this item belongs to (see src/data/levels). */
+  levels: LevelId[];
+  /** Private note of what inspired the item (never shown). */
+  sourceNote?: string;
 }
 
 export interface Choice {

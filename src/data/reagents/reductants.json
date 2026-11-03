@@ -31,7 +31,13 @@
       "Amides give amines, not alcohols"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nabh4",
@@ -62,7 +68,14 @@
       "Without CeCl₃, enones can undergo some 1,4-(conjugate) reduction"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "dibal-h",
@@ -98,6 +111,10 @@
     ],
     "topic": "organic/reduction",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "Behaviour of DIBAL-H towards organic azides: treated here as not a standard method"
     ]
@@ -128,6 +145,10 @@
     ],
     "topic": "organic/reduction",
     "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "Extent of 1,4-reduction of enones by L-Selectride (substrate-dependent)"
     ]
@@ -155,7 +176,11 @@
       "Too low a pH protonates the amine and stops imine formation"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nabh-oac-3",
@@ -182,7 +207,11 @@
       "Not a general carbonyl reducing agent"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "bh3-thf",
@@ -210,7 +239,11 @@
       "Hydroboration is syn; the subsequent oxidation proceeds with retention"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "na-nh3",
@@ -241,7 +274,11 @@
       "Lithium is often used instead of sodium"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "h2-pd-c",
@@ -269,7 +306,14 @@
       "Benzyl protecting groups are removed too"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "lindlar",
@@ -293,7 +337,11 @@
       "Syn addition gives the Z-alkene; use Na/NH₃ for the E-alkene"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "clemmensen",
@@ -320,7 +368,11 @@
       "Complementary to the Wolff–Kishner reduction, which works under strongly basic conditions"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "wolff-kishner",
@@ -348,7 +400,11 @@
       "Hydrazine first acts as a nucleophile (forming the hydrazone); the reduction follows on heating with base"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "sncl2",
@@ -379,6 +435,13 @@
       "The aniline is obtained as its ammonium salt; basify to isolate the free amine"
     ],
     "topic": "organic/reduction",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   }
 ]

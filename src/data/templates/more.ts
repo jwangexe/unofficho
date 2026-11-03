@@ -40,6 +40,7 @@ export const moreTemplates: CalcTemplate[] = [
       'A reaction has ΔrH = {dH1} at {T1}. Given ΔrCₚ = {dCp}, what is ΔrH at {T2}?',
     ],
     explanation: 'ΔH(T₂) = ΔH(T₁) + ΔCₚ(T₂ − T₁). ΔCₚ is in J, ΔH in kJ: watch the factor of 1000.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -71,6 +72,7 @@ export const moreTemplates: CalcTemplate[] = [
       'With ΔvapH = {dvapH} and a normal boiling point of {T1} (at {p1}), estimate the boiling point at {p2}.',
     ],
     explanation: 'Clausius–Clapeyron: 1/T₂ = 1/T₁ − R ln(p₂/p₁)/ΔvapH. Lower pressure gives a lower boiling point.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -100,6 +102,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Calculate the entropy change when {n} of a liquid with Cₚ = {Cp} is warmed from {T1} to {T2}.',
     ],
     explanation: 'ΔS = nCₚ ln(T₂/T₁), with both temperatures in kelvin (a ratio of Celsius values is meaningless).',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -135,6 +138,7 @@ export const moreTemplates: CalcTemplate[] = [
     ],
     approachText: 'Reaction 2A + B → 3C + D with ΔfH known for every species.',
     explanation: 'ΔrH = Σν ΔfH(products) − Σν ΔfH(reactants) = 3ΔfH(C) + ΔfH(D) − 2ΔfH(A) − ΔfH(B).',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -160,6 +164,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Convert ΔcU = {dU} into ΔcH at {T}, given Δn_gas = {dn}.',
     ],
     explanation: 'ΔH = ΔU + Δn_gas RT. The correction is only a few kJ mol⁻¹, so keep 4 significant figures.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -191,6 +196,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Convert Kc = {Kc} to Kp at {T} for a reaction with Δn_gas = {dn}.',
     ],
     explanation: 'Kp = Kc(c°RT/p°)^Δn; with c° = 1 mol dm⁻³ and p° = 1 bar, c°R/p° = 0.08314 K⁻¹.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -215,6 +221,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Ksp = {Ksp} for a sparingly soluble salt MₓXᵧ (x = {x}, y = {y}). What is s?',
     ],
     explanation: 'Ksp = (xs)^x(ys)^y = x^x y^y s^(x+y). Do not forget the x^x y^y factor (e.g. 4s³ for MX₂).',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -255,6 +262,7 @@ export const moreTemplates: CalcTemplate[] = [
       'A weak base has K_b = {Kb}. What is the pH of a {c} solution? (pK_w = {pKw})',
     ],
     explanation: '[OH⁻] ≈ √(K_b c), pOH = −log₁₀[OH⁻], then pH = pK_w − pOH.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -297,6 +305,7 @@ export const moreTemplates: CalcTemplate[] = [
     ],
     approachText: 'Electrolysis: current, time, ion charge z and molar mass known. Find the mass deposited.',
     explanation: 'Q = It, n = Q/(zF), m = nM. Time must be in seconds for coulombs.',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -328,6 +337,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Standard reduction potentials: cathode {Ecat}, anode {Ean}. What is the standard cell potential?',
     ],
     explanation: 'E°cell = E°(cathode) − E°(anode), using reduction potentials for both.',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -352,6 +362,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Find c from A = {A}, ε = {eps} and a path length of {l}.',
     ],
     explanation: 'c = A/(εl). Keep ε and l in matching length units (cm here).',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -370,6 +381,7 @@ export const moreTemplates: CalcTemplate[] = [
       'Find the maximum photon wavelength able to cleave a bond of energy {Em}.',
     ],
     explanation: 'Per photon E = D/N_A, so λ = N_A hc / D. Higher bond energy needs shorter wavelength.',
+    levels: ['c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
 ];

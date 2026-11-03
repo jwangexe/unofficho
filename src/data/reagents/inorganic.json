@@ -29,7 +29,14 @@
       "Disproportionates in acid to S (cloudy precipitate) and SO₂"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "feso4",
@@ -57,7 +64,14 @@
       "Solutions slowly oxidise in air, so standardise them shortly before use"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "zinc",
@@ -84,7 +98,14 @@
       "Amphoteric: it also dissolves in strong alkali as zincate, releasing H₂"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "sodium",
@@ -110,6 +131,13 @@
       "Never use to dry halogenated solvents (explosive reaction)"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   }
 ]

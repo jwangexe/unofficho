@@ -45,6 +45,7 @@ export const kineticsTemplates: CalcTemplate[] = [
       'The decomposition of A is first order with t½ = {thalf}. If [A]₀ = {A0}, find [A] at t = {t}.',
     ],
     explanation: 'k = ln 2 / t½, then [A] = [A]₀ e^(−kt). Keep k and t in the same time units.',
+    levels: ['c3l6', 'ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -78,6 +79,7 @@ export const kineticsTemplates: CalcTemplate[] = [
       'k rises from {k1} at {T1} to {k2} at {T2}. Find Eₐ.',
     ],
     explanation: 'ln(k₂/k₁) = −(Eₐ/R)(1/T₂ − 1/T₁). Use the natural log and temperatures in kelvin.',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -110,6 +112,7 @@ export const kineticsTemplates: CalcTemplate[] = [
       'For 2A → products with rate = k[A]², k = {k} and [A]₀ = {A0}. Find t½.',
     ],
     explanation: 't½ = 1/(k[A]₀). Unlike first order, it depends on the starting concentration.',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
 ];

@@ -42,6 +42,7 @@ export const equilibriumTemplates: CalcTemplate[] = [
       'A weak monoprotic acid has Kₐ = {Ka}. What is the pH of a {c} solution?',
     ],
     explanation: '[H⁺] ≈ √(Kₐc) when dissociation is small (check: [H⁺]/c < 5 %), then pH = −log₁₀[H⁺].',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
   {
@@ -79,6 +80,7 @@ export const equilibriumTemplates: CalcTemplate[] = [
       'Find the pH of a solution made from {nHA} of a weak acid (pKₐ = {pKa}) and {nA} of its sodium salt.',
     ],
     explanation: 'Both species share one volume, so the mole ratio equals the concentration ratio: pH = pKₐ + log₁₀(n(A⁻)/n(HA)).',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: true,
   },
   {
@@ -103,6 +105,7 @@ export const equilibriumTemplates: CalcTemplate[] = [
       'A sample of gas fills {V} at {T} and {p}. Calculate the amount in moles.',
     ],
     explanation: 'n = pV/RT in SI units: Pa × m³ (or kPa × dm³, which also gives J) and T in kelvin.',
+    levels: ['alevel', 'c3l6', 'ukcho1', 'icho'],
     reviewed: false,
   },
 ];

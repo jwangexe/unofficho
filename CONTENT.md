@@ -22,6 +22,34 @@ Formulas and questions are TypeScript because they contain functions (residuals,
 - **Unsure? Say so.** In data files, add a note to `todoVerify` (a list of strings). In TS, you can also leave a `// TODO(verify): …` comment. Accuracy matters more than volume, so never guess a value.
 - **Ids are lowercase kebab-case** (`dibal-h`, `calc-arrhenius-ea`) and must never change once published. Progress and flags are stored against them.
 
+## Levels
+
+UnoffIChO serves five levels, a ladder from **A-Level (AQA)** through **C3L6**, **UKChO Round 1** and **UKChO Round 2** to **IChO**. Every item says which levels it belongs to:
+
+- **`levels`** (required): e.g. `['alevel', 'c3l6', 'ukcho1']`. One item can serve several levels; never duplicate an item for another level.
+- **`difficultyByLevel`** (optional): e.g. `{ alevel: 3, icho: 1 }`, for when an item is hard at one level and easy at another. Without it, `difficulty` applies everywhere.
+- **`sourceNote`** (optional, never shown): what inspired the item, e.g. "idea from a UKChO Round 1 thermodynamics question". It records inspiration only; never copy text or data sets from past papers.
+
+Each level's **scope** is in `src/data/levels/<level>.ts`. It lists:
+
+- the formulas students at that level are expected to use
+- the topics in scope
+- the reagents in scope
+- which modes the app shows
+- the Exam-mode time per item and unit strictness
+- notation, e.g. AQA's R = 8.31 J K⁻¹ mol⁻¹
+
+A **reagent's** `levels` must be exactly the levels whose scope lists it, so add a reagent to a level by editing that scope file and then its `levels`.
+
+The tests (`tests/levels.test.ts`) check, for each level an item is tagged with:
+
+- every formula in a question's reference solution is in scope
+- the topic or Book section is in scope
+- a "Will it react?" item's reagent is in scope, and the level has that mode
+- Mechanisms only appear at levels that show the Mechanisms mode
+
+Where you are unsure whether something is on a specification, leave a `todoVerify` note rather than guessing.
+
 ## Checking your work
 
 ```bash

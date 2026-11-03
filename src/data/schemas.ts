@@ -3,11 +3,18 @@
  * both at load time and in tests/content.test.ts. See CONTENT.md for examples.
  */
 import { z } from 'zod';
+import { LEVEL_IDS } from './levels/types';
 
 const id = z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'ids are lowercase kebab-case');
 
 /** Free-text notes for facts the author is unsure of — the JSON equivalent of a TODO(verify) comment. */
 const todoVerify = z.array(z.string()).optional();
+
+/** Levels an item belongs to (see src/data/levels). */
+const levels = z.array(z.enum(LEVEL_IDS)).min(1);
+const difficultyByLevel = z.partialRecord(z.enum(LEVEL_IDS), z.union([z.literal(1), z.literal(2), z.literal(3)])).optional();
+/** Private note of what inspired an item (never shown). */
+const sourceNote = z.string().optional();
 
 // ---------- Reagents ----------
 
@@ -66,6 +73,9 @@ export const Reagent = z
     pitfalls: z.array(z.string()),
     topic: z.string(),
     reviewed: z.boolean(),
+    levels,
+    difficultyByLevel,
+    sourceNote,
     todoVerify,
   })
   .refine((r) => r.roles.includes(r.primaryRole), {
@@ -96,6 +106,9 @@ export const ReactItem = z.object({
   explanation: z.string(),
   topic: z.string(),
   reviewed: z.boolean(),
+  levels,
+  difficultyByLevel,
+  sourceNote,
   todoVerify,
 });
 export type ReactItem = z.infer<typeof ReactItem>;
@@ -145,6 +158,9 @@ export const BookPageMeta = z
     stub: z.boolean().default(false),
     outline: z.array(z.string()).default([]),
     reviewed: z.boolean(),
+    levels,
+    difficultyByLevel,
+    sourceNote,
     todoVerify,
   })
   .refine((p) => p.stub || p.quickChecks.length >= 2, { message: 'complete pages need 2–3 quick checks' })

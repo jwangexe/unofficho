@@ -9,6 +9,7 @@ import { convert, displayValue, fromSI, qty, type QKind, type Quantity } from '.
 import { formatQuantity } from './quantity';
 import { fail, ok, type Result } from './result';
 import { getUnit } from './units';
+import type { LevelId } from '@/data/levels/types';
 
 export interface ParamSpec {
   unit: string;
@@ -67,6 +68,12 @@ export interface CalcTemplate {
   explanation: string;
   reviewed: boolean;
   todoVerify?: string[];
+  /** Levels this item belongs to (see src/data/levels). */
+  levels: LevelId[];
+  /** Difficulty at particular levels, when it differs from `difficulty`. */
+  difficultyByLevel?: Partial<Record<LevelId, 1 | 2 | 3>>;
+  /** Private note of what inspired the item (never shown). */
+  sourceNote?: string;
 }
 
 export interface GivenChip {

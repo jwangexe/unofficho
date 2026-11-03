@@ -22,6 +22,7 @@ export const electroTemplates: CalcTemplate[] = [
       'For a redox reaction with n = {n} and E°cell = {E0}, what is ΔG°?',
     ],
     explanation: 'ΔG° = −nFE°. A positive E° means a spontaneous cell (negative ΔG°).',
+    levels: ['ukcho1', 'ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -65,6 +66,7 @@ export const electroTemplates: CalcTemplate[] = [
       'For a cell reaction with n = {n} and E° = {E0}, calculate the cell potential at {T} if Q = {Q}.',
     ],
     explanation: 'E = E° − (RT/nF) ln Q. At 298 K that is E° − (0.0592/n) log₁₀ Q.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
 ];

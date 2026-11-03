@@ -27,7 +27,14 @@
       "Acid releases HCN gas, which is extremely toxic"
     ],
     "topic": "organic/nucleophiles",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nan3",
@@ -53,7 +60,11 @@
       "HN₃ is toxic and explosive; heavy-metal azides are explosive; never use CH₂Cl₂ as solvent (diazidomethane)"
     ],
     "topic": "organic/nucleophiles",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "pph3",
@@ -78,7 +89,12 @@
       "Removing the Ph₃P=O by-product is a classic purification headache"
     ],
     "topic": "organic/nucleophiles",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nai-acetone",
@@ -105,6 +121,11 @@
       "I⁻ is both an excellent nucleophile and an excellent leaving group"
     ],
     "topic": "organic/nucleophiles",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   }
 ]

@@ -99,6 +99,7 @@ describe('sampling instances for range problems', () => {
     wordings: ['{x}'],
     explanation: '',
     reviewed: false,
+    levels: ['icho'],
     ...overrides,
   });
 

@@ -27,7 +27,12 @@
       "Mildly acidic: buffer with NaOAc for acid-sensitive substrates"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "swern",
@@ -53,7 +58,11 @@
       "Produces Me₂S (foul smell), CO and CO₂"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "dmp",
@@ -80,7 +89,11 @@
       "Hypervalent iodine(V) reagent; its precursor IBX can be shock-sensitive"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "kmno4",
@@ -111,7 +124,14 @@
       "Purple MnO₄⁻ → brown MnO₂ (neutral/basic) or colourless Mn²⁺ (acidic)"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "oso4",
@@ -137,7 +157,12 @@
       "Volatile and very toxic, so used catalytically with NMO to re-oxidise Os(VI)"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "mcpba",
@@ -166,6 +191,11 @@
     ],
     "topic": "organic/oxidation",
     "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "Relative migratory aptitude of secondary alkyl vs phenyl in Baeyer–Villiger (often quoted as comparable)"
     ]
@@ -193,7 +223,12 @@
       "Ozonides are explosive: always work them up before isolating"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "naio4",
@@ -218,7 +253,11 @@
       "Each C–C bond cleaved consumes one equivalent of IO₄⁻"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "jones",
@@ -248,7 +287,12 @@
       "Orange Cr(VI) turns green Cr(III) as it works"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "tempo-bleach",
@@ -275,7 +319,11 @@
       "TEMPO itself is a stable nitroxyl radical"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "h2o2",
@@ -309,7 +357,13 @@
       "Disproportionates to O₂ and H₂O, catalysed by MnO₂ or catalase"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "so2",
@@ -337,7 +391,13 @@
       "SO₂ itself has no H to donate; its aqueous solution is acidic because it forms HSO₃⁻ + H⁺"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "naocl",
@@ -370,7 +430,13 @@
       "Mixing with acid releases Cl₂; mixing with ammonia gives toxic chloramines"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "k2cr2o7",
@@ -398,7 +464,14 @@
       "Orange Cr₂O₇²⁻ → green Cr³⁺"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "tollens",
@@ -426,7 +499,14 @@
       "Prepare fresh and do not store: aged ammoniacal silver solutions can form explosive silver nitride"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "seo2",
@@ -450,7 +530,11 @@
       "Selenium compounds are toxic and malodorous"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "nbs",
@@ -478,7 +562,12 @@
       "Brominations of C–H are oxidations of carbon; NBS is a source of Br• or 'Br⁺'"
     ],
     "topic": "organic/oxidation",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "iodine",
@@ -507,7 +596,14 @@
       "Dissolves in KI(aq) as I₃⁻ (I₂ acting as a Lewis acid towards I⁻)"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "bromine",
@@ -536,7 +632,14 @@
       "Decolourisation of bromine water is not specific to C=C: phenols and enols also react"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "chlorine",
@@ -562,7 +665,14 @@
       "Disproportionates in cold NaOH to Cl⁻ + ClO⁻ (and to ClO₃⁻ when hot)"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "fluorine",
@@ -587,7 +697,13 @@
       "Fluorine can only ever be in the −1 oxidation state in compounds (except F₂ itself, at 0)"
     ],
     "topic": "inorganic/redox",
-    "reviewed": false
+    "reviewed": false,
+    "levels": [
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ]
   },
   {
     "id": "hno3-conc",
@@ -619,6 +735,13 @@
     ],
     "topic": "inorganic/redox",
     "reviewed": false,
+    "levels": [
+      "alevel",
+      "c3l6",
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "E° for NO₃⁻/NO₂ couple (≈ +0.80 V)"
     ]
@@ -651,6 +774,11 @@
     ],
     "topic": "inorganic/redox",
     "reviewed": false,
+    "levels": [
+      "ukcho1",
+      "ukcho2",
+      "icho"
+    ],
     "todoVerify": [
       "Ce(IV)/Ce(III) potential varies strongly with the acid (≈1.44 V in H₂SO₄, ≈1.61 V in HNO₃)"
     ]

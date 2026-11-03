@@ -24,6 +24,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'Steady state on I gives k₁k₂[A]/(k₋₁ + k₂), with no assumption about which step is faster. Pre-equilibrium is its limit when k₋₁ ≫ k₂; the opposite limit, k₂ ≫ k₋₁, makes step 1 rate-determining.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -44,6 +45,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'Steady state on A* gives k₁k₂[A][M]/(k₋₁[M] + k₂). At high pressure k₋₁[M] ≫ k₂ and the reaction is first order (k₁k₂/k₋₁); at low pressure it becomes second order, k₁[A][M], because energising collisions are rate-limiting.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -65,6 +67,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'The free enzyme is not known, so use the mass balance [E] = [E]₀ − [ES] before solving. Dividing top and bottom by k₁ gives v = k₂[E]₀[S]/($K_\\mathrm{M}$ + [S]) with $K_\\mathrm{M}$ = (k₋₁ + k₂)/k₁. Pre-equilibrium instead gives $K_\\mathrm{S}$ = k₋₁/k₁ in place of $K_\\mathrm{M}$.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -87,6 +90,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'With the mass balance [E]₀ = [E] + [ES] + [EI], the result has the Michaelis–Menten form with $K_\\mathrm{M}$ multiplied by (1 + [I]/$K_\\mathrm{I}$), where $K_\\mathrm{I}$ = k₋₃/k₃: $V_\\mathrm{max}$ is unchanged, only the apparent $K_\\mathrm{M}$ grows.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -107,6 +111,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'Two NO2 form per step-2 event, so d[NO₂]/dt carries a factor of 2. Pre-equilibrium gives a third-order rate law, 2k₁k₂[NO]²[O₂]/k₋₁; since the dimerisation is exothermic, the apparent activation energy can be negative.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -124,6 +129,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     challenges: [{ ss: ['R+'], pe: [] }],
     explanation:
       'Steady state on R⁺ gives k₁k₂[RX][Nu⁻]/(k₋₁[X⁻] + k₂[Nu⁻]). Added X⁻ slows the reaction (common-ion effect); when capture by Nu⁻ wins, k₂[Nu⁻] ≫ k₋₁[X⁻], and the familiar first-order rate k₁[RX] appears.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -144,6 +150,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'O₃ is consumed in both steps, so −d[O₃]/dt picks up a factor of 2: 2k₁k₂[O₃]²/(k₋₁[O₂] + k₂[O₃]). When k₋₁[O₂] dominates, the rate is inhibited by O₂: 2k₁k₂[O₃]²/(k₋₁[O₂]).',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -164,6 +171,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'Pre-equilibrium gives [I]² = (k₁/k₋₁)[I₂], and so d[HI]/dt = 2k₁k₂[H₂][I₂]/k₋₁: the same second-order law as a one-step H₂ + I₂ collision, which is why rate laws alone cannot prove a mechanism.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -183,6 +191,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     explanation:
       'Propagation neither makes nor destroys radicals, so in the steady state initiation balances termination: $2k_\\mathrm{d}$[In] = $2k_\\mathrm{t}$[R•]². Monomer is used at $k_\\mathrm{p}$[R•][M], giving the half order in initiator.',
     todoVerify: ['Factor-of-2 conventions for termination differ between texts; this uses d[R•]/dt = −2kₜ[R•]².'],
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
   {
@@ -204,6 +213,7 @@ export const MECHANISMS: readonly Mechanism[] = [
     ],
     explanation:
       'With both intermediates in steady state, everything that forms I₂ is trapped, so the rate is set by the formation of I₂: k₁k₂[A][B]/(k₋₁ + k₂). Neither k₃ nor [C] appears.',
+    levels: ['ukcho2', 'icho'],
     reviewed: false,
   },
 ];
