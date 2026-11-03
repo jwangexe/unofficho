@@ -1,0 +1,105 @@
+---
+id: kc-kp-activities
+chapter: physical
+section: equilibrium
+order: 1.5
+title: "Kc, Kp and the unitless K"
+minutes: 4
+related:
+  formulas: [kc, kp, partial-pressure, kp-kc, gibbs-k]
+derives: [kp-kc]
+quickChecks:
+  - id: kc-units
+    type: mcq
+    prompt: "What are the units of $K_\\mathrm{c}$ for $2\\mathrm{SO_2(g)} + \\mathrm{O_2(g)} \\rightleftharpoons 2\\mathrm{SO_3(g)}$?"
+    options:
+      - "mol dm⁻³"
+      - "mol⁻¹ dm³"
+      - "mol⁻² dm⁶"
+      - "No units"
+    answer: 1
+    explanation: "$K_\\mathrm{c} = [\\mathrm{SO_3}]^2/([\\mathrm{SO_2}]^2[\\mathrm{O_2}])$, so the units are $(\\text{mol dm}^{-3})^{2-3} = (\\text{mol dm}^{-3})^{-1}$ = mol⁻¹ dm³. In general they are $(\\text{mol dm}^{-3})^{\\Delta n}$ with $\\Delta n = 2 - 3 = -1$."
+  - id: kp-to-k
+    type: mcq
+    prompt: "For $\\mathrm{N_2O_4(g)} \\rightleftharpoons 2\\mathrm{NO_2(g)}$, $K_\\mathrm{p} = 115$ kPa at 298 K. Which number goes into $\\Delta G^\\circ = -RT\\ln K$, with $p^\\circ = 1$ bar = 100 kPa?"
+    options:
+      - "115"
+      - "1.15"
+      - "0.115"
+      - "1.15 × 10⁵"
+    answer: 1
+    explanation: "Each partial pressure is divided by $p^\\circ$ = 100 kPa, and here $\\Delta n = 1$, so $K = K_\\mathrm{p}/p^\\circ = 115/100 = 1.15$. Using 115 (kPa) or $1.15 \\times 10^5$ (Pa) gives the wrong $\\Delta G^\\circ$."
+  - id: why-no-solids
+    type: reveal
+    prompt: "Why are pure solids and liquids left out of K?"
+    answer: "Their activity is 1. The activity of a substance measures how far it is from its standard state; a pure solid or liquid is already in its standard state whatever the amount present, so its term in K is 1 and drops out. At A-level this is usually stated as 'their concentration is constant'."
+reviewed: false
+levels: [alevel, c3l6, ukcho1, ukcho2, icho]
+---
+
+You will meet three equilibrium constants. At A-level, $K_\mathrm{c}$ and $K_\mathrm{p}$ carry units. At university and in olympiads, $K$ has no units, because it goes inside a logarithm in $\Delta G^\circ = -RT\ln K$. They are the same idea, written with different conventions.
+
+## Kc: concentrations, with units
+
+For $a\mathrm{A} + b\mathrm{B} \rightleftharpoons c\mathrm{C} + d\mathrm{D}$, the <F id="kc">concentration equilibrium constant</F> uses equilibrium concentrations:
+
+$$
+K_\mathrm{c} = \frac{[\mathrm{C}]^c[\mathrm{D}]^d}{[\mathrm{A}]^a[\mathrm{B}]^b}
+$$
+
+Its units are $(\text{mol dm}^{-3})^{\Delta n}$, where $\Delta n = (c + d) - (a + b)$. For $\mathrm{N_2} + 3\mathrm{H_2} \rightleftharpoons 2\mathrm{NH_3}$, $\Delta n = -2$, so $K_\mathrm{c}$ is in mol⁻² dm⁶. When $\Delta n = 0$ the units cancel, and so does the volume.
+
+## Kp: partial pressures, with units
+
+For gases, use partial pressures instead. The <F id="partial-pressure">partial pressure</F> of a gas is its mole fraction times the total pressure, $p_\mathrm{A} = x_\mathrm{A}\,p_\text{total}$, and the partial pressures add up to the total. Then
+
+$$
+K_\mathrm{p} = \frac{p_\mathrm{C}^{\,c}\,p_\mathrm{D}^{\,d}}{p_\mathrm{A}^{\,a}\,p_\mathrm{B}^{\,b}}
+$$
+
+with units of $(\text{pressure})^{\Delta n}$. The number depends on the unit chosen: for $\Delta n = -2$, $K_\mathrm{p}$ in Pa⁻² is $10^6$ times smaller than in kPa⁻². Only gases appear in $K_\mathrm{p}$.
+
+## From Kc to Kp
+
+For an ideal gas, $p = \frac{n}{V}RT = cRT$, so every partial pressure is its concentration times $RT$. Substituting into $K_\mathrm{p}$, each factor of $RT$ appears once per mole of gas:
+
+$$
+K_\mathrm{p} = K_\mathrm{c}\,(RT)^{\Delta n}
+$$
+
+Use SI units throughout: concentrations in mol m⁻³ and pressures in Pa (so $R = 8.314$ J K⁻¹ mol⁻¹ links them directly).
+
+## The unitless K: activities
+
+The thermodynamic $K$ replaces each concentration or pressure with an **activity**, a pure number that says how far a substance is from its standard state:
+
+| Substance | Activity (ideal) | Standard state |
+| --- | --- | --- |
+| Solute | $c/c^\circ$ | $c^\circ = 1$ mol dm⁻³ |
+| Gas | $p/p^\circ$ | $p^\circ = 1$ bar = 100 kPa |
+| Pure solid or liquid, solvent | 1 | the pure substance |
+
+So $K = \prod_i a_i^{\nu_i}$ has no units, and $\Delta G^\circ = -RT\ln K$ makes sense: you can only take the logarithm of a pure number. For real, non-ideal mixtures each activity also carries an activity coefficient, $a = \gamma c/c^\circ$; olympiad problems almost always take $\gamma = 1$.
+
+Numerically, $K$ equals $K_\mathrm{c}$ with concentrations in mol dm⁻³, and $K$ equals $K_\mathrm{p}$ with pressures in bar. Dividing the ideal-gas link by the standard states gives the unitless version of the conversion, the <F id="kp-kc" /> relation:
+
+$$
+K_p = K_c\left(\frac{c^\circ RT}{p^\circ}\right)^{\Delta n}
+$$
+
+<Callout type="trap">
+Putting a $K_\mathrm{p}$ in kPa straight into $\Delta G^\circ = -RT\ln K$ gives the wrong answer unless $\Delta n = 0$. Convert the pressures to bar first, i.e. divide each by $p^\circ$ = 100 kPa.
+</Callout>
+
+## Which one to use
+
+| | $K_\mathrm{c}$ | $K_\mathrm{p}$ | unitless $K$ |
+| --- | --- | --- | --- |
+| From | concentrations | pressures | activities |
+| Units | $(\text{mol dm}^{-3})^{\Delta n}$ | $(\text{kPa})^{\Delta n}$ | none |
+| Solids | left out | left out | activity 1 |
+| Used in | A-level | A-level | university, olympiads |
+
+<Callout type="tip">
+In an A-level exam, give $K_\mathrm{c}$ and $K_\mathrm{p}$ with units. In an olympiad, if a question links $K$ to $\Delta G^\circ$ or $E^\circ$, treat it as unitless and make sure every concentration is in mol dm⁻³ and every pressure in bar.
+</Callout>

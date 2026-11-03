@@ -8,6 +8,7 @@ export const alevel: LevelScope = {
   formulas: [
     'moles-mass', 'concentration', 'mole-ratio', 'dilution', 'ideal-gas', 'particles', 'percentage-yield', 'mass-concentration',
     'heat-mass', 'gibbs',
+    'kc', 'kp', 'partial-pressure',
     'arrhenius', 'arrhenius-two-point',
     'ph', 'p-function', 'weak-acid-approx', 'henderson-hasselbalch',
     'ecell',

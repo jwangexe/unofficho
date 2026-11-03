@@ -149,6 +149,8 @@ function firstParagraph(page: BookPage): string {
       // KaTeX writes each formula twice (MathML and HTML); keep the visible copy.
       .replace(/<span class="katex-mathml">[\s\S]*?<\/math><\/span>/g, '')
       .replace(/<[^>]+>/g, '')
+      // KaTeX pads subscripts with zero-width spaces.
+      .replace(/\u200b/g, '')
       .replace(/&#x27;|&#39;/g, '’')
       .replace(/&quot;/g, '"')
       .replace(/&amp;/g, '&')

@@ -6,6 +6,7 @@ import { ukcho1Batch1Templates } from './ukcho1-batch1';
 import { ukcho2Batch1Templates } from './ukcho2-batch1';
 import type { CaseStudy } from '@/engine/caseStudy';
 import { alevelEnergeticsTemplates } from './alevel-energetics';
+import { alevelEquilibriumTemplates } from './alevel-equilibrium';
 import { electroTemplates } from './electro';
 import { equilibriumTemplates } from './equilibrium';
 import { kineticsTemplates } from './kinetics';
@@ -24,6 +25,7 @@ export const CALC_TEMPLATES: readonly CalcTemplate[] = [
   ...moreTemplates,
   ...alevelEnergeticsTemplates,
   ...alevelAmountTemplates,
+  ...alevelEquilibriumTemplates,
   ...ukcho1Batch1Templates,
   ...ukcho2Batch1Templates,
 ];

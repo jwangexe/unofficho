@@ -1,4 +1,4 @@
-import { D, type Dim, dimKey, eqDim, formatDim } from './dims';
+import { D, type Dim, dimKey, eqDim, formatDim, powDim } from './dims';
 
 export interface Unit {
   id: string;
@@ -46,6 +46,13 @@ export const UNITS: readonly Unit[] = [
   u('bar', 'bar', '\\mathrm{bar}', D.pressure, 1e5),
   u('atm', 'atm', '\\mathrm{atm}', D.pressure, 101325),
   u('mmHg', 'mmHg', '\\mathrm{mmHg}', D.pressure, 101325 / 760),
+  // powers of pressure, for Kp with units (A-level); kPa first, as AQA questions mostly use it
+  u('1/kPa', 'kPa⁻¹', '\\mathrm{kPa^{-1}}', powDim(D.pressure, -1), 1e-3),
+  u('kPa2', 'kPa²', '\\mathrm{kPa^{2}}', powDim(D.pressure, 2), 1e6),
+  u('1/kPa2', 'kPa⁻²', '\\mathrm{kPa^{-2}}', powDim(D.pressure, -2), 1e-6),
+  u('1/Pa', 'Pa⁻¹', '\\mathrm{Pa^{-1}}', powDim(D.pressure, -1), 1),
+  u('Pa2', 'Pa²', '\\mathrm{Pa^{2}}', powDim(D.pressure, 2), 1),
+  u('1/Pa2', 'Pa⁻²', '\\mathrm{Pa^{-2}}', powDim(D.pressure, -2), 1),
   // volume
   u('dm3', 'dm³', '\\mathrm{dm^3}', D.volume, 1e-3),
   u('cm3', 'cm³', '\\mathrm{cm^3}', D.volume, 1e-6),
@@ -65,6 +72,12 @@ export const UNITS: readonly Unit[] = [
   u('mmol/dm3', 'mmol dm⁻³', '\\mathrm{mmol\\,dm^{-3}}', D.concentration, 1),
   u('umol/dm3', 'µmol dm⁻³', '\\mathrm{\\mu mol\\,dm^{-3}}', D.concentration, 1e-3),
   u('mol/m3', 'mol m⁻³', '\\mathrm{mol\\,m^{-3}}', D.concentration, 1),
+  // powers of concentration, for Kc with units (A-level)
+  u('dm3/mol', 'mol⁻¹ dm³', '\\mathrm{mol^{-1}\\,dm^{3}}', powDim(D.concentration, -1), 1e-3),
+  u('mol2/dm6', 'mol² dm⁻⁶', '\\mathrm{mol^{2}\\,dm^{-6}}', powDim(D.concentration, 2), 1e6),
+  u('dm6/mol2', 'mol⁻² dm⁶', '\\mathrm{mol^{-2}\\,dm^{6}}', powDim(D.concentration, -2), 1e-6),
+  u('mol3/dm9', 'mol³ dm⁻⁹', '\\mathrm{mol^{3}\\,dm^{-9}}', powDim(D.concentration, 3), 1e9),
+  u('dm9/mol3', 'mol⁻³ dm⁹', '\\mathrm{mol^{-3}\\,dm^{9}}', powDim(D.concentration, -3), 1e-9),
   // time
   u('s', 's', '\\mathrm{s}', D.time, 1),
   u('min', 'min', '\\mathrm{min}', D.time, 60),

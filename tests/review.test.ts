@@ -42,6 +42,6 @@ describe('review write-back', () => {
         return !hit || !markInSource(hit.source, kind, id).ok;
       })
       .map(([, id]) => id);
-    expect(failed.sort()).toEqual(['weak-acid-approx', 'weak-acid-exact', 'weak-base-approx', 'weak-base-exact']);
+    expect(failed.sort()).toEqual(['kc', 'kp', 'weak-acid-approx', 'weak-acid-exact', 'weak-base-approx', 'weak-base-exact']);
   });
 });

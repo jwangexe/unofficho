@@ -83,6 +83,11 @@ export interface Formula {
   todoVerify?: string[];
   /** Per-species variables; `vars` then holds only the shared ones until species are added. */
   species?: SpeciesGroup;
+  /**
+   * For `{ any }` variables whose dimension follows from the others, e.g. Kc in
+   * (mol dm⁻³)^Δn: the expected dimension and display unit, given the other variables.
+   */
+  anyDim?: (sym: string, others: Record<string, Quantity>) => { dim: Dim; unit: string } | undefined;
   /** Set on a formula built for a particular number of species. */
   speciesCount?: number;
 }
@@ -210,10 +215,26 @@ export function solveFormula(
     known[spec.sym] = q.value;
   }
 
+  // Variables whose dimension depends on the others (Kc, Kp) must match it.
+  if (f.anyDim) {
+    for (const [sym, q] of Object.entries(checked)) {
+      const spec = varSpec(f, sym);
+      if (!isAny(spec.dim)) continue;
+      const want = f.anyDim(sym, { ...checked, [sym]: q });
+      if (want && !eqDim(want.dim, q.dim)) {
+        return fail('dimension', `${spec.label} needs units of ${getUnit(want.unit).symbol || 'a dimensionless number'} for these coefficients`);
+      }
+    }
+  }
+
   // Output dimension and display unit.
   let outDim: Dim;
   let outUnit: string;
-  if (isAny(target.dim)) {
+  const derived = isAny(target.dim) ? f.anyDim?.(unknown, checked) : undefined;
+  if (derived) {
+    outDim = derived.dim;
+    outUnit = derived.unit;
+  } else if (isAny(target.dim)) {
     const group = target.dim.any;
     const partner = f.vars.find((s) => s.sym !== unknown && isAny(s.dim) && s.dim.any === group);
     const pq = partner && checked[partner.sym];

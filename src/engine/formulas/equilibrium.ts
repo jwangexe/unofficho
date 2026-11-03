@@ -1,6 +1,8 @@
 import { defineFormula, type Formula, type VarSpec } from '../formula';
 import { C_STD, P_STD, R } from '../constants';
 import { conc, dimensionless, temp } from './vars';
+import { D, powDim } from '../dims';
+import type { Quantity } from '../quantity';
 
 const ln = Math.log;
 const log10 = Math.log10;
@@ -22,6 +24,113 @@ function iceLatex(nus: readonly number[]): string {
 
 const pVar = (sym: string, label: string, latex: string, name: string): VarSpec =>
   dimensionless(sym, label, latex, name, { sign: 'signed' });
+
+/** K = Π[X_i]^ν_i written out with the actual coefficients: products over reactants. */
+function kLatex(K: string, X: (i: number) => string) {
+  return (nus: readonly number[]): string => {
+    const term = (i: number, nu: number) => (Math.abs(nu) === 1 ? X(i + 1) : `${X(i + 1)}^{${Math.abs(nu)}}`);
+    const top = nus.map((nu, i) => (nu > 0 ? term(i, nu) : '')).join('\\,');
+    const bottom = nus.map((nu, i) => (nu < 0 ? term(i, nu) : '')).join('\\,');
+    return bottom ? `${K} = \\dfrac{${top || '1'}}{${bottom}}` : `${K} = ${top || '1'}`;
+  };
+}
+
+const sumNu = (v: Record<string, Quantity | number>) => {
+  let n = 0;
+  for (let i = 1; `nu${i}` in v; i++) {
+    const x = v[`nu${i}`]!;
+    n += typeof x === 'number' ? x : x.value;
+  }
+  return n;
+};
+
+/** Display units for (mol dm⁻³)^n and pressure^n, by power. */
+const CONC_UNITS: Record<number, string> = { [-3]: 'dm9/mol3', [-2]: 'dm6/mol2', [-1]: 'dm3/mol', 0: '1', 1: 'mol/dm3', 2: 'mol2/dm6', 3: 'mol3/dm9' };
+const PRESSURE_UNITS: Record<string, Record<number, string>> = {
+  kPa: { [-2]: '1/kPa2', [-1]: '1/kPa', 0: '1', 1: 'kPa', 2: 'kPa2' },
+  Pa: { [-2]: '1/Pa2', [-1]: '1/Pa', 0: '1', 1: 'Pa', 2: 'Pa2' },
+};
+
+/**
+ * Kc or Kp with units, as A-level uses them: K = Π x_i^ν_i over equilibrium concentrations
+ * (or partial pressures), so K carries (mol dm⁻³)^Δn (or kPa^Δn). Any number of species.
+ */
+function kWithUnits(kind: 'c' | 'p'): Formula {
+  const c = kind === 'c';
+  const X = (i: number) => (c ? `[\\mathrm{X}_{${i}}]` : `p_{\\mathrm{X}_{${i}}}`);
+  return defineFormula({
+    id: c ? 'kc' : 'kp',
+    name: c ? 'Kc from equilibrium concentrations' : 'Kp from equilibrium partial pressures',
+    topic: 'equilibrium',
+    latex: c ? 'K_\\mathrm{c} = \\dfrac{[\\mathrm{C}]^c[\\mathrm{D}]^d}{[\\mathrm{A}]^a[\\mathrm{B}]^b}' : 'K_\\mathrm{p} = \\dfrac{p_\\mathrm{C}^{\\,c}\\,p_\\mathrm{D}^{\\,d}}{p_\\mathrm{A}^{\\,a}\\,p_\\mathrm{B}^{\\,b}}',
+    vars: [
+      {
+        sym: 'K',
+        label: c ? 'Kc' : 'Kp',
+        latex: c ? 'K_\\mathrm{c}' : 'K_\\mathrm{p}',
+        name: c ? 'Equilibrium constant in concentrations (units depend on Δn)' : 'Equilibrium constant in partial pressures (units depend on Δn)',
+        dim: { any: c ? 'Kc' : 'Kp' },
+        unit: '1',
+      },
+    ],
+    species: {
+      min: 1,
+      max: 6,
+      vars: (i) => [
+        dimensionless(`nu${i}`, `ν${SUB[i]}`, `\\nu_{${i}}`, `Coefficient of X${SUB[i]} (− reactant, + product)`, {
+          sign: 'signed',
+          solvable: false,
+          integer: true,
+        }),
+        c
+          ? conc(`X${i}`, `[X${SUB[i]}]`, X(i), `Equilibrium concentration of X${SUB[i]}`)
+          : { sym: `X${i}`, label: `p(X${SUB[i]})`, latex: X(i), name: `Equilibrium partial pressure of X${SUB[i]}`, dim: D.pressure, unit: 'kPa' },
+      ],
+      coefficient: (i) => `nu${i}`,
+      latexFor: kLatex(c ? 'K_\\mathrm{c}' : 'K_\\mathrm{p}', X),
+    },
+    // In SI units throughout, so K comes out in (mol m⁻³)^Δn or Pa^Δn and converts for display.
+    relation: (v) => {
+      let lnQ = 0;
+      for (let i = 1; `nu${i}` in v; i++) lnQ += v[`nu${i}`]! * ln(v[`X${i}`]!);
+      return [ln(v.K!), lnQ];
+    },
+    anyDim: (sym, others) => {
+      if (sym !== 'K') return undefined;
+      const n = Math.round(sumNu(others));
+      if (c) return { dim: powDim(D.concentration, n), unit: CONC_UNITS[n] ?? 'mol/dm3' };
+      const base = Object.entries(others).find(([k]) => /^X\d+$/.test(k))?.[1]?.unit === 'Pa' ? 'Pa' : 'kPa';
+      return { dim: powDim(D.pressure, n), unit: PRESSURE_UNITS[base]![n] ?? base };
+    },
+    constraint: (v) => {
+      for (let i = 1; `nu${i}` in v; i++) if (v[`nu${i}`] === 0) return `ν${SUB[i]} is 0: remove that species instead`;
+      return null;
+    },
+    rearranged: {
+      K: c ? 'K_\\mathrm{c} = \\prod_i [\\mathrm{X}_i]^{\\nu_i}' : 'K_\\mathrm{p} = \\prod_i p_{\\mathrm{X}_i}^{\\,\\nu_i}',
+      ...Object.fromEntries(
+        Array.from({ length: 6 }, (_, k) => [`X${k + 1}`, `\\text{Solve } ${c ? 'K_\\mathrm{c}' : 'K_\\mathrm{p}'} = \\prod_i ${c ? '[\\mathrm{X}_i]' : 'p_{\\mathrm{X}_i}'}^{\\nu_i} \\text{ for } ${X(k + 1)}`]),
+      ),
+    },
+    notes: c
+      ? 'ν is negative for reactants and positive for products; leave out solids. Kc has units of (mol dm⁻³)^Δn, where Δn = Σν.'
+      : 'ν is negative for reactants and positive for products; only gases appear. Kp has units of (pressure)^Δn, where Δn = Σν.',
+    examples: c
+      ? [
+          // N₂ + 3H₂ ⇌ 2NH₃: Kc in mol⁻² dm⁶.
+          { nu1: -1, X1: 0.5, nu2: -3, X2: 1.2, nu3: 2, X3: 0.3 },
+          // H₂ + I₂ ⇌ 2HI: Δn = 0, so Kc has no units; find [HI].
+          { K: 49, nu1: -1, X1: 0.02, nu2: -1, X2: 0.02, nu3: 2 },
+        ]
+      : [
+          // N₂O₄ ⇌ 2NO₂ in kPa: Kp in kPa.
+          { nu1: -1, X1: 60, nu2: 2, X2: 40 },
+          // 2SO₂ + O₂ ⇌ 2SO₃: Kp in kPa⁻¹.
+          { nu1: -2, X1: 20, nu2: -1, X2: 10, nu3: 2, X3: 70 },
+        ],
+    reviewed: false,
+  });
+}
 
 /** Weak acid / weak base pH, approximate and exact, built from one template. */
 function weak(kind: 'acid' | 'base'): Formula[] {
@@ -92,6 +201,28 @@ function weak(kind: 'acid' | 'base'): Formula[] {
 }
 
 export const equilibrium = [
+  kWithUnits('c'),
+  kWithUnits('p'),
+  defineFormula({
+    id: 'partial-pressure',
+    name: 'Partial pressure from mole fraction',
+    topic: 'equilibrium',
+    latex: 'p_\\mathrm{A} = x_\\mathrm{A}\\,p_\\text{total}',
+    vars: [
+      { sym: 'p', label: 'p(A)', latex: 'p_\\mathrm{A}', name: 'Partial pressure of A', dim: D.pressure, unit: 'kPa' },
+      dimensionless('x', 'x(A)', 'x_\\mathrm{A}', 'Mole fraction of A (n_A ÷ n_total)'),
+      { sym: 'ptot', label: 'p(total)', latex: 'p_\\text{total}', name: 'Total pressure', dim: D.pressure, unit: 'kPa' },
+    ],
+    relation: (v) => [v.p!, v.x! * v.ptot!],
+    rearranged: {
+      p: 'p_\\mathrm{A} = x_\\mathrm{A}\\,p_\\text{total}',
+      x: 'x_\\mathrm{A} = \\dfrac{p_\\mathrm{A}}{p_\\text{total}}',
+      ptot: 'p_\\text{total} = \\dfrac{p_\\mathrm{A}}{x_\\mathrm{A}}',
+    },
+    notes: 'Mole fraction x_A = n_A ÷ n_total; the partial pressures add up to the total pressure.',
+    examples: [{ x: 0.25, ptot: 200 }],
+    reviewed: false,
+  }),
   defineFormula({
     id: 'kp-kc',
     name: 'Kp from Kc',
