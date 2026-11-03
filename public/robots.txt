@@ -1,2 +1,11 @@
 User-agent: *
 Allow: /
+# Private or personal pages: nothing for search engines here.
+Disallow: /review
+Disallow: /inbox
+Disallow: /debug
+Disallow: /settings
+Disallow: /progress
+Disallow: /api/
+
+Sitemap: https://unofficho.org/sitemap.xml

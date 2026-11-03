@@ -98,7 +98,7 @@ export const thermoTemplates: CalcTemplate[] = [
     title: 'K from ΔH° and ΔS°',
     difficulty: 2,
     params: {
-      dH: { unit: 'kJ/mol', min: -150, max: 150 },
+      dH: { unit: 'kJ/mol', min: -100, max: 100 },
       dS: { unit: 'J/(K mol)', min: -200, max: 200 },
       T: T,
     },
@@ -107,7 +107,8 @@ export const thermoTemplates: CalcTemplate[] = [
       { key: 'dS', label: 'ΔS°', from: 'p.dS' },
       { key: 'T', label: 'T', from: 'p.T' },
     ],
-    constraint: (v) => v.answer! > 1e-15 && v.answer! < 1e15 && Math.abs(Math.log(v.answer!)) > 0.5,
+    // K between 10⁻⁸ and 10⁸: beyond that the numbers stop meaning much (and flagged as outliers in review).
+    constraint: (v) => v.answer! > 1e-8 && v.answer! < 1e8 && Math.abs(Math.log(v.answer!)) > 0.5,
     reference: [
       { id: 'dG', formula: 'gibbs', solveFor: 'dG', inputs: { dH: 'g.dH', dS: 'g.dS', T: 'g.T' } },
       { id: 'K', formula: 'gibbs-k', solveFor: 'K', inputs: { dG0: 'n.dG', T: 'g.T' } },

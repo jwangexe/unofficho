@@ -1,4 +1,4 @@
-import { DISCLAIMER, DOMAIN } from '@/app/brand';
+import { DISCLAIMER, DOMAIN, NOT_AFFILIATED } from '@/app/brand';
 import { Logo } from '@/ui/Logo';
 import { Page } from '@/ui/Page';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
@@ -10,7 +10,10 @@ export default function About() {
       <h1 className="mb-4 text-3xl">
         <Logo />
       </h1>
-      <p className="mb-4 rounded-xl border border-warn/40 bg-surface p-4 text-sm">{DISCLAIMER}</p>
+      <div className="mb-4 space-y-2 rounded-xl border border-warn/40 bg-surface p-4 text-sm">
+        <p>{DISCLAIMER}</p>
+        <p>{NOT_AFFILIATED}</p>
+      </div>
       <div className="space-y-3 text-sm leading-relaxed text-muted">
         <p>
           A phone-first revision app for chemistry olympiad preparation. It has three parts: a short-page

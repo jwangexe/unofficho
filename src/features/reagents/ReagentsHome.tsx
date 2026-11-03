@@ -8,6 +8,7 @@ import { useSavedMode } from '../useSavedMode';
 import { ClassifyCard, FastCard } from './ClassifyCard';
 import { ReactCard } from './ReactCard';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { TITLES } from '@/app/seo';
 import { LEVELS } from '@/data/levels';
 import { weightedPass, weightedPool, type LevelPrefs, type Weighted } from '@/data/levels/pool';
 import { LevelChip } from '../level/LevelChip';
@@ -84,7 +85,7 @@ function ModeFeed({ mode, deck }: { mode: Mode; deck: Deck }) {
 }
 
 export default function ReagentsHome() {
-  useDocumentTitle('Reagents');
+  useDocumentTitle(TITLES.reagents);
   const [chosen, pick] = useSavedMode<Mode>(MODE_KEY, MODES.map((m) => m.id), 'classify');
   const prefs = useLevelPrefs();
   const modes = MODES.filter((m) => LEVELS[prefs.level].modes.reagents.includes(m.id));

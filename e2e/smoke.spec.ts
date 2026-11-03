@@ -22,7 +22,7 @@ test('tab bar reaches every section, and About shows the disclaimer', async ({ p
   await expect(page.getByRole('note', { name: 'About the author' })).toContainText('IChO gold medallist');
   await tab(page, 'Book').click();
   await expect(page.getByRole('heading', { name: 'Book', level: 1 })).toBeVisible();
-  await expect(page).toHaveTitle('Book · UnoffIChO');
+  await expect(page).toHaveTitle('Book: short chemistry olympiad revision pages · UnoffIChO');
   await tab(page, 'Reagents').click();
   await expect(page.getByRole('navigation', { name: 'Reagent modes' })).toBeVisible();
   await tab(page, 'Progress').click();

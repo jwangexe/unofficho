@@ -1,5 +1,6 @@
 import { isFormulaNode } from '@/engine/graph';
 import type { CalcTemplate } from '@/engine/template';
+import { alevelEnergeticsTemplates } from './alevel-energetics';
 import { electroTemplates } from './electro';
 import { equilibriumTemplates } from './equilibrium';
 import { kineticsTemplates } from './kinetics';
@@ -16,6 +17,7 @@ export const CALC_TEMPLATES: readonly CalcTemplate[] = [
   ...equilibriumTemplates,
   ...electroTemplates,
   ...moreTemplates,
+  ...alevelEnergeticsTemplates,
 ];
 
 /** Hand-authored olympiad-style problems (4–8 operations) for multi-step mode. */

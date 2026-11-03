@@ -5,6 +5,7 @@ import { CHAPTERS, type Chapter } from '@/data/schemas';
 import { Page } from '@/ui/Page';
 import { BookPageView } from './BookPageView';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { TITLES } from '@/app/seo';
 import { topicInScope } from '@/data/levels';
 import { inLevel } from '@/data/levels/pool';
 import { LevelChip } from '../level/LevelChip';
@@ -22,7 +23,7 @@ function readChapter(): Chapter {
 }
 
 function Contents() {
-  useDocumentTitle('Book');
+  useDocumentTitle(TITLES.book);
   const prefs = useLevelPrefs();
   // Pages at this level (and easier ones, if on); sections and chapters outside the level's syllabus are hidden.
   const pages = bookPages.filter((p) => inLevel(p.levels, prefs));

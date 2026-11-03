@@ -11,6 +11,7 @@ import { ApproachCard } from './ApproachCard';
 import { QuestionCard } from './QuestionCard';
 import { useCalcStore } from './store';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { TITLES } from '@/app/seo';
 import { useSavedMode } from '../useSavedMode';
 import { markTutorialSeen, Tutorial, tutorialSeen } from '@/ui/Tutorial';
 import { CALC_TOUR, MECHANISMS_TOUR } from './tours';
@@ -151,7 +152,7 @@ function ModeFeed({ mode, pool, examSeconds }: { mode: Mode; pool: readonly Weig
 }
 
 export default function CalcHome() {
-  useDocumentTitle('Calculations');
+  useDocumentTitle(TITLES.calc);
   const [chosen, pick] = useSavedMode<Mode>(MODE_KEY, MODES.map((m) => m.id), 'feed');
   const prefs = useLevelPrefs();
   const scope = LEVELS[prefs.level];

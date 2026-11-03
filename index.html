@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="UnoffIChO — an unofficial, independent chemistry olympiad study resource." />
     <meta name="theme-color" content="#0f1117" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>UnoffIChO</title>
+    <!-- seo:start (the build replaces this block per page from src/app/seo.ts) -->
+    <title>UnoffIChO: interactive chemistry olympiad practice problems</title>
+    <meta name="description" content="Free, interactive chemistry olympiad practice for IChO, UKChO, C3L6 and A-Level: step-by-step calculation problems, reagent drills and short revision pages." />
+    <!-- seo:end -->
     <script>
       // Apply saved theme before first paint to avoid a flash. Dark is the default.
       try {
@@ -18,6 +20,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Pre-rendered pages carry their path. index.html is also served for app routes that are
+      // not pre-rendered (e.g. /progress): drop the home page's markup there before it paints.
+      (function () {
+        var r = document.getElementById('root');
+        var here = location.pathname.replace(/(.)\/$/, '$1');
+        if (r && r.dataset.path && r.dataset.path !== here) r.innerHTML = '';
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

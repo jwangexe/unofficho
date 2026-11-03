@@ -8,6 +8,7 @@ import { BookIcon, CalcIcon, ChartIcon, FlaskIcon, MechanismIcon } from '@/ui/ic
 import { Logo } from '@/ui/Logo';
 import { useSuggest } from '../feedback/Suggest';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
+import { TITLES } from '@/app/seo';
 import { LEVELS } from '@/data/levels';
 import { LevelChip } from '../level/LevelChip';
 import { useLevelPrefs } from '../level/store';
@@ -51,7 +52,7 @@ function Feature({ icon, title, to, children, links }: { icon: ReactNode; title:
 }
 
 export default function Home() {
-  useDocumentTitle('Home');
+  useDocumentTitle(TITLES.home);
   const due = useDueCount();
   // Only the modes the student's level has.
   const { modes } = LEVELS[useLevelPrefs().level];

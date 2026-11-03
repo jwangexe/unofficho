@@ -133,6 +133,17 @@ No action is needed from them.
 
 To roll back, open the project's **Deployments** list and roll back to an earlier version.
 
+## 6. Get found on search engines
+
+The build pre-renders Home, About, Calculations, Reagents, the Book contents and every written Book page into their own HTML files (`scripts/prerender.ts`), each with its own title, description and structured data, and writes `sitemap.xml`. After the first deploy:
+
+1. **Google Search Console** (search.google.com/search-console): add a **Domain** property for `unofficho.org`. It asks for a DNS TXT record; add it in Cloudflare under **DNS → Records**, then click Verify.
+2. In Search Console, open **Sitemaps** and submit `https://unofficho.org/sitemap.xml`.
+3. Use **URL inspection** on the home page and a Book page, then **Request indexing**.
+4. **Bing Webmaster Tools** (bing.com/webmasters): sign in and choose **Import from Google Search Console**. Bing also feeds DuckDuckGo and several AI search tools.
+
+New Book pages join the sitemap automatically on the next deploy. Links from other sites (school chemistry pages, olympiad communities) matter more for ranking than anything on the site itself.
+
 ## Notes
 
 - **Privacy.** The site has no analytics or cookies. Progress lives in each user's browser (IndexedDB) and leaves the device only through the user's own export. The only thing stored on the server is a suggestion someone chooses to send.
