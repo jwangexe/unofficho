@@ -39,7 +39,13 @@ const SPECS: Record<ReviewKind, KindSpec> = {
   reagent: { files: [{ dir: 'src/data/reagents', match: /\.json$/ }], ...json },
   react: { files: [{ dir: 'src/data', match: /^react-items\.json$/ }], ...json },
   formula: { files: [{ dir: 'src/engine/formulas', match: /\.ts$/ }], ...ts },
-  template: { files: [{ dir: 'src/data/templates', match: /\.ts$/ }], ...ts },
+  // Case-study parts (ids "case-…") sit one level deeper, inside their case's `parts` list.
+  template: {
+    files: [{ dir: 'src/data/templates', match: /\.ts$/ }],
+    ...ts,
+    anchor: (id) => new RegExp(`^(?: {4}| {8}(?=id: 'case-))id: '${esc(id)}',$`, 'm'),
+    next: /^ {4}id: '|^ {8}id: 'case-/m,
+  },
   mechanism: { files: [{ dir: 'src/data', match: /^mechanisms\.ts$/ }], ...ts },
 };
 

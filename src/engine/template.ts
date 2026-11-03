@@ -74,6 +74,18 @@ export interface CalcTemplate {
   difficultyByLevel?: Partial<Record<LevelId, 1 | 2 | 3>>;
   /** Private note of what inspired the item (never shown). */
   sourceNote?: string;
+  /** Set on the parts of a case study (see caseStudy.ts): the shared stem shown above this part. */
+  caseStudy?: CaseStudyRef;
+}
+
+export interface CaseStudyRef {
+  id: string;
+  title: string;
+  /** The stem; {key} placeholders are filled from the givens like a wording. */
+  intro: string;
+  /** 1-based position of this part, and how many parts the case has. */
+  part: number;
+  parts: number;
 }
 
 export interface GivenChip {
@@ -94,6 +106,8 @@ export interface CalcInstance {
   referenceValues: Record<string, Quantity>;
   /** Values the template's misconceptions would produce. */
   misconceptionValues: { message: string; q: Quantity }[];
+  /** Case-study parts: the stem with this instance's numbers. */
+  intro?: string;
 }
 
 /** Small, fast, seedable PRNG (mulberry32). */
@@ -222,6 +236,7 @@ export function instantiate(t: CalcTemplate, seed: number): Result<CalcInstance>
       expected,
       referenceValues,
       misconceptionValues,
+      ...(t.caseStudy && { intro: fillText(t.caseStudy.intro, givens) }),
     });
   }
   return fail('no-solution', `Template ${t.id}: could not generate an instance (${lastError})`);

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { reactItems, reagents } from '@/data';
 import { bookPages } from '@/data/book';
 import { MECHANISMS } from '@/data/mechanisms';
-import { ALL_TEMPLATES } from '@/data/templates';
+import { ALL_TEMPLATES, CASE_PARTS } from '@/data/templates';
 import { FORMULAS } from '@/engine/formulas';
 import { locate, markInSource, type ReviewKind } from '../scripts/review';
 
@@ -33,7 +33,7 @@ describe('review write-back', () => {
       ...reagents.filter((r) => !r.reviewed).map((r) => ['reagent', r.id] as [ReviewKind, string]),
       ...reactItems.filter((r) => !r.reviewed).map((r) => ['react', r.id] as [ReviewKind, string]),
       ...FORMULAS.filter((f) => !f.reviewed).map((f) => ['formula', f.id] as [ReviewKind, string]),
-      ...ALL_TEMPLATES.filter((t) => !t.reviewed).map((t) => ['template', t.id] as [ReviewKind, string]),
+      ...[...ALL_TEMPLATES, ...CASE_PARTS].filter((t) => !t.reviewed).map((t) => ['template', t.id] as [ReviewKind, string]),
       ...MECHANISMS.filter((m) => !m.reviewed).map((m) => ['mechanism', m.id] as [ReviewKind, string]),
     ];
     const failed = items

@@ -309,3 +309,17 @@ test('a practice page shows a worked example and opens that question in the app'
   await expect(page).toHaveURL(/\/calc\?/);
   await expect(page.getByText('Focus:')).toBeVisible();
 });
+
+test('C3L6 case studies: the stem shows above part (a), and part (b) folds it away', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('unofficho.level', 'c3l6'));
+  await page.goto('/calc?mode=case');
+  const modes = page.getByRole('navigation', { name: 'Calculation modes' });
+  await expect(modes.getByRole('button', { name: 'Case studies' })).toHaveAttribute('aria-current', 'page');
+  const first = page.getByRole('region', { name: 'Question 1' });
+  await expect(first.getByText(/Case study: .* part \(a\) of 3/)).toBeVisible();
+  await expect(first.locator('details')).toHaveAttribute('open', '');
+  await page.keyboard.press('ArrowDown');
+  const second = page.getByRole('region', { name: 'Question 2' });
+  await expect(second.getByText(/part \(b\) of 3/)).toBeVisible();
+  await expect(second.locator('details')).not.toHaveAttribute('open', '');
+});

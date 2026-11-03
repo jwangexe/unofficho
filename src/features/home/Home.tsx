@@ -60,6 +60,7 @@ export default function Home() {
     { id: 'feed', label: 'Feed' },
     { id: 'approach', label: 'Approach' },
     { id: 'multi', label: 'Multi-step' },
+    { id: 'case', label: 'Case studies' },
     { id: 'exam', label: 'Exam' },
   ] as const;
   const reagentLinks = [

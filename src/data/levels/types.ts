@@ -3,7 +3,7 @@
 export const LEVEL_IDS = ['alevel', 'c3l6', 'ukcho1', 'ukcho2', 'icho'] as const;
 export type LevelId = (typeof LEVEL_IDS)[number];
 
-export type CalcModeId = 'feed' | 'approach' | 'multi' | 'exam' | 'mechanisms';
+export type CalcModeId = 'feed' | 'approach' | 'multi' | 'case' | 'exam' | 'mechanisms';
 export type ReagentModeId = 'classify' | 'fast' | 'react';
 
 /** A level's scope: what its students are expected to know, and how the app presents it. */

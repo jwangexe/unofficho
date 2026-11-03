@@ -19,7 +19,7 @@ export const c3l6: LevelScope = {
   ],
   topics: [...(alevel.topics as string[]), 'other', 'inorganic/main-group'],
   reagents: [...(alevel.reagents as string[]), 'lialh4', 'h2o2', 'naocl', 'so2', 'fluorine', 'k2co3', 'naoet'],
-  modes: { calc: ['feed', 'multi', 'exam'], reagents: ['classify', 'fast'] },
+  modes: { calc: ['feed', 'multi', 'case', 'exam'], reagents: ['classify', 'fast'] },
   exam: { secondsPerItem: 240, strictUnits: true },
   notation: {
     constants: { R: 8.314, NA: 6.022e23 },

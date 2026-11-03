@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { calcTemplateById, CALC_TEMPLATES, PROBLEMS } from '@/data/templates';
 import { displayValue, qty } from '@/engine/quantity';
 import { instantiate, type CalcTemplate } from '@/engine/template';
-import { allItems, compareAnswer, exportMarkdown, flagOutliers, parseAnswer, parseUnit, progressBySection, sampleAnswers } from '@/features/review/reviewLogic';
+import { allItems, compareAnswer, exportMarkdown, flagOutliers, parseAnswer, parseUnit, progressBySection, sampleAnswers, SECTIONS } from '@/features/review/reviewLogic';
 
 describe('typed units', () => {
   it.each([
@@ -139,7 +139,7 @@ describe('queue and progress', () => {
     const items = allItems();
     expect(items[0]!.section).toBe('feed');
     expect(items[0]!.difficulty).toBe(1);
-    expect(new Set(items.map((i) => i.section))).toEqual(new Set(['feed', 'multi', 'mechanisms', 'reagents', 'book', 'formulas']));
+    expect(new Set(items.map((i) => i.section))).toEqual(new Set(SECTIONS));
     expect(new Set(items.map((i) => i.key)).size).toBe(items.length);
   });
 

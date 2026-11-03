@@ -64,6 +64,7 @@ export function CalcReview({ item, onDone }: { item: QueueItem; onDone: (message
         <p className="text-xs text-muted">
           {t.id} · difficulty {t.difficulty} · seed {seed}
         </p>
+        {i.intro && <p className="mt-2 rounded-xl bg-surface-2 p-3 text-sm leading-relaxed">{i.intro}</p>}
         <p className="mt-2 text-[17px] leading-relaxed">{i.text}</p>
         <ul className="mt-3 flex flex-wrap gap-2" aria-label="Givens">
           {i.givens.map((g) => (

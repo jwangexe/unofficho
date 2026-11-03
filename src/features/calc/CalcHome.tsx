@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ALL_TEMPLATES, CALC_TEMPLATES, calcTemplateById, PROBLEMS, templateFormulas } from '@/data/templates';
+import { ALL_TEMPLATES, CALC_TEMPLATES, calcTemplateById, CASE_PARTS, CASE_STUDIES, PROBLEMS, templateFormulas } from '@/data/templates';
+import { instantiateCase, type CaseStudy } from '@/engine/caseStudy';
 import { instantiate, type CalcInstance, type CalcTemplate } from '@/engine/template';
 import { itemId } from '@/storage/progress';
 import { EmptyFocus, FocusBanner, useDueIds, useFocus, type Focus } from '../focus';
@@ -20,7 +21,7 @@ import { inLevel, pickWeighted, weightedPool, type LevelPrefs, type Weighted } f
 import { LevelChip } from '../level/LevelChip';
 import { useLevelPrefs } from '../level/store';
 
-type Mode = 'feed' | 'approach' | 'multi' | 'exam' | 'mechanisms';
+type Mode = 'feed' | 'approach' | 'multi' | 'case' | 'exam' | 'mechanisms';
 
 const difficultyAt = (t: CalcTemplate, level: LevelId) => t.difficultyByLevel?.[level] ?? t.difficulty;
 
@@ -29,6 +30,8 @@ const MODES: { id: Mode; label: string; pool: (level: LevelId) => readonly CalcT
   // Planning only means something when there is more than one step.
   { id: 'approach', label: 'Approach', pool: () => ALL_TEMPLATES.filter((t) => t.reference.length >= 2) },
   { id: 'multi', label: 'Multi-step', pool: () => PROBLEMS },
+  // A stem and a few linked parts; this mode deals whole cases, not single templates.
+  { id: 'case', label: 'Case studies', pool: () => [] },
   { id: 'exam', label: 'Exam', pool: (level) => [...CALC_TEMPLATES.filter((t) => difficultyAt(t, level) >= 2), ...PROBLEMS] },
   // Steady-state and pre-equilibrium derivations; this mode deals mechanisms, not templates.
   { id: 'mechanisms', label: 'Mechanisms', pool: () => [] },
@@ -82,7 +85,7 @@ const MODE_KEY = 'unofficho.calcMode';
  * within the level; due items and specific items are the student's own, so any level.
  */
 function focusPool(mode: Mode, focus: Focus, due: Set<string> | null, prefs: LevelPrefs): Weighted<CalcTemplate>[] {
-  const base = mode === 'feed' ? ALL_TEMPLATES : MODES.find((m) => m.id === mode)!.pool(prefs.level);
+  const base = mode === 'feed' ? [...ALL_TEMPLATES, ...CASE_PARTS] : MODES.find((m) => m.id === mode)!.pool(prefs.level);
   const ownItems = !!focus.ids || focus.due;
   return (ownItems ? base.map((item) => ({ item, weight: 1 })) : weightedPool(base, prefs)).filter(
     ({ item: t }) =>
@@ -114,6 +117,50 @@ function generate(pool: readonly Weighted<CalcTemplate>[], n: number, lastTempla
     last = t.id;
   }
   return out;
+}
+
+let caseCounter = 0;
+/** Every part of one case, picked by weight, never the same case twice running. */
+function dealCase(pool: readonly Weighted<CaseStudy>[], last?: string): CalcInstance[] {
+  const c = pickWeighted(pool, Math.random, (x) => x.id === last);
+  const insts = instantiateCase(c, randomSeed()).map((i) => ({ ...i, key: `${i.key}~${caseCounter}` }));
+  caseCounter++;
+  for (const i of insts) useCalcStore.getState().ensure(i);
+  return insts;
+}
+
+function CaseFeed({ pool }: { pool: readonly Weighted<CaseStudy>[] }) {
+  const [items, setItems] = useState<CalcInstance[]>(() => {
+    const first = dealCase(pool);
+    return [...first, ...dealCase(pool, calcTemplateById.get(first[0]!.templateId)?.caseStudy?.id)];
+  });
+  const [locked, setLocked] = useState(false);
+  const feed = useRef<FeedHandle>(null);
+  const onIndexChange = useCallback(
+    (i: number) =>
+      setItems((cur) => (i >= cur.length - 3 ? [...cur, ...dealCase(pool, calcTemplateById.get(cur.at(-1)!.templateId)?.caseStudy?.id)] : cur)),
+    [pool],
+  );
+  return (
+    <Feed
+      ref={feed}
+      items={items}
+      getKey={(i) => i.key}
+      locked={locked}
+      itemLabel="Question"
+      onIndexChange={onIndexChange}
+      render={(inst, i, active) => (
+        <QuestionCard
+          inst={inst}
+          template={calcTemplateById.get(inst.templateId)!}
+          mode="case"
+          active={active}
+          onNext={() => feed.current?.scrollTo(i + 1)}
+          onSheetChange={setLocked}
+        />
+      )}
+    />
+  );
 }
 
 function ModeFeed({ mode, pool, examSeconds }: { mode: Mode; pool: readonly Weighted<CalcTemplate>[]; examSeconds: number }) {
@@ -162,19 +209,23 @@ export default function CalcHome() {
   const due = useDueIds('calc', !!focus?.due);
   // A focus on mechanisms only (e.g. a weak spot) opens Mechanisms mode without changing the saved choice.
   // A mode the level does not have (saved from another level) falls back to the level's first.
+  // A focus in Case studies (e.g. one weak part) is shown as single questions in Feed.
+  const levelMode = modes.some((m) => m.id === chosen) ? chosen : modes[0]!.id;
   const mode: Mode =
     focus?.ids?.length && focus.ids.every((id) => id.startsWith('mech:'))
       ? 'mechanisms'
-      : modes.some((m) => m.id === chosen)
-        ? chosen
-        : modes[0]!.id;
+      : focus && levelMode === 'case'
+        ? 'feed'
+        : levelMode;
   const waiting = !!focus?.due && !due;
   const mechPool = useMemo(() => (mode === 'mechanisms' && !waiting ? focusMechanisms(focus, due, prefs) : []), [mode, focus, due, waiting, prefs]);
+  const casePool = useMemo(() => (mode === 'case' ? weightedPool(CASE_STUDIES, prefs) : []), [mode, prefs]);
   const pool = useMemo(
-    () => (waiting || mode === 'mechanisms' ? null : focus ? focusPool(mode, focus, due, prefs) : levelModePool(mode, prefs)),
+    () =>
+      waiting || mode === 'mechanisms' || mode === 'case' ? null : focus ? focusPool(mode, focus, due, prefs) : levelModePool(mode, prefs),
     [focus, due, mode, waiting, prefs],
   );
-  const count = mode === 'mechanisms' ? mechPool.length : (pool?.length ?? 0);
+  const count = mode === 'mechanisms' ? mechPool.length : mode === 'case' ? casePool.length : (pool?.length ?? 0);
 
   // First visit: Rad's tour of Calculations, and separately of Mechanisms. "?" replays it.
   const tourId = mode === 'mechanisms' ? 'mechanisms' : 'calc';
@@ -191,7 +242,7 @@ export default function CalcHome() {
   useEffect(() => {
     nav.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, [mode]);
-  const ready = mode === 'mechanisms' ? !waiting : !!pool;
+  const ready = mode === 'mechanisms' ? !waiting : mode === 'case' || !!pool;
 
   return (
     <div className="flex h-full flex-col">
@@ -238,10 +289,12 @@ export default function CalcHome() {
           />
         ) : mode === 'mechanisms' ? (
           <MechanismFeed key={`mech|${mechPool.map((m) => m.id).join(',')}`} pool={mechPool} />
+        ) : mode === 'case' ? (
+          <CaseFeed key={`case|${casePool.map((x) => `${x.item.id}:${x.weight}`).join(',')}`} pool={casePool} />
         ) : (
           <ModeFeed
             key={`${mode}|${pool!.map((x) => `${x.item.id}:${x.weight}`).join(',')}`}
-            mode={mode as Exclude<Mode, 'mechanisms'>}
+            mode={mode as Exclude<Mode, 'mechanisms' | 'case'>}
             pool={pool!}
             examSeconds={scope.exam.secondsPerItem}
           />

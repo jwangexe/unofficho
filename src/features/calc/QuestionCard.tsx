@@ -15,6 +15,7 @@ import { RouteList } from './RouteList';
 import { ResultPanel } from './ResultPanel';
 import { DerivationLinks } from '../book/DerivationLink';
 import { templateFormulas } from '@/data/templates';
+import { partLetter } from '@/engine/caseStudy';
 import { useCalcStore } from './store';
 
 import { TOPIC_TAG } from './topics';
@@ -144,6 +145,20 @@ export function QuestionCard({
       </header>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 pb-4">
+        {inst.intro && t.caseStudy && (
+          // The stem: open on the first part, folded away (but a tap from re-reading) on later ones.
+          <details open={t.caseStudy.part === 1} className="group rounded-xl border border-border bg-surface p-3">
+            <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-semibold text-accent [&::-webkit-details-marker]:hidden">
+              <span className="min-w-0 flex-1">
+                Case study: {t.caseStudy.title} · part ({partLetter(t.caseStudy.part)}) of {t.caseStudy.parts}
+              </span>
+              <span aria-hidden className="text-muted transition-transform group-open:rotate-90">
+                ›
+              </span>
+            </summary>
+            <p className="mt-2 text-[15px] leading-relaxed">{inst.intro}</p>
+          </details>
+        )}
         <p className="text-[17px] leading-relaxed" data-tour="question">
           {inst.text}
         </p>

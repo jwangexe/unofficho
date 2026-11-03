@@ -7,12 +7,12 @@ import { reactItems, reagentById, reagents } from '@/data';
 import { bookPages } from '@/data/book';
 import { LEVEL_IDS, LEVELS, formulaInScope, reagentInScope, reagentLevels, topicInScope, type LevelId } from '@/data/levels';
 import { MECHANISMS } from '@/data/mechanisms';
-import { CALC_TEMPLATES, PROBLEMS } from '@/data/templates';
+import { CALC_TEMPLATES, CASE_PARTS, PROBLEMS } from '@/data/templates';
 import { FORMULAS } from '@/engine/formulas';
 import { isFormulaNode } from '@/engine/graph';
 import type { CalcTemplate } from '@/engine/template';
 
-const templates = [...CALC_TEMPLATES, ...PROBLEMS];
+const templates = [...CALC_TEMPLATES, ...PROBLEMS, ...CASE_PARTS];
 const formulaIds = new Set(FORMULAS.map((f) => f.id));
 
 
@@ -48,6 +48,10 @@ describe('every item is tagged, and in scope for each of its levels', () => {
       }
       for (const l of Object.keys(t.difficultyByLevel ?? {}) as LevelId[]) expect(levels, `${t.id}: difficultyByLevel names ${l}`).toContain(l);
     }
+  });
+
+  it('case studies only at levels that show the Case studies mode', () => {
+    for (const t of CASE_PARTS) for (const l of t.levels) expect(LEVELS[l].modes.calc, `${t.id}: ${l} has no Case studies mode`).toContain('case');
   });
 
   it('mechanisms', () => {

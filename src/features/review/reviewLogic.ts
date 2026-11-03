@@ -6,7 +6,7 @@
 import { reactItems, reagents } from '@/data';
 import { bookPages } from '@/data/book';
 import { MECHANISMS } from '@/data/mechanisms';
-import { CALC_TEMPLATES, PROBLEMS } from '@/data/templates';
+import { CALC_TEMPLATES, CASE_PARTS, PROBLEMS } from '@/data/templates';
 import { withinTolerance } from '@/engine/check';
 import { D, eqDim } from '@/engine/dims';
 import { FORMULAS } from '@/engine/formulas';
@@ -17,12 +17,13 @@ import type { ReviewKind } from '../../../scripts/review';
 
 // ---------- Queue ----------
 
-export const SECTIONS = ['feed', 'multi', 'mechanisms', 'reagents', 'book', 'formulas'] as const;
+export const SECTIONS = ['feed', 'multi', 'case', 'mechanisms', 'reagents', 'book', 'formulas'] as const;
 export type ReviewSection = (typeof SECTIONS)[number];
 
 export const SECTION_LABEL: Record<ReviewSection, string> = {
   feed: 'Feed questions',
   multi: 'Multi-step',
+  case: 'Case studies',
   mechanisms: 'Mechanisms',
   reagents: 'Reagents',
   book: 'Book pages',
@@ -57,6 +58,8 @@ export function allItems(): QueueItem[] {
   return [
     ...[...CALC_TEMPLATES].sort(byDifficulty).map((t) => item('template', t.id, 'feed', t.title, t.topic, t.reviewed, t.difficulty)),
     ...[...PROBLEMS].sort(byDifficulty).map((t) => item('template', t.id, 'multi', t.title, t.topic, t.reviewed, t.difficulty)),
+    // In case order (a, b, c), so each part is checked with the one before it fresh in mind.
+    ...CASE_PARTS.map((t) => item('template', t.id, 'case', t.title, t.topic, t.reviewed, t.difficulty)),
     ...MECHANISMS.map((m) => item('mechanism', m.id, 'mechanisms', m.title, m.topic, m.reviewed)),
     ...reagents.map((r) => item('reagent', r.id, 'reagents', r.name, r.topic, r.reviewed)),
     ...reactItems.map((x) => item('react', x.id, 'reagents', `Will it react? ${x.substrate.name}`, x.topic, x.reviewed)),
