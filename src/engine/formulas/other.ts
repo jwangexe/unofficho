@@ -70,4 +70,42 @@ export const other = [
     examples: [{ lambda: 400 }],
     reviewed: false,
   }),
+
+  defineFormula({
+    id: 'unit-cell-density',
+    name: 'Density from a cubic unit cell',
+    topic: 'other',
+    latex: '\\rho = \\dfrac{ZM}{N_\\mathrm{A}a^3}',
+    vars: [
+      { sym: 'rho', label: 'ρ', latex: '\\rho', name: 'Density', dim: D.massConcentration, unit: 'g/cm3' },
+      dimensionless('Z', 'Z', 'Z', 'Formula units per unit cell', { integer: true, solvable: false }),
+      { sym: 'M', label: 'M', latex: 'M', name: 'Molar mass (per formula unit)', dim: D.molarMass, unit: 'g/mol' },
+      { sym: 'a', label: 'a', latex: 'a', name: 'Cell edge (lattice parameter)', dim: D.length, unit: 'pm' },
+    ],
+    relation: (v) => [v.rho! * NA * v.a! ** 3, v.Z! * v.M!],
+    rearranged: {
+      rho: '\\rho = \\dfrac{ZM}{N_\\mathrm{A}a^3}',
+      M: 'M = \\dfrac{\\rho N_\\mathrm{A}a^3}{Z}',
+      a: 'a = \\sqrt[3]{\\dfrac{ZM}{\\rho N_\\mathrm{A}}}',
+    },
+    notes: 'Z: 1 simple cubic, 2 body-centred, 4 face-centred (and 4 NaCl units in rock salt).',
+    // Copper, face-centred cubic: a = 361.5 pm gives ρ ≈ 8.93 g cm⁻³.
+    examples: [{ Z: 4, M: 63.55, a: 361.5 }],
+    reviewed: false,
+  }),
+
+  defineFormula({
+    id: 'spin-only',
+    name: 'Spin-only magnetic moment',
+    topic: 'other',
+    latex: '\\mu_\\text{so} = \\sqrt{n(n+2)}\\;\\mu_\\mathrm{B}',
+    vars: [
+      dimensionless('mu', 'μ', '\\mu_\\text{so}', 'Magnetic moment, in Bohr magnetons'),
+      dimensionless('n', 'n', 'n', 'Number of unpaired electrons', { sign: 'nonneg' }),
+    ],
+    relation: (v) => [v.mu! ** 2, v.n! * (v.n! + 2)],
+    rearranged: { mu: '\\mu = \\sqrt{n(n+2)}', n: 'n = \\sqrt{1 + \\mu^2} - 1' },
+    examples: [{ n: 3 }],
+    reviewed: false,
+  }),
 ];
