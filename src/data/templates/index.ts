@@ -2,6 +2,7 @@ import { isFormulaNode } from '@/engine/graph';
 import type { CalcTemplate } from '@/engine/template';
 import { alevelAmountTemplates } from './alevel-amount';
 import { c3l6Cases } from './c3l6-cases';
+import { ukcho1Batch1Templates } from './ukcho1-batch1';
 import type { CaseStudy } from '@/engine/caseStudy';
 import { alevelEnergeticsTemplates } from './alevel-energetics';
 import { electroTemplates } from './electro';
@@ -22,6 +23,7 @@ export const CALC_TEMPLATES: readonly CalcTemplate[] = [
   ...moreTemplates,
   ...alevelEnergeticsTemplates,
   ...alevelAmountTemplates,
+  ...ukcho1Batch1Templates,
 ];
 
 /** Hand-authored olympiad-style problems (4–8 operations) for multi-step mode. */
