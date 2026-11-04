@@ -30,6 +30,10 @@
   Cache-Control: no-cache
 /practice/*
   Cache-Control: no-cache
+/guides
+  Cache-Control: no-cache
+/guides/*
+  Cache-Control: no-cache
 /sitemap.xml
   Cache-Control: no-cache
 

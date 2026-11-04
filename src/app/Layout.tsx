@@ -9,7 +9,7 @@ import { TabBar } from './TabBar';
 import { useTheme } from './theme';
 
 /** Pages that make sense before a level is chosen: no picker over them. */
-const NO_PICKER = ['/about', '/inbox', '/review', '/debug', '/settings', '/practice'];
+const NO_PICKER = ['/about', '/inbox', '/review', '/debug', '/settings', '/practice', '/guides'];
 
 export function Layout() {
   const { theme, toggle } = useTheme();

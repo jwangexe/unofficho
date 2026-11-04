@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { headTags } from '@/app/seo';
 import { bookPages } from '@/data/book';
+import { GUIDE_LIST, guidePath } from '@/features/guides/guides';
 import { renderPages } from '@/prerender';
 
 describe('pre-rendered pages', () => {
@@ -8,7 +9,8 @@ describe('pre-rendered pages', () => {
 
   it('cover the public sections and every written Book page', () => {
     const paths = pages.map((p) => p.meta.path);
-    for (const p of ['/', '/about', '/book', '/calc', '/reagents']) expect(paths).toContain(p);
+    for (const p of ['/', '/about', '/book', '/calc', '/reagents', '/practice', '/guides']) expect(paths).toContain(p);
+    for (const g of GUIDE_LIST) expect(paths).toContain(guidePath(g));
     for (const p of bookPages.filter((b) => !b.stub)) expect(paths).toContain(`/book/${p.id}`);
     expect(new Set(paths).size).toBe(paths.length);
   });

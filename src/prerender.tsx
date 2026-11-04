@@ -23,6 +23,8 @@ import { Logo } from '@/ui/Logo';
 import { Page } from '@/ui/Page';
 import PracticePages from '@/features/practice/PracticePages';
 import { PRACTICE, practiceDescription, practicePath } from '@/features/practice/practice';
+import GuidePages from '@/features/guides/GuidePages';
+import { GUIDE_LIST, guidePath, type Guide } from '@/features/guides/guides';
 
 export { headTags, SITE_URL };
 
@@ -38,6 +40,7 @@ const NAV: [string, string][] = [
   ['/reagents', 'Reagents'],
   ['/calc', 'Calculations'],
   ['/practice', 'Question types'],
+  ['/guides', 'Competitions'],
   ['/about', 'About'],
 ];
 
@@ -220,6 +223,34 @@ function practiceMeta(t: (typeof PRACTICE)[number]): PageMeta {
   };
 }
 
+const GuideRoutes = () => (
+  <Routes>
+    <Route path="/guides/*" element={<GuidePages />} />
+  </Routes>
+);
+
+function guideMeta(g: Guide): PageMeta {
+  const path = guidePath(g);
+  return {
+    path,
+    title: g.title,
+    description: g.description,
+    type: 'article',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'LearningResource',
+      name: g.title,
+      description: g.description,
+      url: `${SITE_URL}${path}`,
+      inLanguage: 'en-GB',
+      isAccessibleForFree: true,
+      learningResourceType: 'Study guide',
+      educationalLevel: LEVELS[g.level].name,
+      isPartOf: { '@type': 'WebSite', name: APP_NAME, url: `${SITE_URL}/` },
+    },
+  };
+}
+
 export function renderPages(): RenderedPage[] {
   const meta = (path: string) => STATIC_PAGES.find((p) => p.path === path)!;
   const render = (path: string, body: ReactNode) => renderToString(<Shell path={path}>{body}</Shell>);
@@ -230,6 +261,8 @@ export function renderPages(): RenderedPage[] {
     { meta: meta('/calc'), html: render('/calc', <CalcIndex />) },
     { meta: meta('/reagents'), html: render('/reagents', <ReagentIndex />) },
     { meta: meta('/practice'), html: render('/practice', <PracticeRoutes />) },
+    { meta: meta('/guides'), html: render('/guides', <GuideRoutes />) },
+    ...GUIDE_LIST.map((g) => ({ meta: guideMeta(g), html: render(guidePath(g), <GuideRoutes />) })),
     ...PRACTICE.map((t) => ({ meta: practiceMeta(t), html: render(practicePath(t), <PracticeRoutes />) })),
     ...written().map((p) => ({
       meta: bookMeta(p),

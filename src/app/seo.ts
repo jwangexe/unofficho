@@ -3,7 +3,7 @@
  * (scripts/prerender.ts) with these tags in their <head>; the screens use the same titles,
  * so the title Google sees after running the app matches the one in the HTML.
  */
-import { APP_NAME, DOMAIN } from './brand';
+import { APP_NAME, AUTHOR, DOMAIN } from './brand';
 
 export const SITE_URL = `https://${DOMAIN}`;
 
@@ -28,6 +28,7 @@ export const TITLES = {
   book: 'Book: short chemistry olympiad revision pages',
   about: 'About',
   practice: 'Chemistry calculation question types with worked examples',
+  guides: 'Chemistry olympiad guides: UKChO, C3L6, IChO and A-Level',
 } as const;
 
 /** "<title> · UnoffIChO", or the title alone if it already names the app. */
@@ -51,6 +52,7 @@ export const STATIC_PAGES: PageMeta[] = [
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
       educationalLevel: ['A-Level', 'Cambridge Chemistry Challenge', 'UK Chemistry Olympiad', 'International Chemistry Olympiad'],
       about: ['Chemistry', 'Chemistry olympiad', 'Physical chemistry', 'Organic chemistry', 'Inorganic chemistry'],
+      author: { '@type': 'Person', name: AUTHOR.name, description: AUTHOR.credentials },
     },
   },
   {
@@ -78,9 +80,15 @@ export const STATIC_PAGES: PageMeta[] = [
       'Every type of chemistry calculation in UnoffIChO, from A-Level to IChO, each with a worked example, the method and the common mistakes.',
   },
   {
+    path: '/guides',
+    title: TITLES.guides,
+    description:
+      'How to prepare for each chemistry competition, from A-Level and the Cambridge Chemistry Challenge to the UK and International Chemistry Olympiads.',
+  },
+  {
     path: '/about',
     title: TITLES.about,
-    description: `About ${APP_NAME}, an unofficial, independent chemistry olympiad study resource made by an IChO gold medallist.`,
+    description: `About ${APP_NAME}, an unofficial, independent chemistry olympiad study resource made by ${AUTHOR.name}, ${AUTHOR.credentials}.`,
   },
 ];
 
@@ -99,9 +107,12 @@ export function headTags(m: PageMeta): string {
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(m.description)}" />`,
     `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:image" content="${SITE_URL}/pwa-512.png" />`,
+    `<meta property="og:image" content="${SITE_URL}/og.png" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:image:alt" content="${APP_NAME}: interactive chemistry olympiad practice" />`,
     `<meta property="og:locale" content="en_GB" />`,
-    `<meta name="twitter:card" content="summary" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
   ];
   // "<" is escaped so the JSON can never close the script element.
   if (m.jsonLd) lines.push(`<script type="application/ld+json">${JSON.stringify(m.jsonLd).replace(/</g, '\\u003c')}</script>`);

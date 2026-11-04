@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
-import { DISCLAIMER } from '@/app/brand';
+import { AUTHOR, DISCLAIMER } from '@/app/brand';
 import { db } from '@/storage/db';
 import { endOfDay } from '@/storage/srs';
 import { Footer } from '@/ui/Footer';
@@ -12,6 +12,7 @@ import { TITLES } from '@/app/seo';
 import { LEVELS } from '@/data/levels';
 import { LevelChip } from '../level/LevelChip';
 import { useLevelPrefs } from '../level/store';
+import { GUIDE_LIST, guidePath } from '../guides/guides';
 
 /** Items due for review today, or null before IndexedDB answers. */
 function useDueCount() {
@@ -74,14 +75,16 @@ export default function Home() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
         <div className="min-w-0">
           <section aria-labelledby="home-title">
-            <h1 id="home-title" className="text-4xl">
+            <p className="text-4xl">
               <Logo />
+            </p>
+            <h1 id="home-title" className="mt-3 text-xl leading-snug font-semibold">
+              Interactive chemistry olympiad practice for IChO, UKChO, C3L6 and A-Level
             </h1>
-            <p className="mt-3 text-xl leading-snug font-semibold">Chemistry olympiad practice that feels like scrolling a feed.</p>
             <p className="mt-3 leading-relaxed text-muted">
-              Short Book pages, a reagent drill and a Calculations trainer where you build solutions from formula steps
-              instead of typing numbers into a calculator. Everything works offline, and missed questions come back
-              when you need them.
+              Free practice problems that feel like scrolling a feed: short Book pages, a reagent drill and a Calculations trainer
+              where you build solutions from formula steps instead of typing numbers into a calculator. Everything works offline,
+              and missed questions come back when you need them.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <Link to="/calc" className="inline-flex min-h-12 items-center rounded-xl bg-accent px-5 font-semibold text-accent-ink active:opacity-80">
@@ -135,6 +138,19 @@ export default function Home() {
             </ul>
           </section>
 
+          <section aria-labelledby="competitions" className="mt-8">
+            <h2 id="competitions" className="mb-3 text-xs font-semibold tracking-wide text-muted uppercase">
+              Preparing for a competition?
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {GUIDE_LIST.map((g) => (
+                <Link key={g.slug} to={guidePath(g)} className={pill}>
+                  {g.title.replace(/ (calculation )?practice$/, '')}
+                </Link>
+              ))}
+            </div>
+          </section>
+
           <section aria-labelledby="privacy" className="mt-8 rounded-2xl border border-border p-4 text-sm leading-relaxed text-muted">
             <h2 id="privacy" className="mb-1 font-semibold text-text">
               Your data stays with you
@@ -165,8 +181,8 @@ function SideBox() {
     <div className="rounded-2xl border border-accent/40 bg-surface p-4" role="note" aria-label="About the author">
       <p className="text-xs font-semibold tracking-wide text-accent uppercase">Made by a medallist</p>
       <p className="mt-2 leading-relaxed">
-        UnoffIChO was created by an <strong className="font-semibold">IChO gold medallist</strong>, built around the practice that
-        actually helps: deriving rather than memorising, short focused drills, and reviewing what you got wrong.
+        UnoffIChO was created by <strong className="font-semibold">{AUTHOR.name}</strong>, {AUTHOR.credentials}. It is built around
+        the practice that actually helps: deriving rather than memorising, short focused drills, and reviewing what you got wrong.
       </p>
       <p className="mt-3 text-xs leading-relaxed text-muted">{DISCLAIMER}</p>
     </div>

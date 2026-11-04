@@ -51,6 +51,8 @@ export default defineConfig({
       workbox: {
         // All content is bundled, so precaching the build output gives full offline support.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
+        // The link-preview image is only for crawlers and chat apps.
+        globIgnores: ['og.png'],
         navigateFallback: '/index.html',
         // The suggestions API must always reach the network.
         navigateFallbackDenylist: [/^\/api\//],

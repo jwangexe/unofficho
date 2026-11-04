@@ -18,7 +18,7 @@ const tab = (page: Page, name: string) => page.getByRole('navigation', { name: '
 
 test('tab bar reaches every section, and About shows the disclaimer', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('UnoffIChO');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Interactive chemistry olympiad practice/);
   await expect(page.getByRole('note', { name: 'About the author' })).toContainText('IChO gold medallist');
   await tab(page, 'Book').click();
   await expect(page.getByRole('heading', { name: 'Book', level: 1 })).toBeVisible();
@@ -227,6 +227,7 @@ test.describe('accessibility (axe, WCAG 2.1 AA)', () => {
     ['/progress', 'light'],
     ['/book', 'light'],
     ['/about', 'light'],
+    ['/guides/uk-chemistry-olympiad-round-1', 'light'],
   ] as const) {
     test(`${path} in ${theme} mode has no serious violations`, async ({ page }) => {
       await page.addInitScript((t) => localStorage.setItem('unofficho.theme', t), theme);
