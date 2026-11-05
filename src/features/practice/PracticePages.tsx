@@ -1,4 +1,5 @@
-import { Link, Navigate, Route, Routes, useParams } from 'react-router';
+import { Link, Route, Routes, useParams } from 'react-router';
+import NotFound from '../notfound/NotFound';
 import { templateFormulas } from '@/data/templates';
 import { describeNode } from '@/engine/approach';
 import { formulaById } from '@/engine/formulas';
@@ -42,7 +43,7 @@ export function PracticeIndex() {
       </p>
       {topics().map((topic) => (
         <section key={topic} className="mb-6" aria-labelledby={`topic-${topic}`}>
-          <h2 id={`topic-${topic}`} className="mb-1.5 text-xs font-semibold tracking-wide text-muted uppercase">
+          <h2 id={`topic-${topic}`} className="mb-1.5 text-xs font-semibold text-muted">
             {topicName(topic)}
           </h2>
           <ul className="divide-y divide-border overflow-hidden rounded-xl bg-surface">
@@ -170,7 +171,7 @@ export function PracticeView({ t }: { t: CalcTemplate }) {
 function BySlug() {
   const { slug } = useParams();
   const t = slug ? practiceBySlug.get(slug) : undefined;
-  if (!t) return <Navigate to="/practice" replace />;
+  if (!t) return <NotFound />;
   return <PracticeView key={t.id} t={t} />;
 }
 

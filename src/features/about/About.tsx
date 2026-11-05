@@ -1,4 +1,4 @@
-import { AUTHOR, DISCLAIMER, DOMAIN, NOT_AFFILIATED } from '@/app/brand';
+import { AUTHOR, DOMAIN } from '@/app/brand';
 import { Link } from 'react-router';
 import { Logo } from '@/ui/Logo';
 import { Page } from '@/ui/Page';
@@ -11,21 +11,10 @@ export default function About() {
       <h1 className="mb-4 text-3xl">
         <Logo />
       </h1>
-      <div className="mb-4 space-y-2 rounded-xl border border-warn/40 bg-surface p-4 text-sm">
-        <p>{DISCLAIMER}</p>
-        <p>{NOT_AFFILIATED}</p>
-      </div>
       <div className="space-y-3 text-sm leading-relaxed text-muted">
         <p>
-          A phone-first revision app for chemistry olympiad preparation. It has three parts: a short-page
-          Book, a reagent classification drill, and a Calculations trainer where you build solutions
-          from formula operations rather than typing numbers into a calculator.
-        </p>
-        <p>
-          All content is original and your progress is stored on your device. Nothing you do is sent anywhere,
-          except a suggestion when you choose to send one (the speech-bubble button at the top). Items
-          marked "unreviewed" have not yet been checked for accuracy, so treat them with care and flag
-          anything that looks wrong.
+          An on-the-go revision app for chemistry olympiad preparation. It allows you to: classify reagents, and train calculations by building solutions
+          from number tiles and formula operations.
         </p>
         <h2 className="pt-2 text-base font-semibold text-text">Who made it</h2>
         <p>
@@ -36,6 +25,17 @@ export default function About() {
           New here? Start with the{' '}
           <Link to="/guides" className="text-accent underline underline-offset-4">
             guide to your competition
+          </Link>
+          .
+        </p>
+        <p>
+          See{' '}
+          <Link to="/changelog" className="text-accent underline underline-offset-4">
+            what's new
+          </Link>
+          , and the{' '}
+          <Link to="/credits" className="text-accent underline underline-offset-4">
+            reviewers who check the content
           </Link>
           .
         </p>

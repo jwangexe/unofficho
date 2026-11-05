@@ -212,7 +212,7 @@ export default function Review() {
                 setTopic('all');
                 setCurrent(null);
               }}
-              className={`min-h-9 rounded-full px-3 text-sm ${section === s ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+              className={`min-h-9 rounded-md px-3 text-sm ${section === s ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
             >
               {s === 'all' ? 'All' : SECTION_LABEL[s]}
             </button>

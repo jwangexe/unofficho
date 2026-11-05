@@ -137,7 +137,7 @@ export function ArithPanel({
               aria-label={`Input ${i + 1}${s ? `, ${s.label}` : ', empty'}`}
               className={`flex min-h-12 min-w-0 flex-1 items-center rounded-xl border px-3 text-left ${active === i ? 'border-accent bg-accent/10' : 'border-border'}`}
             >
-              {s ? <ChipButton chip={s} /> : <span className="text-sm text-muted">{active === i ? 'Tap a chip below' : `Input ${i + 1}`}</span>}
+              {s ? <ChipButton chip={s} /> : <span className="text-sm text-muted">{active === i ? 'Tap a chip' : `Input ${i + 1}`}</span>}
             </button>
             {def.arity === 2 && i === 0 && <span className="w-6 text-center text-lg">{def.symbol}</span>}
           </li>
@@ -177,7 +177,7 @@ export function ArithPanel({
                   type="button"
                   aria-pressed={unit === u.id}
                   onClick={() => setUnit(u.id)}
-                  className={`min-h-11 rounded-full px-3 text-sm ${unit === u.id ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
+                  className={`min-h-11 rounded-md px-3 text-sm ${unit === u.id ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
                 >
                   {u.symbol}
                 </button>

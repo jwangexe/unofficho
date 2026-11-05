@@ -56,7 +56,7 @@ function Contents() {
             type="button"
             onClick={() => pick(c)}
             aria-current={c === chapter ? 'page' : undefined}
-            className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${c === chapter ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+            className={`min-h-9 shrink-0 rounded-md px-3 text-sm ${c === chapter ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
           >
             {BOOK_OUTLINE[c].title}
           </button>
@@ -66,7 +66,7 @@ function Contents() {
         const here = pages.filter((p) => p.chapter === chapter && p.section === s.id);
         return (
           <section key={s.id} className="mb-5" aria-labelledby={`sec-${s.id}`}>
-            <h2 id={`sec-${s.id}`} className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
+            <h2 id={`sec-${s.id}`} className="mb-1.5 text-xs font-semibold text-muted">
               {s.title}
             </h2>
             {here.length === 0 ? (

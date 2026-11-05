@@ -1,4 +1,5 @@
-import { Link, Navigate, Route, Routes, useParams } from 'react-router';
+import { Link, Route, Routes, useParams } from 'react-router';
+import NotFound from '../notfound/NotFound';
 import { TITLES } from '@/app/seo';
 import { reagents } from '@/data';
 import { bookPages } from '@/data/book';
@@ -178,7 +179,7 @@ export function GuideView({ g }: { g: Guide }) {
 function BySlug() {
   const { slug } = useParams();
   const g = slug ? guideBySlug.get(slug) : undefined;
-  if (!g) return <Navigate to="/guides" replace />;
+  if (!g) return <NotFound />;
   return <GuideView key={g.slug} g={g} />;
 }
 

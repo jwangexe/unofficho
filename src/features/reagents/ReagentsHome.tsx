@@ -113,7 +113,7 @@ export default function ReagentsHome() {
               type="button"
               onClick={() => pick(m.id)}
               aria-current={m.id === mode ? 'page' : undefined}
-              className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${m.id === mode ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+              className={`min-h-9 shrink-0 rounded-md px-3 text-sm ${m.id === mode ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
             >
               {m.label}
             </button>

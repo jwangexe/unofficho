@@ -36,8 +36,8 @@ export default defineConfig({
         short_name: 'UnoffIChO',
         description:
           'An unofficial, independent study resource for chemistry olympiad preparation.',
-        theme_color: '#0f1117',
-        background_color: '#0f1117',
+        theme_color: '#faf8f3',
+        background_color: '#faf8f3',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',

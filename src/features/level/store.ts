@@ -10,6 +10,7 @@ import { db } from '@/storage/db';
 
 export const LEVEL_KEY = 'level';
 export const EASIER_KEY = 'includeEasier';
+export const ALL_FORMULAS_KEY = 'allFormulas';
 /** What "Skip" chooses. */
 export const DEFAULT_LEVEL: LevelId = 'ukcho1';
 
@@ -38,22 +39,30 @@ interface LevelState {
   /** Null until the student has chosen (or skipped): the picker shows. */
   level: LevelId | null;
   includeEasier: boolean;
+  /** Show every formula in the operation sheet, not just those at the student's level. */
+  allFormulas: boolean;
   load: () => Promise<void>;
   setLevel: (level: LevelId) => Promise<void>;
   setIncludeEasier: (on: boolean) => Promise<void>;
+  setAllFormulas: (on: boolean) => Promise<void>;
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
   loaded: false,
   level: null,
   includeEasier: true,
+  allFormulas: false,
   load: async () => {
     try {
-      const [level, easier] = await Promise.all([db.settings.get(LEVEL_KEY), db.settings.get(EASIER_KEY)]);
+      const [level, easier, all] = await Promise.all([
+        db.settings.get(LEVEL_KEY),
+        db.settings.get(EASIER_KEY),
+        db.settings.get(ALL_FORMULAS_KEY),
+      ]);
       const chosen = isLevel(level?.value) ? level.value : readMirror();
       if (chosen && chosen !== level?.value) await db.settings.put({ key: LEVEL_KEY, value: chosen });
       if (chosen) writeMirror(chosen);
-      set({ loaded: true, level: chosen, includeEasier: easier?.value !== false });
+      set({ loaded: true, level: chosen, includeEasier: easier?.value !== false, allFormulas: all?.value === true });
     } catch {
       // No IndexedDB (some private modes): fall back to the copy, then the default, rather than block the app.
       set({ loaded: true, level: readMirror() ?? DEFAULT_LEVEL });
@@ -67,6 +76,10 @@ export const useLevelStore = create<LevelState>((set) => ({
   setIncludeEasier: async (includeEasier) => {
     set({ includeEasier });
     await db.settings.put({ key: EASIER_KEY, value: includeEasier }).catch(() => {});
+  },
+  setAllFormulas: async (allFormulas) => {
+    set({ allFormulas });
+    await db.settings.put({ key: ALL_FORMULAS_KEY, value: allFormulas }).catch(() => {});
   },
 }));
 

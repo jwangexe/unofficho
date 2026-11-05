@@ -4,7 +4,6 @@ import { challengeOptions, describeChoice, symbolTex, type Mechanism } from '@/e
 import { rng } from '@/engine/template';
 import { CardTop } from '@/features/reagents/ReagentHeader';
 import { itemId } from '@/storage/progress';
-import { CardDisclaimer } from '@/ui/Footer';
 import { Tex } from '@/ui/Tex';
 import { texToSpeech } from '@/ui/texSpeech';
 import { answer } from '../answer';
@@ -162,7 +161,6 @@ export function MechanismCard({ item, onNext }: { item: MechanismItem; onNext: (
             <MechanismExplorer mech={mech} initial={choice} />
           </section>
         )}
-        <CardDisclaimer />
       </div>
       <div className="border-t border-border bg-bg px-4 py-2">
         <button type="button" disabled={!done} onClick={onNext} className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-ink disabled:opacity-40">

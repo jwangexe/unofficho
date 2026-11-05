@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import NotFound from '../notfound/NotFound';
+import { Link, useNavigate, useParams } from 'react-router';
 import { BOOK_OUTLINE, bookPageById, bookPages, sectionTitle } from '@/data/book';
 import { FlagButton } from '@/ui/FlagButton';
 import { Page } from '@/ui/Page';
@@ -27,7 +28,7 @@ export function BookPageView() {
     document.querySelector('main')?.scrollTo(0, 0);
   }, [pageId]);
 
-  if (!page) return <Navigate to="/book" replace />;
+  if (!page) return <NotFound />;
   const { Content } = page;
   const hasRelated = page.related.reagents.length + page.related.formulas.length > 0;
 
@@ -72,17 +73,17 @@ export function BookPageView() {
 
       {hasRelated && (
         <section aria-labelledby="related-heading" className="mt-6">
-          <h2 id="related-heading" className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
+          <h2 id="related-heading" className="mb-2 text-xs font-semibold text-muted">
             Related
           </h2>
           <div className="flex flex-wrap gap-2 text-sm">
             {page.related.reagents.map((id) => (
-              <span key={id} className="rounded-full bg-surface px-2 py-1">
+              <span key={id} className="rounded-md bg-surface px-2 py-1">
                 <R id={id} />
               </span>
             ))}
             {page.related.formulas.map((id) => (
-              <span key={id} className="rounded-full bg-surface px-2 py-1">
+              <span key={id} className="rounded-md bg-surface px-2 py-1">
                 <F id={id} />
               </span>
             ))}

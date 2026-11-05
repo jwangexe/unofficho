@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes } from 'react-router';
 import { Layout } from './Layout';
 
 const Home = lazy(() => import('@/features/home/Home'));
@@ -8,6 +8,9 @@ const ReagentsHome = lazy(() => import('@/features/reagents/ReagentsHome'));
 const CalcHome = lazy(() => import('@/features/calc/CalcHome'));
 const ProgressHome = lazy(() => import('@/features/progress/ProgressHome'));
 const About = lazy(() => import('@/features/about/About'));
+const Changelog = lazy(() => import('@/features/about/Changelog'));
+const Credits = lazy(() => import('@/features/about/Credits'));
+const NotFound = lazy(() => import('@/features/notfound/NotFound'));
 const Settings = lazy(() => import('@/features/settings/Settings'));
 const PracticePages = lazy(() => import('@/features/practice/PracticePages'));
 const GuidePages = lazy(() => import('@/features/guides/GuidePages'));
@@ -28,6 +31,8 @@ export function App() {
           <Route path="calc/*" element={<CalcHome />} />
           <Route path="progress" element={<ProgressHome />} />
           <Route path="about" element={<About />} />
+          <Route path="changelog" element={<Changelog />} />
+          <Route path="credits" element={<Credits />} />
           <Route path="settings" element={<Settings />} />
           {/* Public worked examples, one per question type (search-engine landing pages). */}
           <Route path="practice/*" element={<PracticePages />} />
@@ -36,7 +41,7 @@ export function App() {
           <Route path="inbox" element={<Inbox />} />
           {Debug && <Route path="debug" element={<Debug />} />}
           <Route path="review" element={<Review />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

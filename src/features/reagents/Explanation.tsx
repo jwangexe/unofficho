@@ -20,7 +20,7 @@ function Strength({ r }: { r: Reagent }) {
 function List({ title, items, tone }: { title: string; items: string[]; tone?: 'warn' }) {
   return (
     <div>
-      <h3 className={`mb-1 text-xs font-semibold uppercase tracking-wide ${tone === 'warn' ? 'text-warn' : 'text-muted'}`}>{title}</h3>
+      <h3 className={`mb-1 text-xs font-semibold ${tone === 'warn' ? 'text-warn' : 'text-muted'}`}>{title}</h3>
       <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed">
         {items.map((x) => (
           <li key={x}>{x}</li>

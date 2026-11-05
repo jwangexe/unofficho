@@ -2,7 +2,6 @@ import { reagentById } from '@/data';
 import type { ReactItem } from '@/data/schemas';
 import { itemId } from '@/storage/progress';
 import { answer } from '../answer';
-import { CardDisclaimer } from '@/ui/Footer';
 import { Structure } from '@/ui/Structure';
 import { CardTop } from './ReagentHeader';
 import { emptyCard, useReagentStore } from './store';
@@ -69,7 +68,7 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
                     ? 'border-bad bg-bad/15'
                     : 'border-border text-muted';
               return (
-                <button key={g.name} type="button" aria-pressed={on} onClick={() => toggleGroup(g.name)} className={`min-h-11 rounded-full border px-3 text-sm ${tone}`}>
+                <button key={g.name} type="button" aria-pressed={on} onClick={() => toggleGroup(g.name)} className={`min-h-11 rounded-md border px-3 text-sm ${tone}`}>
                   {g.name}
                   {state.groupsChecked && (g.reacts ? ' · reacts' : ' · untouched')}
                 </button>
@@ -113,7 +112,6 @@ export function ReactCard({ cardKey, item, onNext }: { cardKey: string; item: Re
             {item.explanation}
           </section>
         )}
-        <CardDisclaimer />
       </div>
       <div className="border-t border-border bg-bg px-4 py-2">
         {!state.groupsChecked ? (

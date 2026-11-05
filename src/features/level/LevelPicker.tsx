@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { LEVEL_IDS, LEVEL_LIST, LEVELS, levelRank, type LevelId } from '@/data/levels';
+import { LEVEL_BLURBS } from '@/content/copy';
 import { Rad, type RadPose } from '@/ui/Rad';
 import { buildPlacement, recommend } from './placement';
 import { DEFAULT_LEVEL, useLevelStore } from './store';
@@ -34,7 +35,7 @@ export function LevelCards({ selected, onSelect }: { selected: LevelId | null; o
             >
               <span className="min-w-0 flex-1">
                 <span className="block font-semibold">{s.name}</span>
-                <span className="mt-0.5 block text-sm leading-snug text-muted">{s.who}</span>
+                <span className="mt-0.5 block text-sm leading-snug text-muted">{LEVEL_BLURBS[s.id]}</span>
                 <span className="sr-only">, {ladderText(s.id)}</span>
               </span>
               <LevelLadder level={s.id} />

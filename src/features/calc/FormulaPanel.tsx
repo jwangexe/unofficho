@@ -197,7 +197,7 @@ export function FormulaPanel({
             ))}
           </ul>
           {nus.length < group.max && (
-            <button type="button" onClick={() => setNus([...nus, 1])} className="mt-2 min-h-10 rounded-full bg-surface-2 px-3 text-sm">
+            <button type="button" onClick={() => setNus([...nus, 1])} className="mt-2 min-h-10 rounded-md bg-surface-2 px-3 text-sm">
               + Add species
             </button>
           )}
@@ -217,7 +217,7 @@ export function FormulaPanel({
                 aria-checked={unknown === v.sym}
                 aria-label={`Solve for ${v.name}`}
                 onClick={() => chooseUnknown(v.sym)}
-                className={`min-h-11 min-w-11 rounded-full px-3 ${unknown === v.sym ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
+                className={`min-h-11 min-w-11 rounded-md px-3 ${unknown === v.sym ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
               >
                 <Tex>{v.latex}</Tex>
               </button>
@@ -276,7 +276,7 @@ export function FormulaPanel({
                     {chip ? (
                       <ChipButton chip={chip} />
                     ) : (
-                      <span className="text-sm text-muted">{isActive ? 'Tap a chip below' : v.name}</span>
+                      <span className="text-sm text-muted">{isActive ? 'Tap a chip' : v.name}</span>
                     )}
                   </span>
                 </button>
@@ -284,7 +284,7 @@ export function FormulaPanel({
                   <button
                     type="button"
                     onClick={() => place(v.sym, { id: `zero:${v.sym}`, label: v.label, q: qty(0, v.unit, v.kind), sig: 1, source: 'const' })}
-                    className="mt-1 ml-1 min-h-9 rounded-full bg-surface-2 px-3 text-xs text-muted"
+                    className="mt-1 ml-1 min-h-9 rounded-md bg-surface-2 px-3 text-xs text-muted"
                   >
                     Starts at 0
                   </button>

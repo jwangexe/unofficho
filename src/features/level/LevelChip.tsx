@@ -14,7 +14,34 @@ export function EasierToggle() {
         <span className="block font-medium">Include easier levels</span>
         <span className="block text-sm text-muted">Mix in a few warm-up items from the levels below yours.</span>
       </span>
-      <input type="checkbox" role="switch" checked={on} onChange={(e) => void set(e.target.checked)} className="size-5 shrink-0 accent-accent" />
+      <input
+        type="checkbox"
+        role="switch"
+        checked={on}
+        onChange={(e) => void set(e.target.checked)}
+        className="size-5 shrink-0 accent-accent"
+      />
+    </label>
+  );
+}
+
+/** The "Show all formulas" switch: formulas beyond the level are hidden by default. */
+export function AllFormulasToggle() {
+  const on = useLevelStore((s) => s.allFormulas);
+  const set = useLevelStore((s) => s.setAllFormulas);
+  return (
+    <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl bg-surface px-4 py-3">
+      <span className="min-w-0 flex-1">
+        <span className="block font-medium">Show all formulas</span>
+        <span className="block text-sm text-muted">List every formula in Calculations, not only the ones at your level.</span>
+      </span>
+      <input
+        type="checkbox"
+        role="switch"
+        checked={on}
+        onChange={(e) => void set(e.target.checked)}
+        className="size-5 shrink-0 accent-accent"
+      />
     </label>
   );
 }
@@ -43,15 +70,11 @@ export function LevelChip({ className = '' }: { className?: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        title={`Level: ${LEVELS[level].name}`}
-        className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-border px-3 text-sm text-muted ${className}`}
+        aria-label={`Level: ${LEVELS[level].name}, change level`}
+        className={`inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-sm text-muted ${className}`}
       >
         <LevelLadder level={level} />
-        <span className="whitespace-nowrap">
-          <span className="sr-only">Level: </span>
-          {SHORT[level]}
-          <span className="sr-only">. Change level</span>
-        </span>
+        <span className="whitespace-nowrap">{SHORT[level]}</span>
         <span aria-hidden>▾</span>
       </button>
       <Sheet open={open} onClose={() => setOpen(false)} title="Your level">

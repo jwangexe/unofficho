@@ -39,7 +39,7 @@ const ELECTRON = "#FFD447";
 const CHEEK = "#FF8FB8";
 
 const PALETTE = {
-  teal: { body: "#3BB8C4", shade: "#2A939E" },
+  teal: { body: "#36ADA4", shade: "#278A83" },
   pink: { body: "#FF6FAE", shade: "#DB4F8E" },
   orange: { body: "#F7843E", shade: "#D5652B" },
 } as const;

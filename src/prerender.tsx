@@ -14,6 +14,9 @@ import { LEVELS } from '@/data/levels';
 import { CHAPTERS } from '@/data/schemas';
 import { ALL_TEMPLATES } from '@/data/templates';
 import About from '@/features/about/About';
+import Changelog from '@/features/about/Changelog';
+import Credits from '@/features/about/Credits';
+import NotFound from '@/features/notfound/NotFound';
 import { BookPageView } from '@/features/book/BookPageView';
 import { mdxComponents } from '@/features/book/mdx';
 import { TOPIC_TAG } from '@/features/calc/topics';
@@ -26,7 +29,7 @@ import { PRACTICE, practiceDescription, practicePath } from '@/features/practice
 import GuidePages from '@/features/guides/GuidePages';
 import { GUIDE_LIST, guidePath, type Guide } from '@/features/guides/guides';
 
-export { headTags, SITE_URL };
+export { APP_NAME, headTags, SITE_URL };
 
 export interface RenderedPage {
   meta: PageMeta;
@@ -251,12 +254,22 @@ function guideMeta(g: Guide): PageMeta {
   };
 }
 
+/** The page for unknown addresses: dist/404.html, which the Worker sends with status 404. */
+export function renderNotFound(): string {
+  return renderToString(<Shell path="/404">{<NotFound />}</Shell>);
+}
+
+/** Book pages still to be written: no pre-rendered content, but the address is real, so it gets the app shell rather than a 404. */
+export const stubBookPaths = () => bookPages.filter((p) => p.stub).map((p) => `/book/${p.id}`);
+
 export function renderPages(): RenderedPage[] {
   const meta = (path: string) => STATIC_PAGES.find((p) => p.path === path)!;
   const render = (path: string, body: ReactNode) => renderToString(<Shell path={path}>{body}</Shell>);
   return [
     { meta: meta('/'), html: render('/', <Home />) },
     { meta: meta('/about'), html: render('/about', <About />) },
+    { meta: meta('/changelog'), html: render('/changelog', <Changelog />) },
+    { meta: meta('/credits'), html: render('/credits', <Credits />) },
     { meta: meta('/book'), html: render('/book', <BookIndex />) },
     { meta: meta('/calc'), html: render('/calc', <CalcIndex />) },
     { meta: meta('/reagents'), html: render('/reagents', <ReagentIndex />) },

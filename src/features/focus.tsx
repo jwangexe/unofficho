@@ -69,10 +69,10 @@ export function FocusBanner({ focus, count, onClear }: { focus: Focus; count: nu
   const what = focus.label ?? (focus.due ? 'Due for review' : focus.topic ?? focus.formula ?? 'Selected items');
   return (
     <div className="mx-auto mt-2 flex w-full max-w-xl items-center gap-2 px-4">
-      <p className="min-w-0 flex-1 truncate rounded-full bg-accent/15 px-3 py-1.5 text-sm text-accent">
+      <p className="min-w-0 flex-1 truncate rounded-md bg-accent/15 px-3 py-1.5 text-sm text-accent">
         <span className="font-semibold">Focus:</span> {what} · {count} {count === 1 ? 'item' : 'items'}
       </p>
-      <button type="button" onClick={onClear} className="min-h-9 shrink-0 rounded-full bg-surface-2 px-3 text-sm text-muted">
+      <button type="button" onClick={onClear} className="min-h-9 shrink-0 rounded-md bg-surface-2 px-3 text-sm text-muted">
         Clear
       </button>
     </div>

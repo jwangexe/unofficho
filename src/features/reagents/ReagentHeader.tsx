@@ -25,7 +25,7 @@ export function CardTop({
 }) {
   return (
     <header className="flex items-center gap-2 px-4 pt-2">
-      <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-muted">{topicLabel(topic)}</span>
+      <span className="rounded-md bg-surface-2 px-2.5 py-1 text-xs text-muted">{topicLabel(topic)}</span>
       {!reviewed && (
         <span className="text-xs text-muted" title="Not yet checked for accuracy">
           unreviewed

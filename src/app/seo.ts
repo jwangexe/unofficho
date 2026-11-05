@@ -27,6 +27,8 @@ export const TITLES = {
   reagents: 'Reagent drill: what each reagent does',
   book: 'Book: short chemistry olympiad revision pages',
   about: 'About',
+  changelog: "What's new",
+  credits: 'Credits',
   practice: 'Chemistry calculation question types with worked examples',
   guides: 'Chemistry olympiad guides: UKChO, C3L6, IChO and A-Level',
 } as const;
@@ -89,6 +91,16 @@ export const STATIC_PAGES: PageMeta[] = [
     path: '/about',
     title: TITLES.about,
     description: `About ${APP_NAME}, an unofficial, independent chemistry olympiad study resource made by ${AUTHOR.name}, ${AUTHOR.credentials}.`,
+  },
+  {
+    path: '/changelog',
+    title: TITLES.changelog,
+    description: `What's new in ${APP_NAME}: new questions, Book pages and features, newest first.`,
+  },
+  {
+    path: '/credits',
+    title: TITLES.credits,
+    description: `The people who have checked ${APP_NAME}'s chemistry content for accuracy.`,
   },
 ];
 

@@ -1,7 +1,6 @@
 import { ROLE_LABELS, ROLES, type Reagent, type Role } from '@/data/schemas';
 import { itemId } from '@/storage/progress';
 import { answer as record } from '../answer';
-import { CardDisclaimer } from '@/ui/Footer';
 import { ReagentExplanation } from './Explanation';
 import { CardTop, ReagentIdentity } from './ReagentHeader';
 import { scoreClassification, scoreFast } from './scoring';
@@ -80,7 +79,6 @@ export function ClassifyCard({ cardKey, r, onNext }: { cardKey: string; r: Reage
             <ReagentExplanation r={r} />
           </>
         )}
-        <CardDisclaimer />
       </div>
       <div className="border-t border-border bg-bg px-4 pt-2 pb-2">
         {!result && (
@@ -131,7 +129,6 @@ export function FastCard({ cardKey, r, onNext }: { cardKey: string; r: Reagent; 
             <ReagentExplanation r={r} />
           </>
         )}
-        <CardDisclaimer />
       </div>
       <div className="border-t border-border bg-bg px-4 py-2">
         {verdict ? (

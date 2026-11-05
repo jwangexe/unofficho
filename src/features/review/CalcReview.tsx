@@ -11,7 +11,7 @@ import { compareAnswer, parseAnswer, sampleAnswers, spreadDecades, type Comparis
 const randomSeed = () => Math.floor(Math.random() * 2 ** 31);
 
 const box = 'rounded-2xl bg-surface p-4';
-const h = 'mb-2 text-xs font-semibold tracking-wide text-muted uppercase';
+const h = 'mb-2 text-xs font-semibold text-muted';
 
 /**
  * Solve blind: question and givens only, enter your answer, then reveal the reference, the
@@ -68,7 +68,7 @@ export function CalcReview({ item, onDone }: { item: QueueItem; onDone: (message
         <p className="mt-2 text-[17px] leading-relaxed">{i.text}</p>
         <ul className="mt-3 flex flex-wrap gap-2" aria-label="Givens">
           {i.givens.map((g) => (
-            <li key={g.key} className="rounded-full bg-surface-2 px-3 py-1 text-sm">
+            <li key={g.key} className="rounded-md bg-surface-2 px-3 py-1 text-sm">
               <span className="font-semibold">{g.label}</span> = {formatQuantity(g.q, g.sig)}
             </li>
           ))}

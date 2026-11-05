@@ -1,190 +1,118 @@
-import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
-import { AUTHOR, DISCLAIMER } from '@/app/brand';
-import { db } from '@/storage/db';
-import { endOfDay } from '@/storage/srs';
+import { AUTHOR } from '@/app/brand';
 import { Footer } from '@/ui/Footer';
-import { BookIcon, CalcIcon, ChartIcon, FlaskIcon, MechanismIcon } from '@/ui/icons';
-import { Logo } from '@/ui/Logo';
+import { Rad } from '@/ui/Rad';
 import { useSuggest } from '../feedback/Suggest';
 import { useDocumentTitle } from '@/ui/useDocumentTitle';
 import { TITLES } from '@/app/seo';
 import { LEVELS } from '@/data/levels';
-import { LevelChip } from '../level/LevelChip';
 import { useLevelPrefs } from '../level/store';
 import { GUIDE_LIST, guidePath } from '../guides/guides';
 
-/** Items due for review today, or null before IndexedDB answers. */
-function useDueCount() {
-  const [n, setN] = useState<number | null>(null);
-  useEffect(() => {
-    void db.srs
-      .where('due')
-      .below(endOfDay(Date.now()))
-      .count()
-      .then(setN, () => setN(0));
-  }, []);
-  return n;
-}
-
-const pill = 'inline-flex min-h-10 items-center rounded-full bg-surface-2 px-3 text-sm font-medium active:opacity-70';
-
-function Feature({ icon, title, to, children, links }: { icon: ReactNode; title: string; to: string; children: ReactNode; links?: { label: string; to: string }[] }) {
-  return (
-    <li className="flex flex-col rounded-2xl bg-surface p-4">
-      <Link to={to} className="group flex items-start gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent/15 text-accent">{icon}</span>
-        <span className="min-w-0">
-          <span className="block font-semibold group-hover:underline group-hover:underline-offset-4">{title}</span>
-          <span className="mt-0.5 block text-sm leading-relaxed text-muted">{children}</span>
-        </span>
-      </Link>
-      {links && (
-        <div className="mt-3 flex flex-wrap gap-2 pl-13">
-          {links.map((l) => (
-            <Link key={l.label} to={l.to} className={pill}>
-              {l.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </li>
-  );
-}
+const pill = 'inline-flex min-h-10 items-center rounded-md bg-surface-2 px-3 text-sm font-medium active:opacity-70';
+const link = 'font-semibold text-accent underline-offset-4 hover:underline';
 
 export default function Home() {
   useDocumentTitle(TITLES.home);
-  const due = useDueCount();
   // Only the modes the student's level has.
   const { modes } = LEVELS[useLevelPrefs().level];
-  const calcLinks = [
-    { id: 'feed', label: 'Feed' },
-    { id: 'approach', label: 'Approach' },
-    { id: 'multi', label: 'Multi-step' },
-    { id: 'case', label: 'Case studies' },
-    { id: 'exam', label: 'Exam' },
-  ] as const;
-  const reagentLinks = [
-    { id: 'classify', label: 'Classify' },
-    { id: 'fast', label: 'Fast' },
-    { id: 'react', label: 'Will it react?' },
-  ] as const;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pt-6">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+    <div className="mx-auto w-full max-w-3xl px-4 pt-6">
+      <section
+        aria-labelledby="home-title"
+        className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:gap-6 sm:text-left"
+      >
+        <Rad pose="idle" size={176} className="shrink-0" />
         <div className="min-w-0">
-          <section aria-labelledby="home-title">
-            <p className="text-4xl">
-              <Logo />
-            </p>
-            <h1 id="home-title" className="mt-3 text-xl leading-snug font-semibold">
-              Interactive chemistry olympiad practice for IChO, UKChO, C3L6 and A-Level
-            </h1>
-            <p className="mt-3 leading-relaxed text-muted">
-              Free practice problems that feel like scrolling a feed: short Book pages, a reagent drill and a Calculations trainer
-              where you build solutions from formula steps instead of typing numbers into a calculator. Everything works offline,
-              and missed questions come back when you need them.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              <Link to="/calc" className="inline-flex min-h-12 items-center rounded-xl bg-accent px-5 font-semibold text-accent-ink active:opacity-80">
-                Start practising
-              </Link>
-              {due ? (
-                <Link to="/progress" className="inline-flex min-h-12 items-center rounded-xl border border-accent px-5 font-semibold text-accent">
-                  Review {due} due today
-                </Link>
-              ) : (
-                <Link to="/book" className="inline-flex min-h-12 items-center rounded-xl bg-surface-2 px-5 font-semibold">
-                  Read the Book
-                </Link>
-              )}
-              <LevelChip />
-            </div>
-          </section>
-
-          {/* On a phone the side box sits here, between the introduction and the features. */}
-          <div className="mt-6 lg:hidden">
-            <SideBox />
-          </div>
-
-          <section aria-labelledby="features" className="mt-8">
-            <h2 id="features" className="mb-3 text-xs font-semibold tracking-wide text-muted uppercase">
-              What's inside
-            </h2>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              <Feature icon={<CalcIcon />} title="Calculations" to="/calc" links={calcLinks
-                .filter((m) => modes.calc.includes(m.id))
-                .map((m): { label: string; to: string } => ({ label: m.label, to: `/calc?mode=${m.id}` }))
-                .concat({ label: 'Worked examples', to: '/practice' })}>
-                Build each answer from formulas and operations, with unit checks and feedback on where a route went wrong.
-              </Feature>
-              {modes.calc.includes('mechanisms') && (
-                <Feature icon={<MechanismIcon />} title="Mechanisms" to="/calc?mode=mechanisms" links={[{ label: 'Derive a rate law', to: '/calc?mode=mechanisms' }]}>
-                  Put intermediates in steady state or pre-equilibrium and derive the rate law yourself, step by step.
-                </Feature>
-              )}
-              <Feature icon={<FlaskIcon />} title="Reagents" to="/reagents" links={reagentLinks
-                .filter((m) => modes.reagents.includes(m.id))
-                .map((m) => ({ label: m.label, to: `/reagents?mode=${m.id}` }))}>
-                Sort reagents by role, then decide which groups react and which product forms.
-              </Feature>
-              <Feature icon={<BookIcon />} title="Book" to="/book" links={[{ label: 'Contents', to: '/book' }]}>
-                Two-minute pages across the syllabus, each ending in quick checks that feed your reviews.
-              </Feature>
-              <Feature icon={<ChartIcon />} title="Progress" to="/progress" links={[{ label: 'Weak spots', to: '/progress' }]}>
-                Streaks, accuracy by topic, and your weakest areas, each one tap from a targeted feed.
-              </Feature>
-            </ul>
-          </section>
-
-          <section aria-labelledby="competitions" className="mt-8">
-            <h2 id="competitions" className="mb-3 text-xs font-semibold tracking-wide text-muted uppercase">
-              Preparing for a competition?
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {GUIDE_LIST.map((g) => (
-                <Link key={g.slug} to={guidePath(g)} className={pill}>
-                  {g.title.replace(/ (calculation )?practice$/, '')}
-                </Link>
-              ))}
-            </div>
-          </section>
-
-          <section aria-labelledby="privacy" className="mt-8 rounded-2xl border border-border p-4 text-sm leading-relaxed text-muted">
-            <h2 id="privacy" className="mb-1 font-semibold text-text">
-              Your data stays with you
-            </h2>
-            Progress is stored on this device only; nothing is sent anywhere. Export it from Progress to move devices. Items marked
-            "unreviewed" have not yet been checked for accuracy, so flag anything that looks wrong, or{' '}
-            <button type="button" onClick={() => useSuggest.getState().setOpen(true)} className="text-accent underline underline-offset-4">
-              send a suggestion
-            </button>
-            .{' '}
-            <Link to="/about" className="text-accent underline underline-offset-4">
-              About UnoffIChO
-            </Link>
-          </section>
+          <h1 id="home-title" className="text-xl leading-snug font-semibold">
+            {AUTHOR.intro}
+          </h1>
+          <p className="mt-1.5 text-xs text-muted">
+            <Link to="/about" className="font-medium text-text underline underline-offset-4">
+              {AUTHOR.name}
+            </Link>{' '}
+            · {AUTHOR.byline}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">Interactive practice for A-Level, C3L6, UKChO and IChO.</p>
+          <Link
+            to="/calc"
+            className="mt-5 inline-flex min-h-12 items-center rounded-xl bg-accent px-6 font-semibold text-accent-ink active:opacity-80"
+          >
+            Start practising
+          </Link>
         </div>
+      </section>
 
-        <aside className="hidden lg:sticky lg:top-6 lg:block">
-          <SideBox />
-        </aside>
-      </div>
+      <section aria-label="Sections" className="mt-8">
+        <ul className="space-y-2 leading-relaxed">
+          <li>
+            <Link to="/calc" className={link}>
+              Calculations
+            </Link>
+            : build answers from formulas.
+          </li>
+          {modes.calc.includes('mechanisms') && (
+            <li>
+              <Link to="/calc?mode=mechanisms" className={link}>
+                Mechanisms
+              </Link>
+              : derive rate laws step by step.
+            </li>
+          )}
+          <li>
+            <Link to="/reagents" className={link}>
+              Reagents
+            </Link>
+            : what each reagent does.
+          </li>
+          <li>
+            <Link to="/book" className={link}>
+              Book
+            </Link>
+            : quick revision pages.
+          </li>
+          <li>
+            <Link to="/practice" className={link}>
+              Worked examples
+            </Link>
+            : for every question type.
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="competitions" className="mt-8">
+        <h2 id="competitions" className="mb-3 text-lg font-semibold">
+          Guides by competition
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {GUIDE_LIST.map((g) => (
+            <Link key={g.slug} to={guidePath(g)} className={pill}>
+              {g.title.replace(/ (calculation )?practice$/, '')}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="mistakes" className="mt-8 rounded-2xl border border-border p-4 text-sm leading-relaxed text-muted">
+        <h2 id="mistakes" className="mb-1 text-lg font-semibold text-text">
+          Spotted a mistake?
+        </h2>
+        <p>
+          Questions marked 'unreviewed' haven't been checked yet. Tap the flag on any question, or{' '}
+          <button type="button" onClick={() => useSuggest.getState().setOpen(true)} className="text-accent underline underline-offset-4">
+            send me a suggestion
+          </button>
+          .
+        </p>
+        <p className="mt-2">
+          Your progress stays on this device. No accounts, no tracking.{' '}
+          <Link to="/about" className="text-accent underline underline-offset-4">
+            About UnoffIChO
+          </Link>
+        </p>
+      </section>
       <Footer />
-    </div>
-  );
-}
-
-function SideBox() {
-  return (
-    <div className="rounded-2xl border border-accent/40 bg-surface p-4" role="note" aria-label="About the author">
-      <p className="text-xs font-semibold tracking-wide text-accent uppercase">Made by a medallist</p>
-      <p className="mt-2 leading-relaxed">
-        UnoffIChO was created by <strong className="font-semibold">{AUTHOR.name}</strong>, {AUTHOR.credentials}. It is built around
-        the practice that actually helps: deriving rather than memorising, short focused drills, and reviewing what you got wrong.
-      </p>
-      <p className="mt-3 text-xs leading-relaxed text-muted">{DISCLAIMER}</p>
     </div>
   );
 }

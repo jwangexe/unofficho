@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 const DISCLAIMER =
-  'An unofficial, independent study resource. Not affiliated with or endorsed by the International Chemistry Olympiad or its organisers.';
+  'Unofficial and independent. Not affiliated with the International Chemistry Olympiad, the Royal Society of Chemistry, the University of Cambridge or any exam board.';
 
 // Rad's first-visit tours and the level picker would cover the screen; tests that want them clear these flags.
 // IChO is the level with every mode and all content.
@@ -18,8 +18,8 @@ const tab = (page: Page, name: string) => page.getByRole('navigation', { name: '
 
 test('tab bar reaches every section, and About shows the disclaimer', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Interactive chemistry olympiad practice/);
-  await expect(page.getByRole('note', { name: 'About the author' })).toContainText('IChO gold medallist');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^I built UnoffIChO/);
+  await expect(page.getByRole('img', { name: /Rad/ })).toBeVisible();
   await tab(page, 'Book').click();
   await expect(page.getByRole('heading', { name: 'Book', level: 1 })).toBeVisible();
   await expect(page).toHaveTitle('Book: short chemistry olympiad revision pages · UnoffIChO');
@@ -31,38 +31,65 @@ test('tab bar reaches every section, and About shows the disclaimer', async ({ p
   await expect(page.getByText(DISCLAIMER).first()).toBeVisible();
 });
 
-test('homepage buttons open the right feature and mode', async ({ page }) => {
+test('homepage button and sections open the right feature and mode', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Derive a rate law' }).click();
+  await page.getByRole('link', { name: 'Start practising' }).click();
   await expect(page).toHaveURL(/\/calc$/);
-  await expect(page.getByRole('navigation', { name: 'Calculation modes' }).getByRole('button', { name: 'Mechanisms' })).toHaveAttribute('aria-current', 'page');
-  await page.getByRole('link', { name: 'UnoffIChO' }).click();
-  await page.getByRole('link', { name: 'Will it react?' }).click();
-  await expect(page.getByRole('navigation', { name: 'Reagent modes' }).getByRole('button', { name: 'Will it react?' })).toHaveAttribute('aria-current', 'page');
+  await page.getByRole('link', { name: 'UnoffIChO', exact: true }).click();
+  await page.getByRole('region', { name: 'Sections' }).getByRole('link', { name: 'Mechanisms' }).click();
+  await expect(page).toHaveURL(/\/calc$/);
+  await expect(page.getByRole('navigation', { name: 'Calculation modes' }).getByRole('button', { name: 'Mechanisms' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
 });
 
-test('Rad’s Calculations tour shows once, spotlights the card, and can be replayed', async ({ page }) => {
+test('What’s new and Credits are reachable from the header and About', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: "What's new" }).click();
+  await expect(page.getByRole('heading', { name: "What's new" })).toBeVisible();
+  await page.getByRole('link', { name: 'About' }).click();
+  await page.getByRole('link', { name: 'reviewers who check the content' }).click();
+  await expect(page.getByText('Reviewers will be listed here.')).toBeVisible();
+});
+
+test('Rad’s three Calculations hints follow the first question, hide for good, and replay from Settings', async ({ page }) => {
   await page.addInitScript(() => {
-    if (!sessionStorage.getItem('tour-test')) {
-      sessionStorage.setItem('tour-test', '1');
+    if (!sessionStorage.getItem('hint-test')) {
+      sessionStorage.setItem('hint-test', '1');
       localStorage.removeItem('unofficho.tutorial.calc');
     }
   });
   await page.goto('/calc');
-  const tour = page.getByRole('dialog', { name: 'Calculations tutorial' });
-  await expect(tour).toBeVisible();
-  await expect(tour.getByRole('img', { name: /Rad/ })).toBeVisible();
-  await expect(tour.getByRole('heading', { name: 'Hi, I’m Rad' })).toBeVisible();
-  await tour.getByRole('button', { name: 'Next' }).click();
-  await expect(tour.getByRole('heading', { name: 'Read the question' })).toBeVisible();
-  await tour.getByRole('button', { name: 'Skip' }).click();
-  await expect(tour).toBeHidden();
+  const card = page.getByRole('region', { name: 'Question 1' });
+  const tip = card.getByRole('complementary', { name: 'Tip from Rad' });
+  await expect(tip).toContainText('1 of 3');
+  await expect(card).toContainText('Tap a chip to select it, or start an operation.');
+  await card.getByRole('button', { name: /=/ }).first().click();
+  await expect(tip).toContainText('2 of 3');
+  await tip.getByRole('button', { name: 'Hide tips' }).click();
+  await expect(tip).toBeHidden();
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Question 1' })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Tip from Rad' })).toHaveCount(0);
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await page.getByRole('button', { name: 'How Calculations works' }).click();
-  await expect(page.getByRole('dialog', { name: 'Calculations tutorial' })).toBeVisible();
+
+  await page.getByRole('link', { name: 'Settings' }).click();
+  await page.getByRole('button', { name: /Replay tutorial/ }).click();
+  await expect(page).toHaveURL(/\/calc$/);
+  await expect(page.getByRole('region', { name: 'Question 1' }).getByRole('complementary', { name: 'Tip from Rad' })).toContainText(
+    '1 of 3',
+  );
+});
+
+test('an unknown address shows the not-found page with a way home', async ({ page }) => {
+  await page.goto('/no/such/page');
+  await expect(page.getByRole('heading', { name: 'Page not found', level: 1 })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Rad/ })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByRole('link', { name: 'Go to the homepage' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^I built UnoffIChO/);
 });
 
 test('a calculation card shows labelled chips and the keyboard moves the feed', async ({ page }) => {
@@ -183,7 +210,11 @@ test('typing a flag note keeps focus in the text box', async ({ page }) => {
 
 test('review mode is password-protected on the live build, then shows the review queue', async ({ page }) => {
   await page.route('**/api/admin/check', (route) =>
-    route.fulfill(route.request().headers().authorization === 'Bearer right' ? { status: 204 } : { status: 401, contentType: 'application/json', body: '{"error":"Wrong password."}' }),
+    route.fulfill(
+      route.request().headers().authorization === 'Bearer right'
+        ? { status: 204 }
+        : { status: 401, contentType: 'application/json', body: '{"error":"Wrong password."}' },
+    ),
   );
   await page.goto('/review');
   const password = page.getByLabel(/Password/);
@@ -222,6 +253,8 @@ test.describe('accessibility (axe, WCAG 2.1 AA)', () => {
     ['/', 'dark'],
     ['/', 'light'],
     ['/calc', 'dark'],
+    ['/calc', 'light'],
+    ['/no/such/page', 'light'],
     ['/reagents', 'dark'],
     ['/book/combining-potentials', 'dark'],
     ['/progress', 'light'],
@@ -235,7 +268,15 @@ test.describe('accessibility (axe, WCAG 2.1 AA)', () => {
       await page.waitForLoadState('networkidle');
       const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const serious = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-      expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`)).toEqual([]);
+      expect(
+        serious.map(
+          (v) =>
+            `${v.id}: ${v.nodes
+              .map((n) => n.target.join(' '))
+              .slice(0, 3)
+              .join(' | ')}`,
+        ),
+      ).toEqual([]);
     });
   }
 });

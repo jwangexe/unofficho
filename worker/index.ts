@@ -1,11 +1,15 @@
 /**
- * The Cloudflare Worker behind unofficho.org. Static files (the app) are served by the
- * assets layer; only /api/* reaches this code (see run_worker_first in wrangler.jsonc).
+ * The Cloudflare Worker behind unofficho.org. Hashed build files under /assets/ go straight to the
+ * assets layer; every other request reaches this code (see run_worker_first in wrangler.jsonc).
  *
  *   POST /api/suggestions   anyone: store a suggestion in D1
  *   GET  /api/suggestions   owner only (Authorization: Bearer <ADMIN_TOKEN>): list them
  *   GET  /api/admin/check   owner only: 204 if the password is right (used by /review)
+ *
+ * Anything else is a file from dist/ if there is one (pre-rendered pages included); else the app
+ * shell for a client-only route; else dist/404.html with status 404.
  */
+import { page } from './pages';
 import { parseSuggestion } from './suggestions';
 
 export interface Env {
@@ -68,7 +72,9 @@ async function suggestions(request: Request, env: Env): Promise<Response> {
   if (request.method === 'GET') {
     const denied = requireOwner(request, env);
     if (denied) return denied;
-    const { results } = await env.DB.prepare('SELECT id, created_at, kind, message, name, page FROM suggestions ORDER BY id DESC LIMIT 500').all();
+    const { results } = await env.DB.prepare(
+      'SELECT id, created_at, kind, message, name, page FROM suggestions ORDER BY id DESC LIMIT 500',
+    ).all();
     return json({ suggestions: results });
   }
 
@@ -93,6 +99,6 @@ export default {
       console.error(e);
       return json({ error: 'Something went wrong on the server.' }, 500);
     }
-    return env.ASSETS.fetch(request);
+    return page(request, env.ASSETS);
   },
 } satisfies ExportedHandler<Env>;

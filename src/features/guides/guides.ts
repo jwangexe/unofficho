@@ -22,55 +22,53 @@ export const GUIDES: Record<LevelId, Guide> = {
   alevel: {
     level: 'alevel',
     slug: 'a-level-chemistry',
-    title: 'A-Level Chemistry calculation practice',
+    title: 'A-Level Chemistry calculations',
     description:
-      'Free, interactive A-Level Chemistry practice (AQA): moles, energetics, Kc and Kp, rates, pH and cells, with worked examples and fresh numbers each time.',
+      'A-Level Chemistry practice: moles, energetics, Kc and Kp, rates, pH and electrochemical cells.',
     about: [
-      'A-Level Chemistry is the two-year sixth-form course taken in Years 12 and 13 in England, Wales and Northern Ireland. The A-Level questions in UnoffIChO follow the AQA specification and stay inside it.',
-      'It is also where every chemistry olympiad starts: the Cambridge Chemistry Challenge and the UK Chemistry Olympiad build on A-Level and then go further.',
+      'A-Level Chemistry is the two-year course taken in Years 12 and 13 in England, Wales and Northern Ireland. The A-Level questions roughly follow major exam boards.'
     ],
     tips: [
-      'Use Feed for short questions on mixed topics, and Exam when you want a timed run.',
-      'Kc and Kp carry units at A-Level; the questions ask for them.',
+      'Kc and Kp have units at A-Level, but the K introduced later on is dimensionless.',
       'Read the Book page on a topic first if a question type is new to you, then try its worked example.',
     ],
   },
   c3l6: {
     level: 'c3l6',
     slug: 'cambridge-chemistry-challenge-c3l6',
-    title: 'Cambridge Chemistry Challenge (C3L6) practice',
+    title: 'Cambridge Chemistry Challenge (C3L6)',
     description:
-      'Free practice for the Cambridge Chemistry Challenge Lower Sixth (C3L6): multi-part calculations built around one context, from A-Level and beyond.',
+      'Practice for the Cambridge Chemistry Challenge Lower Sixth (C3L6): multi-part calculations, from beyond AS-Level.',
     about: [
-      'The Cambridge Chemistry Challenge Lower Sixth (C3L6) is a written paper for Year 12 students, sat at school in the summer term. It starts from A-Level chemistry and goes well beyond the syllabus, explaining anything unfamiliar in the question itself.',
-      'Questions are long and often built around one context, such as a mineral, a drug or an industrial process, with later parts using earlier answers.',
+      'C3L6 is for Year 12 students and is sat at school in the summer. It starts from AS-Level chemistry and explains unfamiliar ideas in the question itself.',
+      'Questions are long and often built around one context, with later parts dependent on earlier ones.',
     ],
     tips: [
-      'Case studies practise the longer C3L6 questions: several linked parts that share one story and one set of data.',
-      'Multi-step questions train you to carry an answer from one step into the next.',
-      'When a question explains a new idea, read it twice before reaching for a formula.',
+      'Case studies practise longer C3L6 questions: several linked parts that share one story.',
+      'Multi-step questions train your accuracy and ability to carry an answer through.',
+      'When a question explains a new idea, read it twice and try to derive its formula.',
     ],
   },
   ukcho1: {
     level: 'ukcho1',
     slug: 'uk-chemistry-olympiad-round-1',
-    title: 'UK Chemistry Olympiad Round 1 practice',
+    title: 'UK Chemistry Olympiad Round 1',
     description:
-      'Free, interactive practice for UK Chemistry Olympiad (UKChO) Round 1: thermodynamics, kinetics, electrochemistry and organic reagents beyond A-Level.',
+      'Practice for the UK Chemistry Olympiad (UKChO) Round 1: thermodynamics, kinetics, electrochemistry and organic reagents at high A-Level standard.',
     about: [
-      'Round 1 of the UK Chemistry Olympiad (UKChO), run by the Royal Society of Chemistry, is a written paper for post-16 students, sat at school in late January.',
-      'It expects A-Level chemistry and goes beyond it: entropy and Gibbs energy, rate laws and half-lives, the Nernst equation, and organic chemistry with reagents you may not have met in class. The best scorers are invited to Round 2.',
+      'UKChO, run by the Royal Society of Chemistry, is a written paper for Year 13 students, sat at school in late January.',
+      'It expects A-Level chemistry and goes beyond it: entropy and Gibbs energy, rate laws and half-lives, the Nernst equation, and organic chemistry with reagents you probably have not have met. The 30 best scorers are invited to Round 2.',
     ],
     tips: [
       'Approach mode asks you to plan a route before any numbers, which is most of the work in a Round 1 calculation.',
-      'Drill reagents with Classify and Will it react? so the organic questions are about thinking, not recall.',
+      'Drill reagents with Classify so the organic questions are about thinking, not recall.',
       'Exam mode times each question; Round 1 rewards working quickly and accurately.',
     ],
   },
   ukcho2: {
     level: 'ukcho2',
     slug: 'uk-chemistry-olympiad-round-2',
-    title: 'UK Chemistry Olympiad Round 2 practice',
+    title: 'UK Chemistry Olympiad Round 2',
     description:
       'Practice for UK Chemistry Olympiad (UKChO) Round 2: derivations, mechanisms and rate laws, crystal structures and harder physical chemistry.',
     about: [
@@ -86,17 +84,17 @@ export const GUIDES: Record<LevelId, Guide> = {
   icho: {
     level: 'icho',
     slug: 'international-chemistry-olympiad',
-    title: 'International Chemistry Olympiad (IChO) practice',
+    title: 'International Chemistry Olympiad (IChO)',
     description:
-      'Free, interactive International Chemistry Olympiad (IChO) practice: calculations, rate-law derivations, reagents and short revision pages.',
+      'Practice for the International Chemistry Olympiad (IChO): calculations, rate-law derivations, reagents and short revision pages.',
     about: [
-      'The International Chemistry Olympiad (IChO) is held every July. Each country sends a team of up to four school students, who sit two exams of about five hours each, one theoretical and one practical.',
-      'Each year’s host publishes preparatory problems in advance, which set out the advanced topics that may come up beyond the common syllabus.',
+      'The International Chemistry Olympiad (IChO) is held every summer. Each country sends a team of up to four school students, who sit two five-hour exams, one theoretical and one practical.',
+      'The host nation must publish preparatory problems in advance, which set out the advanced topics that may come up beyond the common syllabus.',
     ],
     tips: [
-      'Plan routes in Approach mode, then derive rate laws in Mechanisms; every formula in the library is in scope.',
-      'Keep missed questions coming back by reviewing what Progress marks as due each day.',
-      'Unitless K matters here: the Book page on Kc, Kp and activities shows why.',
+      'Plan your attack in Approach mode, and derive rate laws in Mechanisms; any of the library formulas could come up.',
+      'Reviewing what Progress marks as due each day.',
+      'At university level, K is unitless: see the Book page on Kc, Kp and activities for why. Functionally, just use bar for Kp and M for Kc.',
     ],
   },
 };

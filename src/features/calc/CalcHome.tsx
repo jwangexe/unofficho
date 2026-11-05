@@ -15,11 +15,12 @@ import { useDocumentTitle } from '@/ui/useDocumentTitle';
 import { TITLES } from '@/app/seo';
 import { useSavedMode } from '../useSavedMode';
 import { markTutorialSeen, Tutorial, tutorialSeen } from '@/ui/Tutorial';
-import { CALC_TOUR, MECHANISMS_TOUR } from './tours';
+import { MECHANISMS_TOUR } from './tours';
+import { useOnboarding } from './onboarding';
 import { LEVELS, type LevelId } from '@/data/levels';
 import { inLevel, pickWeighted, weightedPool, type LevelPrefs, type Weighted } from '@/data/levels/pool';
 import { LevelChip } from '../level/LevelChip';
-import { useLevelPrefs } from '../level/store';
+import { useLevelPrefs, useLevelStore } from '../level/store';
 
 type Mode = 'feed' | 'approach' | 'multi' | 'case' | 'exam' | 'mechanisms';
 
@@ -227,15 +228,18 @@ export default function CalcHome() {
   );
   const count = mode === 'mechanisms' ? mechPool.length : mode === 'case' ? casePool.length : (pool?.length ?? 0);
 
-  // First visit: Rad's tour of Calculations, and separately of Mechanisms. "?" replays it.
-  const tourId = mode === 'mechanisms' ? 'mechanisms' : 'calc';
-  const [tour, setTour] = useState<'calc' | 'mechanisms' | null>(null);
+  // Calculations teaches with three hints on the card itself; Mechanisms with Rad's tour on first visit. "?" replays either.
+  // Neither shows while the level picker is up.
+  const levelChosen = useLevelStore((s) => s.level !== null);
+  const loadOnboarding = useOnboarding((s) => s.load);
+  useEffect(() => void loadOnboarding(), [loadOnboarding]);
+  const [tour, setTour] = useState(false);
   useEffect(() => {
-    if (tutorialSeen(tourId)) return;
+    if (mode !== 'mechanisms' || !levelChosen || tutorialSeen('mechanisms')) return;
     // Let the first card render, so the tour can point at it.
-    const t = setTimeout(() => setTour(tourId), 450);
+    const t = setTimeout(() => setTour(true), 450);
     return () => clearTimeout(t);
-  }, [tourId]);
+  }, [mode, levelChosen]);
 
   // Five modes overflow a phone's width: keep the active one in view.
   const nav = useRef<HTMLElement>(null);
@@ -247,14 +251,14 @@ export default function CalcHome() {
   return (
     <div className="flex h-full flex-col">
       <div className="mx-auto flex w-full max-w-xl items-center gap-1 px-4 pt-2" data-tour="modes">
-      <nav ref={nav} aria-label="Calculation modes" className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
+      <nav ref={nav} aria-label="Calculation modes" className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none]">
         {modes.map((m) => (
           <button
             key={m.id}
             type="button"
             onClick={() => pick(m.id)}
             aria-current={m.id === mode ? 'page' : undefined}
-            className={`min-h-9 shrink-0 rounded-full px-3 text-sm ${m.id === mode ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+            className={`min-h-9 shrink-0 rounded-md px-3 text-sm ${m.id === mode ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
           >
             {m.label}
           </button>
@@ -263,20 +267,20 @@ export default function CalcHome() {
         <LevelChip />
         <button
           type="button"
-          onClick={() => setTour(tourId)}
+          onClick={() => (mode === 'mechanisms' ? setTour(true) : useOnboarding.getState().replayHints())}
           aria-label={mode === 'mechanisms' ? 'How Mechanisms works' : 'How Calculations works'}
-          className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-sm font-semibold text-muted"
+          className="grid size-9 shrink-0 place-items-center rounded-md bg-surface-2 text-sm font-semibold text-muted"
         >
           ?
         </button>
       </div>
-      {tour && (
+      {tour && mode === 'mechanisms' && levelChosen && (
         <Tutorial
-          steps={tour === 'mechanisms' ? MECHANISMS_TOUR : CALC_TOUR}
-          label={tour === 'mechanisms' ? 'Mechanisms tutorial' : 'Calculations tutorial'}
+          steps={MECHANISMS_TOUR}
+          label="Mechanisms tutorial"
           onClose={() => {
-            markTutorialSeen(tour);
-            setTour(null);
+            markTutorialSeen('mechanisms');
+            setTour(false);
           }}
         />
       )}

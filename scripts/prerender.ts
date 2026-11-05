@@ -31,13 +31,27 @@ try {
     writeFileSync(join(DIST, file), out);
   }
 
+  // Unknown addresses: the Worker answers with this page and status 404. Stub Book pages get the bare app shell, so
+  // only addresses with no file at all are 404s. Neither is for search engines.
+  const noindex = (title: string) => `<title>${title} · ${mod.APP_NAME}</title>\n    <meta name="robots" content="noindex" />`;
+  writeFileSync(
+    join(DIST, '404.html'),
+    template
+      .replace(/<!-- seo:start[\s\S]*?seo:end -->/, noindex('Page not found'))
+      .replace('<div id="root"></div>', `<div id="root" data-path="/404">${mod.renderNotFound()}</div>`),
+  );
+  const stubs: string[] = mod.stubBookPaths();
+  for (const path of stubs) {
+    writeFileSync(join(DIST, `${path.slice(1)}.html`), template.replace(/<!-- seo:start[\s\S]*?seo:end -->/, noindex('Book')));
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   const urls = pages.map(({ meta }) => `  <url><loc>${mod.SITE_URL}${meta.path}</loc><lastmod>${today}</lastmod></url>`);
   writeFileSync(
     join(DIST, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`,
   );
-  console.log(`prerender: ${pages.length} pages and sitemap.xml`);
+  console.log(`prerender: ${pages.length} pages, ${stubs.length} Book stubs, 404.html and sitemap.xml`);
 } finally {
   await server.close();
 }

@@ -127,7 +127,7 @@ export default function Inbox() {
                   type="button"
                   aria-pressed={filter === k}
                   onClick={() => setFilter(k)}
-                  className={`min-h-9 rounded-full px-3 text-sm ${filter === k ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
+                  className={`min-h-9 rounded-md px-3 text-sm ${filter === k ? 'bg-accent text-accent-ink' : 'bg-surface-2 text-muted'}`}
                 >
                   {k === 'all' ? 'All' : SUGGESTION_KIND_LABEL[k]} {n}
                 </button>

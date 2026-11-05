@@ -46,7 +46,7 @@ From then on, every push to `main` deploys to production.
 
 How the files are served:
 
-- **`wrangler.jsonc`** tells Cloudflare to serve `dist/`. Its `"not_found_handling": "single-page-application"` returns `index.html` for app routes, so links such as `/book/diels-alder` work when opened directly. Do **not** add a `_redirects` file with `/* /index.html 200`: Workers rejects it as an infinite loop.
+- **`wrangler.jsonc`** tells Cloudflare to serve `dist/`. Every request except the hashed files in `/assets/` goes through the Worker first (`run_worker_first`), which serves the file if there is one, the app shell (`index.html`) for client-only routes such as `/calc` and `/progress`, and `dist/404.html` with status 404 for anything else (`worker/pages.ts`). A new client-only route must be added to `APP_ROUTE` there, or it will 404 when opened directly. Do **not** add a `_redirects` file with `/* /index.html 200`: Workers rejects it as an infinite loop.
 - **`public/_headers`** (copied into `dist/`) caches the hashed files in `/assets/` for a year. It always revalidates `index.html`, `sw.js`, `registerSW.js` and the manifest, so users never get stuck on an old version. It also adds a few standard security headers.
 
 ### Alternative: deploy from your machine

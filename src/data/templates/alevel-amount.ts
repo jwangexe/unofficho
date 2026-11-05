@@ -459,4 +459,75 @@ export const alevelAmountTemplates: CalcTemplate[] = [
     levels: ['alevel'],
     reviewed: false,
   },
+  {
+    id: 'calc-al-empirical-formula',
+    topic: 'stoich',
+    title: 'Empirical formula from the masses of each element',
+    difficulty: 2,
+    params: {
+      x: { unit: '1', choices: [1, 2, 3, 4, 5] },
+      y: { unit: '1', choices: [2, 4, 6, 8, 10, 12] },
+      s: { unit: 'g', min: 1, max: 10, sig: 3 },
+      MC: { unit: 'g/mol', choices: [12.0], decimals: 1 },
+      MH: { unit: 'g/mol', choices: [1.0], decimals: 1 },
+      MO: { unit: 'g/mol', choices: [16.0], decimals: 1 },
+    },
+    setup: [
+      // A compound CxHyO: the mass of each element in a sample of mass s.
+      { id: 'cx', op: 'mul', inputs: ['p.x', 'p.MC'] },
+      { id: 'hy', op: 'mul', inputs: ['p.y', 'p.MH'] },
+      { id: 'Mr', op: 'sum', inputs: ['n.cx', 'n.hy', 'p.MO'], coefs: [1, 1, 1] },
+      { id: 'units', op: 'div', inputs: ['p.s', 'n.Mr'] },
+      { id: 'mC', op: 'mul', inputs: ['n.units', 'n.cx'] },
+      { id: 'mH', op: 'mul', inputs: ['n.units', 'n.hy'] },
+      { id: 'mO', op: 'mul', inputs: ['n.units', 'p.MO'] },
+    ],
+    given: [
+      { key: 'mC', label: 'm(C)', from: 'n.mC', unit: 'g', sig: 3 },
+      { key: 'mH', label: 'm(H)', from: 'n.mH', unit: 'g', sig: 3 },
+      { key: 'mO', label: 'm(O)', from: 'n.mO', unit: 'g', sig: 3 },
+      { key: 'MC', label: 'M(C)', from: 'p.MC' },
+      { key: 'MH', label: 'M(H)', from: 'p.MH' },
+      { key: 'MO', label: 'M(O)', from: 'p.MO' },
+    ],
+    // A plausible compound: at least one H per C (like phenol), and no more than a saturated CxH(2x+2)O.
+    constraint: (v) => {
+      const x = v.mC! / 12 / (v.mO! / 16);
+      return v.answer! >= x - 0.2 && v.answer! <= 2 * x + 2.2;
+    },
+    reference: [
+      { id: 'nC', label: 'n(C)', formula: 'moles-mass', solveFor: 'n', inputs: { m: 'g.mC', M: 'g.MC' } },
+      { id: 'nH', label: 'n(H)', formula: 'moles-mass', solveFor: 'n', inputs: { m: 'g.mH', M: 'g.MH' } },
+      { id: 'nO', label: 'n(O), the smallest', formula: 'moles-mass', solveFor: 'n', inputs: { m: 'g.mO', M: 'g.MO' } },
+      { id: 'y', label: 'n(H) ÷ n(O)', op: 'div', inputs: ['n.nH', 'n.nO'] },
+    ],
+    answer: { node: 'y', label: 'H atoms in the empirical formula', unit: '1' },
+    // The ratio from three-figure data is within a few hundredths of a whole number; round it.
+    tolerance: { abs: 0.15 },
+    misconceptions: [
+      {
+        reference: [{ id: 'y', op: 'div', inputs: ['g.mH', 'g.mO'] }],
+        answer: 'y',
+        message: 'That is a ratio of masses. Convert each mass to moles first; the formula is a ratio of atoms.',
+      },
+      {
+        reference: [
+          { id: 'nC', formula: 'moles-mass', solveFor: 'n', inputs: { m: 'g.mC', M: 'g.MC' } },
+          { id: 'nO', formula: 'moles-mass', solveFor: 'n', inputs: { m: 'g.mO', M: 'g.MO' } },
+          { id: 'y', op: 'div', inputs: ['n.nC', 'n.nO'] },
+        ],
+        answer: 'y',
+        message: 'That is the number of carbon atoms. The question asks for hydrogen.',
+      },
+    ],
+    wordings: [
+      'An organic compound contains only carbon, hydrogen and oxygen. A sample contains {mC} of carbon, {mH} of hydrogen and {mO} of oxygen. Its empirical formula has one oxygen atom. How many hydrogen atoms does the empirical formula contain? M(C) = {MC}, M(H) = {MH}, M(O) = {MO}.',
+      'Analysis of a compound of C, H and O found {mC} C, {mH} H and {mO} O. Work out its empirical formula, CₓHᵧO, and give y. Use M(C) = {MC}, M(H) = {MH} and M(O) = {MO}.',
+    ],
+    approachText: 'Mass of each element in a compound of C, H and O; find its empirical formula.',
+    explanation:
+      'Convert each mass to moles (n = m/M), divide every amount by the smallest (here oxygen), and round to whole numbers. The Table in + Operation does this in one go: a row of masses, a row of molar masses, n = m/M, ÷ smallest, then Round.',
+    levels: ['alevel'],
+    reviewed: false,
+  },
 ];

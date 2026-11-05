@@ -321,7 +321,7 @@ export function MechanismDerive({
                           type="button"
                           aria-label={`${texToSpeech(c.tex)}: ${place === 'none' ? 'not used' : place === 'top' ? 'numerator' : 'denominator'}`}
                           onClick={() => save((s) => ({ placed: { ...s.placed, [c.key]: next[s.placed[c.key] ?? 'none'] }, misplaced: s.misplaced.filter((k) => k !== c.key) }))}
-                          className={`min-h-11 rounded-full border px-3 text-sm ${wrong ? 'border-bad ring-2 ring-bad' : place === 'none' ? 'border-border bg-surface' : 'border-accent bg-accent/15'}`}
+                          className={`min-h-11 rounded-md border px-3 text-sm ${wrong ? 'border-bad ring-2 ring-bad' : place === 'none' ? 'border-border bg-surface' : 'border-accent bg-accent/15'}`}
                         >
                           <span className="mr-1 text-xs text-muted">{place === 'top' ? '↑' : place === 'bottom' ? '↓' : '·'}</span>
                           <Tex>{`${c.term.c < 0 ? '-' : ''}${c.tex}`}</Tex>

@@ -88,7 +88,7 @@ export default function Debug() {
               role="radio"
               aria-checked={unknown === v.sym}
               onClick={() => setUnknown(v.sym)}
-              className={`min-h-11 min-w-11 rounded-full px-3 ${unknown === v.sym ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
+              className={`min-h-11 min-w-11 rounded-md px-3 ${unknown === v.sym ? 'bg-accent text-accent-ink' : 'bg-surface-2'}`}
             >
               <Tex>{v.latex}</Tex>
             </button>

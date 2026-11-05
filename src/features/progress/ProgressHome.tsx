@@ -159,7 +159,7 @@ export default function ProgressHome() {
         <select
           value={levelFilter}
           onChange={(e) => setLevelFilter(e.target.value as LevelId | 'all')}
-          className="min-h-9 rounded-full border border-border bg-surface px-3 text-text"
+          className="min-h-9 rounded-md border border-border bg-surface px-3 text-text"
         >
           <option value="all">All levels</option>
           {LEVEL_LIST.map((l) => (
@@ -190,7 +190,7 @@ export default function ProgressHome() {
                   <span className="flex-1">{SECTION_LABEL[s]}</span>
                   <span className="text-sm text-muted tabular-nums">{stats.due[s].length}</span>
                   {stats.due[s].length > 0 ? (
-                    <Link to={`${SECTION_PATH[s]}${focusQuery({ due: true })}`} className="grid min-h-9 place-items-center rounded-full bg-accent px-3 text-sm font-semibold text-accent-ink">
+                    <Link to={`${SECTION_PATH[s]}${focusQuery({ due: true })}`} className="grid min-h-9 place-items-center rounded-md bg-accent px-3 text-sm font-semibold text-accent-ink">
                       Review
                     </Link>
                   ) : (

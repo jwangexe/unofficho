@@ -12,7 +12,7 @@ function Maths({ children }: { children: string }) {
 }
 
 const chip = (on: boolean) =>
-  `min-h-10 rounded-full border px-3 text-sm disabled:opacity-40 ${on ? 'border-accent bg-accent text-accent-ink' : 'border-border bg-surface-2'}`;
+  `min-h-10 rounded-md border px-3 text-sm disabled:opacity-40 ${on ? 'border-accent bg-accent text-accent-ink' : 'border-border bg-surface-2'}`;
 
 /**
  * Pick which intermediates are in steady state and which steps are fast pre-equilibria;

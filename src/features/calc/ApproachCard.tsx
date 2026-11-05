@@ -79,7 +79,7 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
   return (
     <article className="mx-auto flex h-full max-w-xl flex-col" aria-label={`Approach: ${t.title}`}>
       <header className="flex items-center gap-2 px-4 pt-2">
-        <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs text-muted">{TOPIC_TAG[t.topic] ?? t.topic}</span>
+        <span className="rounded-md bg-surface-2 px-2.5 py-1 text-xs text-muted">{TOPIC_TAG[t.topic] ?? t.topic}</span>
         <span className="text-xs text-muted">
           Step {Math.min(state.done.length + 1, total)} of {total}
         </span>
@@ -93,7 +93,7 @@ export function ApproachCard({ inst, template: t, onNext }: { inst: CalcInstance
           <p className="mb-1 text-muted">You know</p>
           <div className="flex flex-wrap gap-1.5">
             {t.given.map((g) => (
-              <span key={g.key} className="rounded-full bg-surface-2 px-2.5 py-1">
+              <span key={g.key} className="rounded-md bg-surface-2 px-2.5 py-1">
                 {g.label}
               </span>
             ))}

@@ -7,10 +7,10 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    // Serve index.html for app routes such as /book/diels-alder (replaces a _redirects rule,
-    // which Workers rejects as a loop).
-    "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
+    // No automatic fallback: the Worker decides between the app shell (client-only routes such as
+    // /calc) and a real 404 page, so unknown addresses are not served as the homepage with 200.
+    "not_found_handling": "none",
+    "run_worker_first": ["/*", "!/assets/*"]
   },
   // Suggestions sent from the app. With no database_id, the first deploy creates the database
   // (Wrangler's automatic provisioning). See DEPLOY.md for reading them.

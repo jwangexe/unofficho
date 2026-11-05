@@ -33,7 +33,7 @@ export function Callout({ type = 'note', title, children }: { type?: keyof typeo
   const c = CALLOUTS[type];
   return (
     <aside className={`my-4 rounded-xl border px-4 py-3 ${c.cls}`}>
-      <p className={`mb-1 text-xs font-semibold uppercase tracking-wide ${c.head}`}>{title ?? c.title}</p>
+      <p className={`mb-1 text-xs font-semibold ${c.head}`}>{title ?? c.title}</p>
       <div className="text-[0.95rem] leading-relaxed [&>p]:my-1.5">{children}</div>
     </aside>
   );

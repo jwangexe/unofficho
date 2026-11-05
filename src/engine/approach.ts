@@ -3,6 +3,7 @@
  * The reference graph is a DAG, so at each point any step whose inputs are already
  * known counts as correct; steps that need something not yet computed are "not yet".
  */
+import { formulaInScope } from '@/data/levels';
 import { CONSTANTS } from './constants';
 import { formulaById, FORMULAS } from './formulas';
 import { isFormulaNode, nodeLabel, type GraphNode, type Ref } from './graph';
@@ -126,10 +127,12 @@ export function buildOptions(t: CalcTemplate, done: ReadonlySet<string>, r: () =
   for (const o of pool) add(o);
 
   // Same-topic formulas that are not part of the solution.
+  // Formulas within the question's levels come first, so a distractor rarely names something unfamiliar.
+  const inScope = (id: string) => t.levels.every((l) => formulaInScope(l, id));
   const topicFormulas = shuffle(
     FORMULAS.filter((f) => f.topic === t.topic && ![...refKeys].some((k) => k.startsWith(`f:${f.id}:`))),
     r,
-  );
+  ).sort((a, b) => Number(inScope(b.id)) - Number(inScope(a.id)));
   for (const f of topicFormulas) {
     if (chosen.size >= count) break;
     const solvable = f.vars.filter((v) => v.solvable !== false);

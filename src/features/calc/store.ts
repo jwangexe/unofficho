@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { CheckResult } from '@/engine/check';
 import type { Quantity } from '@/engine/quantity';
+import type { CalcTable } from '@/engine/table';
 import type { CalcInstance } from '@/engine/template';
 
 export interface Chip {
@@ -28,6 +29,8 @@ export interface CardState {
   /** Recorded once per card: the first submission is what counts for progress. */
   recorded: boolean;
   revealed: boolean;
+  /** The working table, if one has been started. Kept apart from the steps; Undo does not touch it. */
+  table?: CalcTable;
 }
 
 interface Store {
@@ -38,6 +41,7 @@ interface Store {
   setResult: (key: string, result: CheckResult | undefined) => void;
   markRecorded: (key: string) => void;
   reveal: (key: string) => void;
+  setTable: (key: string, table: CalcTable | undefined) => void;
 }
 
 const fresh = (inst: CalcInstance): CardState => ({
@@ -82,4 +86,5 @@ export const useCalcStore = create<Store>((set) => ({
   setResult: (key, result) => set((s) => ({ cards: { ...s.cards, [key]: { ...s.cards[key]!, result } } })),
   markRecorded: (key) => set((s) => ({ cards: { ...s.cards, [key]: { ...s.cards[key]!, recorded: true } } })),
   reveal: (key) => set((s) => ({ cards: { ...s.cards, [key]: { ...s.cards[key]!, revealed: true } } })),
+  setTable: (key, table) => set((s) => ({ cards: { ...s.cards, [key]: { ...s.cards[key]!, table } } })),
 }));
